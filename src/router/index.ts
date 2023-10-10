@@ -1,19 +1,21 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
+import DiveLog from '@/views/DiveLog.vue';
+import UserIdentity from '@/views/UserIdentity.vue'; // Import the UserIdentity component
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    redirect: '/useridentity'
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/divelog',
+    name: 'DiveLog',
+    component: DiveLog
+  },
+  {
+    path: '/useridentity',
+    name: 'UserIdentity',
+    component: UserIdentity
   }
 ]
 
@@ -22,4 +24,4 @@ const router = createRouter({
   routes
 })
 
-export default router
+export default router;
