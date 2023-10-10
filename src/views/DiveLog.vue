@@ -38,7 +38,7 @@ export default {
 }
 
 .form-item {
-    width: 70%; /* Ou tout autre pourcentage/px/em/vw que vous souhaitez */
+    width: 100%; /* Ou tout autre pourcentage/px/em/vw que vous souhaitez */
     margin: 0 auto; /* Cela va centrer le bloc à l'intérieur de .form-container */
 }
 

@@ -1,19 +1,15 @@
 <template>
-  <nav class="bg-gray-800">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="flex items-center justify-between h-16">
+      <nav class="bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-2">
+          <div class="flex items-center justify-between h-13">
+            <div class="flex items-center">
+              <img class="h-20 w-auto rounded-full" src="@/assets/MQ_Logo.png" alt="Mariana Quest"/> <!-- Ajustez la hauteur à h-20 ou selon vos préférences -->
+            </div>
 
-        <!-- Logo -->
-        <div>
-          <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" />
-        </div>
-
-        <!-- Navigation Links and User Dropdown -->
         <div class="flex items-center space-x-4">
           <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']">
             {{ item.name }}
           </a>
-          <!-- User Dropdown -->
           <div class="relative">
             <button @click="showDropdown = !showDropdown" class="rounded-full bg-gray-800 text-sm focus:outline-none">
               <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
@@ -30,7 +26,6 @@
   </nav>
 </template>
 
-  
   <script lang="ts">
   import { ref } from 'vue';
   
