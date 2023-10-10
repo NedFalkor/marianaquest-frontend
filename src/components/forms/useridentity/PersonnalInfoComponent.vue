@@ -1,12 +1,10 @@
 <template>
     <div class="flex flex-col items-center">
       
-      <!-- Image Upload -->
       <div class="flex flex-col items-center mb-7 p-5 border border-gray-300 rounded w-4/5 min-w-[300px]">
         <input type="file" accept="image/*" @change="onFileSelected" class="mb-5"/>
       </div>
 
-      <!-- Personal Details -->
       <div class="flex flex-col items-center mb-7 p-5 border border-gray-300 rounded w-4/5 min-w-[300px]">
         <h3 class="text-xl mb-4 text-center">Nom de Famille</h3>
         <input type="text" id="nom" class="w-full p-2 mb-4 border border-gray-300 rounded" />
@@ -41,20 +39,23 @@
 </template>
 
 <script lang="ts">
+import { ref } from 'vue';
+
 export default {
-  name: 'PersonnalInfo',
-  data() {
-    return {
-      selectedImage: null as File | null
-    };
-  },
-  methods: {
-    onFileSelected(event: Event) {
+  setup() {
+    const selectedImage = ref<File | null>(null);
+
+    function onFileSelected(event: Event) {
       const input = event.target as HTMLInputElement;
       if (input.files && input.files.length > 0) {
-        this.selectedImage = input.files[0];
+        selectedImage.value = input.files[0];
       }
     }
+
+    return {
+      selectedImage,
+      onFileSelected
+    };
   }
 };
 </script>
