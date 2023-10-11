@@ -1,31 +1,37 @@
 <template>
-  <div class="flex flex-col items-center">
+  <div class="bg-gray-100 w-1/2 p-6">
 
-    <div class="flex flex-col items-center mb-7 p-5 border border-gray-300 rounded w-4/5 min-w-[300px]">
-      <h3 class="text-xl mb-4 text-center">En Cas de Nécessité</h3>
-      <h4 class="text-base mb-4 text-left">Personne à Prévenir</h4>
+    <div class="mb-4">
+      <h3 class="text-2xl mb-5 text-center">En Cas de Nécessité</h3>
+  <h4 class="text-sm mb-2 text-center italic">Personne à Prévenir</h4>
     </div>
 
-    <div class="flex flex-col items-center mb-7 p-5 border border-gray-300 rounded w-4/5 min-w-[300px]">
+    <div class="mb-4">
       <h3 class="text-xl mb-4 text-center">Nom de Famille</h3>
-      <input type="text" id="personneNom" class="w-full p-2 mb-4 border border-gray-300 rounded" />
+      <input type="text" id="emergencyLastName"
+        class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
 
       <h3 class="text-xl mb-4 text-center">Prénom</h3>
-      <input type="text" id="personnePrenom" class="w-full p-2 mb-4 border border-gray-300 rounded" />
+      <input type="text" id="emergencyFirstName"
+        class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
 
       <h3 class="text-xl mb-4 text-center">Adresse</h3>
-      <input type="text" id="personneAdresse" class="w-full p-2 mb-4 border border-gray-300 rounded" />
+      <input type="text" id="emergencyAddress"
+        class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
     </div>
 
-    <div class="flex flex-col items-center mb-7 p-5 border border-gray-300 rounded w-4/5 min-w-[300px]">
+    <div class="mb-4">
       <h3 class="text-xl mb-4 text-center">Téléphone Fixe</h3>
-      <input type="tel" id="personneTelFixe" class="w-full p-2 mb-4 border border-gray-300 rounded" />
+      <input type="tel" id="emergencyLandline"
+        class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
 
       <h3 class="text-xl mb-4 text-center">Téléphone Portable</h3>
-      <input type="tel" id="personneMobile" class="w-full p-2 mb-4 border border-gray-300 rounded" />
+      <input type="tel" id="emergencyMobile"
+        class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
 
       <h3 class="text-xl mb-4 text-center">Adresse Email</h3>
-      <input type="email" id="personneCourriel" class="w-full p-2 border border-gray-300 rounded" />
+      <input type="email" id="emergencyEmail"
+        class="w-full p-2 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
     </div>
   </div>
 </template>
@@ -36,18 +42,20 @@ export default {
   name: 'EmergencyInfo',
   data() {
     return {
-      personneNom: '',
-      personnePrenom: '',
-      personneAdresse: '',
-      personneTelFixe: '',
-      personneMobile: '',
-      personneCourriel: ''
+      emergencyLastName: '',
+      emergencyFirstName: '',
+      emergencyAddress: '',
+      emergencyLandline: '',
+      emergencyMobile: '',
+      emergencyEmail: ''
     };
   },
   methods: {
+    // Ajoutez ici les méthodes si nécessaire.
   }
 };
 </script>
+
 
 <style>
     

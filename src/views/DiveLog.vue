@@ -3,9 +3,9 @@
         <header-component></header-component>
         <TitleComponent :pageTitle="`Formulaire de plongée`" />
         <div class="form-container">
-    <dive-settings-component class="form-item"></dive-settings-component>
-    <dive-equipment-component class="form-item"></dive-equipment-component>
-    <dive-conditions-component class="form-item"></dive-conditions-component>
+            <dive-settings-component class="form-item"></dive-settings-component>
+            <dive-equipment-component class="form-item"></dive-equipment-component>
+            <dive-conditions-component class="form-item"></dive-conditions-component>
 
         </div>
     </div>
@@ -38,8 +38,7 @@ export default {
 }
 
 .form-item {
-    width: 70%; /* Ou tout autre pourcentage/px/em/vw que vous souhaitez */
-    margin: 0 auto; /* Cela va centrer le bloc à l'intérieur de .form-container */
+    width: 70%;
+    margin: 0 auto;
 }
-
 </style>
