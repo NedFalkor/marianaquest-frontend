@@ -40,5 +40,6 @@ export default {
 .form-item {
     width: 70%;
     margin: 0 auto;
+
 }
 </style>
