@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import DiveLog from '@/views/DiveLog.vue';
-import UserIdentity from '@/views/UserIdentity.vue'; // Import the UserIdentity component
+import UserIdentity from '@/views/UserIdentity.vue';
+import NemoCounter from '@/views/NemoCounter.vue';  // Import the NemoCounter component
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -16,6 +17,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/useridentity',
     name: 'UserIdentity',
     component: UserIdentity
+  },
+  {
+    path: '/nemocounter',
+    name: 'NemoCounter',
+    component: NemoCounter  // Add the route for NemoCounter
   }
 ]
 
@@ -25,3 +31,4 @@ const router = createRouter({
 })
 
 export default router;
+
