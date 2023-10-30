@@ -1,53 +1,54 @@
 <template>
-  <div>
+  <div class="bg-blue-50 min-h-screen">
+
     <header-component></header-component>
-    <TitleComponent :pageTitle="'Formulaire de plongée'" />
 
-    <div class="form-container">
-      <dive-settings-component
-        class="form-item"
-        @update:settings="updateData('settings', $event)"
-      ></dive-settings-component>
-      <dive-equipment-component
-        class="form-item"
-        @update:equipment="updateData('equipment', $event)"
-      ></dive-equipment-component>
-      <dive-conditions-component
-        class="form-item"
-        @update:conditions="updateData('conditions', $event)"
-      ></dive-conditions-component>
+    <TitleComponent class="text-center text-blue-900" :pageTitle="'Formulaire de plongée'" />
 
-      <div class="signature">
-        <p>Signature du moniteur :</p>
-        <div class="signature-container">
-          <canvas ref="signatureCanvas"></canvas>
-          <button class="clear-button" @click="clearSignature">
-            Effacer la signature
-          </button>
+    <div class="form-container mx-auto mt-8 w-3/4">
+
+      <div class="p-6 rounded-lg shadow-lg bg-f5e7bc">
+
+        <dive-settings-component class="form-item marine-style p-4 rounded-md shadow-md"
+          @update:settings="updateData('settings', $event)" />
+
+        <dive-equipment-component class="form-item marine-style mt-4 p-4 rounded-md shadow-md"
+          @update:equipment="updateData('equipment', $event)" />
+
+        <dive-conditions-component class="form-item marine-style mt-4 p-4 rounded-md shadow-md"
+          @update:conditions="updateData('conditions', $event)" />
+
+        <div class="signature mt-4 p-4 rounded-md shadow-md bg-gray-100">
+          <p class="text-2c5282 block">Signature du moniteur :</p>
+          <div class="signature-container flex items-center mt-4">
+            <canvas class="border-2c5282 border shadow rounded-md mr-4" ref="signatureCanvas"></canvas>
+            <button class="clear-button bg-red-500 text-white rounded-md px-2 py-1" @click="clearSignature">Effacer la
+              signature</button>
+          </div>
         </div>
+
+        <div class="stamp mt-4 p-4 rounded-md shadow-md bg-gray-100">
+          <p class="text-2c5282 block">Tampon du club ou du moniteur :</p>
+          <input type="file"
+            class="mt-4 shadow appearance-none border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            ref="stampInput" @change="showStampPreview" />
+          <button class="mt-4 bg-blue-600 text-white rounded-md px-4 py-2" @click="generatePDFPreview">Aperçu PDF</button>
+        </div>
+
       </div>
 
-      <div class="stamp">
-        <p>Tampon du club ou du moniteur :</p>
-        <input type="file" ref="stampInput" @change="showStampPreview" />
+      <div class="validation-button mt-4">
+        <button class="button is-large bg-green-500 text-white rounded-md px-6 py-3" @click="validateDiving">Valider la
+          plongée</button>
       </div>
 
-      <button @click="generatePDFPreview">Aperçu PDF du Formulaire</button>
+      <button class="mt-4 bg-blue-600 text-white rounded-md px-4 py-2" @click="submitForm">Enregistrer</button>
 
-      <div class="validation-button">
-        <button
-          class="button is-large"
-          style="background-color: #00b289; color: #fff"
-          @click="validateDiving"
-        >
-          Valider la plongée
-        </button>
-      </div>
-
-      <button @click="submitForm">Enregistrer</button>
     </div>
   </div>
 </template>
+
+
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
@@ -206,11 +207,30 @@ export default class DiveLog extends Vue {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
 }
 
 .form-item {
-  width: 70%;
+  width: 100%;
   margin: 0 auto;
+  background-color: #ebf8ff;
+  border: 2px solid #2c5282;
+}
+
+.marine-style {
+  background-color: #ebf8ff;
+  border: 2px solid #2c5282;
+}
+
+.text-2c5282 {
+  color: #2c5282;
+}
+
+.border-2c5282 {
+  border-color: #2c5282;
+}
+
+.bg-sand {
+  background-color: #f5e7bc;
+  /* Couleur beige rappelant le sable */
 }
 </style>
