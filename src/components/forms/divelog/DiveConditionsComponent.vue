@@ -78,7 +78,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, watch } from 'vue';
 
 export default defineComponent({
   name: 'ConditionsComponent',
@@ -95,6 +95,35 @@ export default defineComponent({
       observations: '',
     };
   },
+  computed: {
+    weather(): string {
+      if (this.sunnyWeather) return 'soleil';
+      if (this.cloudyWeather) return 'nuage';
+      if (this.rainyWeather) return 'pluie';
+      if (this.showerWeather) return 'averse';
+      return '';
+    }
+  },
+  watch: {
+    airTemperature: 'emitData',
+    waterTemperature: 'emitData',
+    weather: 'emitData',
+    visibility: 'emitData',
+    current: 'emitData',
+    observations: 'emitData'
+  },
+  methods: {
+    emitData() {
+      this.$emit('update:conditions', {
+        air_temperature: this.airTemperature,
+        water_temperature: this.waterTemperature,
+        weather: this.weather,
+        visibility: this.visibility,
+        current: this.current,
+        observations: this.observations
+      });
+    }
+  }
 });
 </script>
 

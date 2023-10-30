@@ -70,28 +70,75 @@
 </template>
 
 <script lang="ts">
-export default {
-    data() {
-        return {
-            tankType: null,
-            wetSuit: '',
-            ballast: '',
-            typeTraining: false,
-            typeExploration: false,
-            typeNightDive: false,
-            typeDriftDive: false,
-            typeWreck: false,
-            typeOther: false,
-            typeNitrox: false,
-            typeTrimix: false,
-            typeRebreather: '',
-            groupType: null,
-            consumptionStart: null,
-            consumptionEnd: null
-        }
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  name: 'DiveEquipment',
+  data() {
+    return {
+      tankType: null,
+      wetSuit: '',
+      ballast: '',
+      typeTraining: false,
+      typeExploration: false,
+      typeNightDive: false,
+      typeDriftDive: false,
+      typeWreck: false,
+      typeOther: false,
+      typeNitrox: false,
+      typeTrimix: false,
+      typeRebreather: '',
+      groupType: null,
+      consumptionStart: null,
+      consumptionEnd: null
+    };
+  },
+  computed: {
+    diveType(): string {
+      let types = [];
+      if (this.typeTraining) types.push('training');
+      if (this.typeExploration) types.push('exploration');
+      if (this.typeNightDive) types.push('night');
+      if (this.typeDriftDive) types.push('drift');
+      if (this.typeWreck) types.push('wreck');
+      if (this.typeOther) types.push('other');
+      return types.join(' ');
+    },
+    gasType(): string {
+      let gases = [];
+      if (this.typeNitrox) gases.push('nitrox');
+      if (this.typeTrimix) gases.push('trimix');
+      if (this.typeRebreather) gases.push('rebreather'); // Note: This assumes that typeRebreather being true means the gas type is 'rebreather'. Adjust as necessary.
+      return gases.join(' ');
     }
-}
+  },
+  watch: {
+    tankType: 'emitData',
+    wetSuit: 'emitData',
+    ballast: 'emitData',
+    diveType: 'emitData',
+    gasType: 'emitData',
+    groupType: 'emitData',
+    consumptionStart: 'emitData',
+    consumptionEnd: 'emitData'
+  },
+  methods: {
+    emitData() {
+      this.$emit('update:equipment', {
+        bottle_type: this.tankType,
+        wet_suit: this.wetSuit,
+        ballast: this.ballast,
+        dive_type: this.diveType,
+        gas_type: this.gasType,
+        group: this.groupType,
+        consumption_start: this.consumptionStart,
+        consumption_end: this.consumptionEnd
+      });
+    }
+  }
+});
 </script>
+
 <style lang="">
     
 </style>

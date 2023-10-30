@@ -66,19 +66,43 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-name: 'DiveSettings',
-data() {
-  return {
-    diveNumber: null,
-    diveDate: null,
-    diveSite: '',
-    environment: '',
-    depth: null,
-    durationDive: null,
-    surfaceReturn: '',
-    decompressionStop: ''
-  };
-}
+  name: 'DiveSettings',
+  data() {
+    return {
+      diveNumber: null,
+      diveDate: null,
+      diveSite: '',
+      environment: '',
+      depth: null,
+      durationDive: null,
+      surfaceReturn: '',
+      decompressionStop: ''
+    };
+  },
+  watch: {
+    diveNumber: 'emitData',
+    diveDate: 'emitData',
+    diveSite: 'emitData',
+    environment: 'emitData',
+    depth: 'emitData',
+    durationDive: 'emitData',
+    surfaceReturn: 'emitData',
+    decompressionStop: 'emitData'
+  },
+  methods: {
+    emitData() {
+      this.$emit('update:settings', {
+        diveNumber: this.diveNumber,
+        diveDate: this.diveDate,
+        diveSite: this.diveSite,
+        environment: this.environment,
+        depth: this.depth,
+        durationDive: this.durationDive,
+        surfaceReturn: this.surfaceReturn,
+        decompressionStop: this.decompressionStop
+      });
+    }
+  }
 });
 </script>
 
