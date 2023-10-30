@@ -21,7 +21,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/nemocounter',
     name: 'NemoCounter',
-    component: NemoCounter  // Add the route for NemoCounter
+    component: NemoCounter
   }
 ]
 

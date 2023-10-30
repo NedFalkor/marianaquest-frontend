@@ -1,23 +1,15 @@
 <template>
-  <div class="bg-blue-50 min-h-screen">
-
-    <header-component></header-component>
-
-    <TitleComponent class="text-center text-blue-900" :pageTitle="'Formulaire de plongée'" />
-
-    <div class="form-container mx-auto mt-8 w-3/4">
-
-      <div class="p-6 rounded-lg shadow-lg bg-f5e7bc">
-
-        <dive-settings-component class="form-item marine-style p-4 rounded-md shadow-md"
+  <div class="min-h-screen bg-blue-50">
+    <header-component class="mb-4"></header-component>
+    <TitleComponent class="text-center text-blue-900 mb-8" :pageTitle="'Formulaire de plongée'" />
+    <div class="min-w-screen min-h-screen bg-blue-50 flex items-center justify-center px-5 py-5">
+      <div class="w-3/4 mx-auto rounded-xl bg-f5e7bc shadow-xl text-gray-800 relative overflow-hidden p-6">
+        <dive-settings-component class="marine-style p-4 mt-4 rounded-md shadow-md"
           @update:settings="updateData('settings', $event)" />
-
-        <dive-equipment-component class="form-item marine-style mt-4 p-4 rounded-md shadow-md"
+        <dive-equipment-component class="marine-style p-4 mt-4 rounded-md shadow-md"
           @update:equipment="updateData('equipment', $event)" />
-
-        <dive-conditions-component class="form-item marine-style mt-4 p-4 rounded-md shadow-md"
+        <dive-conditions-component class="marine-style p-4 mt-4 rounded-md shadow-md"
           @update:conditions="updateData('conditions', $event)" />
-
         <div class="signature mt-4 p-4 rounded-md shadow-md bg-gray-100">
           <p class="text-2c5282 block">Signature du moniteur :</p>
           <div class="signature-container flex items-center mt-4">
@@ -26,28 +18,24 @@
               signature</button>
           </div>
         </div>
-
         <div class="stamp mt-4 p-4 rounded-md shadow-md bg-gray-100">
           <p class="text-2c5282 block">Tampon du club ou du moniteur :</p>
           <input type="file"
             class="mt-4 shadow appearance-none border rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             ref="stampInput" @change="showStampPreview" />
-          <button class="mt-4 bg-blue-600 text-white rounded-md px-4 py-2" @click="generatePDFPreview">Aperçu PDF</button>
+          <button class="mt-4 bg-indigo-500 hover:bg-indigo-700 text-white rounded-md px-4 py-2"
+            @click="generatePDFPreview">Aperçu PDF</button>
         </div>
-
+        <div class="validation-button mt-4">
+          <button class="button is-large bg-green-500 text-white rounded-md px-6 py-3" @click="validateDiving">Valider la
+            plongée</button>
+        </div>
+        <button class="mt-4 bg-indigo-500 hover:bg-indigo-700 text-white rounded-md px-4 py-2"
+          @click="submitForm">Enregistrer</button>
       </div>
-
-      <div class="validation-button mt-4">
-        <button class="button is-large bg-green-500 text-white rounded-md px-6 py-3" @click="validateDiving">Valider la
-          plongée</button>
-      </div>
-
-      <button class="mt-4 bg-blue-600 text-white rounded-md px-4 py-2" @click="submitForm">Enregistrer</button>
-
     </div>
   </div>
 </template>
-
 
 
 <script lang="ts">
@@ -231,6 +219,5 @@ export default class DiveLog extends Vue {
 
 .bg-sand {
   background-color: #f5e7bc;
-  /* Couleur beige rappelant le sable */
 }
 </style>

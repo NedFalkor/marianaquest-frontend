@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-gray-100 w-1/4 p-6">
-    <h2 class="font-bold text-xl mb-4">Paramètres de la plongée</h2>
+  <div class="marine-style w-1/4 p-6">
+    <h2 class="text-2c5282 font-bold text-xl mb-4">Paramètres de la plongée</h2>
 
     <!-- Dive Number -->
     <div class="mb-4">
