@@ -38,15 +38,15 @@
 
     <div class="mb-4">
       <h3 class="text-xl mb-4 text-center">Téléphone Fixe</h3>
-      <input v-model="landlinePhone" type="tel" id="landlinePhone"
+      <input v-model="landline" type="tel" id="landlinePhone"
         class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
 
       <h3 class="text-xl mb-4 text-center">Téléphone Portable</h3>
-      <input v-model="mobilePhone" type="tel" id="mobilePhone"
+      <input v-model="mobile" type="tel" id="mobilePhone"
         class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
 
       <h3 class="text-xl mb-4 text-center">Adresse Email</h3>
-      <input v-model="emailAddress" type="email" id="emailAddress"
+      <input v-model="email" type="email" id="emailAddress"
         class="w-full p-2 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
     </div>
   </div>
@@ -54,51 +54,45 @@
 
 
 <script lang="ts">
+import { IPersonalInfo } from '@/interfaces/DiverProfile';
+import { defineComponent } from 'vue';
 
-import { ref } from 'vue';
-
-export default {
-  setup() {
-    const selectedImage = ref<File | null>(null);
-    const lastName = ref<string>('');
-    const firstName = ref<string>('');
-    const address = ref<string>('');
-    const postalCode = ref<string>('');
-    const city = ref<string>('');
-    const country = ref<string>('');
-    const landlinePhone = ref<string>('');
-    const mobilePhone = ref<string>('');
-    const emailAddress = ref<string>('');
-    const imageURL = ref<string | null>(null);
-
-    function onFileSelected(event: Event) {
+export default defineComponent({
+  name: 'PersonalInfo',
+  data(): Partial<IPersonalInfo> {
+    return {
+      lastName: '',
+      firstName: '',
+      address: '',
+      postalCode: '',
+      city: '',
+      country: '',
+      landline: null,
+      mobile: null,
+      email: '',
+      imageURL: null,
+      selectedImage: null
+    };
+  },
+  methods: {
+    onFileSelected(event: Event) {
       const input = event.target as HTMLInputElement;
       if (input.files && input.files.length > 0) {
-        selectedImage.value = input.files[0];
-        imageURL.value = URL.createObjectURL(selectedImage.value);
+        this.selectedImage = input.files[0];
+        this.imageURL = URL.createObjectURL(this.selectedImage);
       }
+    },
+    emitData() {
+      this.$emit('update:personalInfo', {
+        ...this.$data
+      });
     }
-
-    return {
-      selectedImage,
-      onFileSelected,
-      lastName,
-      firstName,
-      address,
-      postalCode,
-      city,
-      country,
-      landlinePhone,
-      mobilePhone,
-      emailAddress,
-      imageURL
-    };
   }
-};
+});
 </script>
 
-<style>
 
+<style>
 .image-container {
   width: 150px;
   height: 300px;
@@ -113,5 +107,4 @@ export default {
   object-fit: cover;
   display: block;
 }
-
 </style>

@@ -65,41 +65,13 @@ import {
   },
 })
 export default class DiveLog extends Vue {
-  diveData: IDivingLog = {
+  private diveData: IDivingLog = {
     id: 0,
     user: 0,
-    settings: {
-      dive_number: null,
-      dive_date: null,
-      dive_site: "",
-      environment: "",
-      depth: null,
-      duration_dive: null,
-      surface_return: "",
-      decompression_stop: "",
-    },
-    equipment: {
-      bottle_type: null,
-      wet_suit: "",
-      ballast: "",
-      dive_type: "",
-      gas_type: "",
-      group: "",
-      consumption_start: null,
-      consumption_end: null,
-    },
-    conditions: {
-      air_temperature: null,
-      water_temperature: null,
-      weather: "",
-      visibility: "",
-      current: "",
-      observations: "",
-    },
-    signatureData: {
-      signature: "",
-      stamp: "",
-    },
+    settings: {} as IDiveSettings,
+    equipment: {} as IDiveEquipment,
+    conditions: {} as IDiveConditions,
+    signatureData: {} as ISignatureData
   };
 
   stampPreview: string | null = null;
