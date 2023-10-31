@@ -4,6 +4,11 @@ import axios from 'axios';
 export const backendUrl = 'http://127.0.0.1:8000';
 
 export default {
+    // Créer un nouvel utilisateur
+    createUser(data: ICustomUser) {
+        return axios.post(`${backendUrl}/api/register/`, data);
+    },
+
     // Récupérer un utilisateur spécifique par ID
     getUserById(id: number) {
         return axios.get(`${backendUrl}/api/users/${id}/`);
@@ -17,5 +22,11 @@ export default {
     // Supprimer un utilisateur
     deleteUser(id: number) {
         return axios.delete(`${backendUrl}/api/users/${id}/`);
+    },
+
+    // Authentifier un utilisateur
+    loginUser(data: { emailOrUsername: string, password: string }) {
+        return axios.post(`${backendUrl}/api/login/`, data);
     }
 };
+

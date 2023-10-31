@@ -38,7 +38,9 @@
 
 
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   name: 'EmergencyInfo',
   data() {
     return {
@@ -50,14 +52,15 @@ export default {
       emergencyEmail: ''
     };
   },
-
   methods: {
-    // Ajoutez ici les méthodes si nécessaire.
+    emitEmergencyData() {
+      this.$emit('update:emergencyInfo', {
+        ...this.$data
+      });
+    }
   }
-};
+});
 </script>
 
 
-<style>
-    
-</style>
+<style></style>

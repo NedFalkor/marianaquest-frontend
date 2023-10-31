@@ -4,11 +4,11 @@
     <div class="w-full mx-auto rounded-xl bg-gray-100 shadow-xl text-gray-800 relative overflow-hidden"
       style="max-width: 500px">
       <div class="bg-indigo-600 w-full py-5 px-6 text-3xl text-white font-thin text-center">
-        Inscription
+        Connexion
       </div>
 
       <div class="container bg-white p-6 rounded-xl">
-        <form @submit.prevent="registerUser">
+        <form @submit.prevent="loginUser">
           <div class="mb-4">
             <label for="emailOrUsername" class="block text-sm font-medium mb-2">Adresse e-mail ou nom
               d'utilisateur</label>
@@ -23,12 +23,12 @@
 
           <button type="submit"
             class="w-full h-16 text-xl font-light bg-indigo-500 hover:bg-indigo-700 text-white rounded-md">
-            Accepter
+            Se connecter
           </button>
         </form>
 
         <div class="mt-4 text-center">
-          <a href="/user-auth" class="text-indigo-600 hover:underline">Vous possédez déjà un compte ?</a>
+          <a href="/user-register" class="text-indigo-600 hover:underline">Vous n'avez pas de compte ?</a>
         </div>
       </div>
     </div>
@@ -47,11 +47,6 @@ import CustomUserService from '@/services/CustomUserService';
 export default {
   data() {
     return {
-      user: {
-        username: "",
-        email: "",
-        password: ""
-      },
       emailOrUsername: "",
       password: "",
       errorMessage: "",
@@ -59,22 +54,20 @@ export default {
     };
   },
   methods: {
-    async registerUser() {
+    async loginUser() {
       try {
-        await CustomUserService.createUser(this.user);
-        this.successMessage = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
+        await CustomUserService.loginUser({ emailOrUsername: this.emailOrUsername, password: this.password });
+        this.successMessage = "Connexion réussie ! Vous êtes maintenant connecté.";
       } catch (error: any) {
         if (error.response && error.response.data && error.response.data.error) {
           this.errorMessage = error.response.data.error;
         } else {
-          this.errorMessage = "Une erreur s'est produite lors de l'inscription.";
+          this.errorMessage = "Une erreur s'est produite lors de la connexion.";
         }
       }
-
     }
   }
 };
 </script>
 
 <style></style>
-
