@@ -8,52 +8,53 @@
       </div>
 
       <div class="container bg-white p-6 rounded-xl">
-        <form @submit.prevent="registerUser">
-          <div class="mb-4">
-            <label for="emailOrUsername" class="block text-sm font-medium mb-2">Adresse e-mail ou nom
-              d'utilisateur</label>
-            <input class="input w-full p-2 border rounded-md" type="text" id="emailOrUsername" v-model="emailOrUsername"
-              required />
+        <div class="container bg-white p-6 rounded-xl">
+          <form @submit.prevent="registerUser">
+            <div class="mb-4">
+              <label for="emailOrUsername" class="block text-sm font-medium mb-2">Adresse e-mail ou nom
+                d'utilisateur</label>
+              <input class="input w-full p-2 border rounded-md" type="text" id="emailOrUsername"
+                v-model="user.emailOrUsername" required />
+            </div>
+
+            <div class="mb-4">
+              <label for="password" class="block text-sm font-medium mb-2">Mot de passe</label>
+              <input class="input w-full p-2 border rounded-md" type="password" id="password" v-model="user.password"
+                required />
+            </div>
+
+            <button type="submit"
+              class="w-full h-16 text-xl font-light bg-indigo-500 hover:bg-indigo-700 text-white rounded-md">
+              Accepter
+            </button>
+          </form>
+
+          <div class="mt-4 text-center">
+            <a href="/user-auth" class="text-indigo-600 hover:underline">Vous possédez déjà un compte ?</a>
           </div>
-
-          <div class="mb-4">
-            <label for="password" class="block text-sm font-medium mb-2">Mot de passe</label>
-            <input class="input w-full p-2 border rounded-md" type="password" id="password" v-model="password" required />
-          </div>
-
-          <button type="submit"
-            class="w-full h-16 text-xl font-light bg-indigo-500 hover:bg-indigo-700 text-white rounded-md">
-            Accepter
-          </button>
-        </form>
-
-        <div class="mt-4 text-center">
-          <a href="/user-auth" class="text-indigo-600 hover:underline">Vous possédez déjà un compte ?</a>
         </div>
       </div>
     </div>
-  </div>
-  <div v-if="successMessage" class="mt-4 text-center text-green-500">
-    {{ successMessage }}
-  </div>
-  <div v-if="errorMessage" class="mt-4 text-center text-red-500">
-    {{ errorMessage }}
+    <div v-if="successMessage" class="mt-4 text-center text-green-500">
+      {{ successMessage }}
+    </div>
+    <div v-if="errorMessage" class="mt-4 text-center text-red-500">
+      {{ errorMessage }}
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import CustomUserService from '@/services/CustomUserService';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   data() {
     return {
       user: {
-        username: "",
-        email: "",
-        password: ""
+        emailOrUsername: "",
+        password: "",
       },
-      emailOrUsername: "",
-      password: "",
       errorMessage: "",
       successMessage: ""
     };
@@ -61,20 +62,21 @@ export default {
   methods: {
     async registerUser() {
       try {
-        await CustomUserService.createUser(this.user);
+        const userData = {
+          email: this.user.emailOrUsername,
+          username: this.user.emailOrUsername,
+          password: this.user.password
+        };
+        await CustomUserService.createUser(userData);
         this.successMessage = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
-      } catch (error: any) {
-        if (error.response && error.response.data && error.response.data.error) {
+      } catch (error: any) { // Using `any` for simplicity, though it's not the most type-safe approach
+        if (error && error.response && error.response.data && error.response.data.error) {
           this.errorMessage = error.response.data.error;
         } else {
           this.errorMessage = "Une erreur s'est produite lors de l'inscription.";
         }
       }
-
     }
   }
-};
+});
 </script>
-
-<style></style>
-

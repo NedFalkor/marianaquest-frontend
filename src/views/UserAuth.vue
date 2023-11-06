@@ -42,9 +42,10 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import CustomUserService from '@/services/CustomUserService';
 
-export default {
+export default defineComponent({
   data() {
     return {
       emailOrUsername: "",
@@ -67,7 +68,7 @@ export default {
       }
     }
   }
-};
+});
 </script>
 
 <style></style>

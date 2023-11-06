@@ -90,21 +90,3 @@ export default defineComponent({
   }
 });
 </script>
-
-
-<style>
-.image-container {
-  width: 150px;
-  height: 300px;
-  overflow: hidden;
-  border-radius: 5px;
-  margin: 0 auto;
-}
-
-.image-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-</style>

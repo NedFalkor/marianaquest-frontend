@@ -1,10 +1,12 @@
+import { IComment } from "./InstructorComment";
+
 export interface IDiveSettings {
-    dive_number: number | null;
-    dive_date: string | null;
+    dive_number?: number;
+    dive_date: Date | null;
     dive_site: string;
-    environment: 'sea' | 'ocean' | 'lake' | '';
-    depth: number | null;
-    duration_dive: number | null;
+    environment: 'sea' | 'ocean' | 'lake';
+    depth?: number;
+    duration_dive?: number;
     surface_return: string;
     decompression_stop: string;
 }
@@ -24,8 +26,8 @@ export interface IDiveConditions {
     air_temperature: number | null;
     water_temperature: number | null;
     weather: 'sun' | 'cloud' | 'rain' | 'downpour' | '';
-    visibility: string;
-    current: string;
+    visibility: 'good' | 'average' | 'poor' | '';
+    current: 'none' | 'medium' | 'strong' | '';
     observations: string;
 }
 
@@ -40,5 +42,6 @@ export interface IDivingLog {
     settings: IDiveSettings;
     equipment: IDiveEquipment;
     conditions: IDiveConditions;
+    comments?: IComment[];
     signatureData: ISignatureData;
 }
