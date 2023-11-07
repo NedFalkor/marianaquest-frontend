@@ -28,19 +28,4 @@ export default {
     deleteDiveLog(id: number) {
         return axios.delete(`${backendUrl}/api/diving-logs/${id}/`);
     },
-
-    // Post a comment to a specific diving log
-postCommentToDiveLog(diveLogId: number, instructorId: number, commentText: string) {
-    const commentData = {
-        diving_log: diveLogId,
-        instructor: instructorId,
-        comment: commentText
-    };
-    return axios.post(`${backendUrl}/api/divelog-comments/`, commentData);
-},
-
-// Get all comments for a specific diving log
-getCommentsByDiveLog(diveLogId: number) {
-    return axios.get(`${backendUrl}/api/divelog-comments/?diving_log=${diveLogId}`);
-}
 };

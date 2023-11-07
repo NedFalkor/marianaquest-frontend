@@ -3,53 +3,64 @@
         <h1>Dashboard Instructeur</h1>
 
         <div v-for="log in divingLogs" :key="log.id" class="diving-log-entry">
-            <!-- Afficher les détails du log ici -->
             <div>{{ log.settings.dive_site }} - {{ log.settings.dive_date }}</div>
-
-            <!-- Ajouter un bouton pour ouvrir un modal ou une section pour ajouter des commentaires -->
             <button @click="selectLog(log)">Ajouter Commentaire</button>
         </div>
 
-        <!-- Si un log est sélectionné, affichez le composant de commentaire ici -->
-        <instructor-comment-component v-if="selectedLog" :diving-log-id="selectedLog.id" @comment-posted="loadDivingLogs" />
+        <instructor-comment-component v-if="selectedLog && instructorId" :diving-log-id="selectedLog.id"
+            :instructor-id="instructorId" @comment-posted="loadDivingLogs" />
     </div>
 </template>
+
 
 <script lang="ts">
 import InstructorCommentComponent from '@/components/forms/divelog/InstructorCommentComponent.vue';
 import DiveLogService from '@/services/DiveLogService';
 import { IDivingLog } from '@/interfaces/DivingLog';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
     components: {
         InstructorCommentComponent
     },
     data() {
         return {
+            instructorId: null as number | null,
             divingLogs: [] as IDivingLog[],
-            selectedLog: null as IDivingLog | null
+            selectedLog: null as IDivingLog | null,
         };
     },
     methods: {
-        loadDivingLogs() {
-            // Assume DiveLogService.getAllDiveLogs() returns Promise with DivingLog[]
+        loadDivingLogs(): void {
             DiveLogService.getAllDiveLogs()
                 .then(response => {
-                    this.divingLogs = response.data.filter(() => {
-                        // Replace this comment with your actual condition
-                        return true; // this is just a placeholder
-                    });
+                    this.divingLogs = response.data;
                 })
                 .catch(error => {
                     console.error('Failed to load diving logs:', error);
                 });
         },
-        selectLog(log: IDivingLog) {
+        selectLog(log: IDivingLog): void {
             this.selectedLog = log;
+        },
+        getCurrentUserId(): string | null {
+            return sessionStorage.getItem('userId');
         }
     },
-    mounted() {
+    mounted(): void {
         this.loadDivingLogs();
+
+        // Safe parsing for potentially null values from sessionStorage
+        const instructorProfileRaw = sessionStorage.getItem('instructorProfile');
+        if (instructorProfileRaw) {
+            const instructorProfile = JSON.parse(instructorProfileRaw);
+            if (instructorProfile && instructorProfile.role === 'FORMATEUR') {
+                this.instructorId = instructorProfile.id;
+            } else {
+                console.error('No instructor profile found or the user is not an instructor.');
+            }
+        }
     }
-};
+});
 </script>
+
