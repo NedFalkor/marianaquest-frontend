@@ -5,6 +5,7 @@ export interface ICustomUser {
     password?: string;
     firstName?: string;
     lastName?: string;
+    role: string,
     dateJoined?: Date;
     lastLogin?: Date;
     isActive?: boolean;

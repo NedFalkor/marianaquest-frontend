@@ -1,4 +1,3 @@
-
 <template>
     <div>
         <!-- Section displaying the comment -->
@@ -14,12 +13,14 @@
         </div>
     </div>
 </template>
-
+  
 <script lang="ts">
-import CommentService from '@/services/InstructorCommentService';
+import { defineComponent } from 'vue';
 import { IComment } from '@/interfaces/InstructorComment';
+import InstructorCommentService from '@/services/InstructorCommentService';
 
-export default {
+export default defineComponent({
+    name: 'CommentComponent',
     props: {
         divingLogId: {
             type: Number,
@@ -40,21 +41,22 @@ export default {
     methods: {
         saveComment() {
             if (this.editContent) {
-                if (this.editContent && this.comment?.id) {
-                    CommentService.updateComment(this.comment.id, this.instructorId, this.editContent)
+                if (this.comment && this.comment.id) {
+                    InstructorCommentService.updateComment(this.comment.id, this.instructorId, this.editContent)
                         .then(response => {
-                            this.comment = response.data; // Update the local comment data with the response
+                            this.comment = response.data;
                             this.editMode = false;
+                            this.editContent = '';
                             this.$emit('comment-updated', this.comment);
                         })
                         .catch(error => {
                             console.error('Failed to update comment:', error);
                         });
                 } else {
-                    CommentService.postComment(this.divingLogId, this.instructorId, this.editContent)
+                    InstructorCommentService.postComment(this.divingLogId, this.instructorId, this.editContent)
                         .then(response => {
-                            this.comment = response.data; // Set the newly created comment as the local comment data
-                            this.editContent = ''; // Clear the textarea
+                            this.comment = response.data;
+                            this.editContent = '';
                             this.$emit('comment-posted', this.comment);
                         })
                         .catch(error => {
@@ -65,9 +67,11 @@ export default {
         },
         deleteComment() {
             if (this.comment && this.comment.id) {
-                CommentService.deleteComment(this.comment.id)
+                InstructorCommentService.deleteComment(this.comment.id)
                     .then(() => {
-                        this.comment = null; // Clear the local comment data
+                        this.comment = null;
+                        this.editMode = false;
+                        this.editContent = '';
                         this.$emit('comment-deleted');
                     })
                     .catch(error => {
@@ -76,7 +80,6 @@ export default {
             }
         }
     },
-    // You can add created or mounted lifecycle hook to fetch the initial comment if necessary
-};
+});
 </script>
-
+  

@@ -48,19 +48,23 @@ export default defineComponent({
         }
     },
     mounted(): void {
-        this.loadDivingLogs();
-
-        // Safe parsing for potentially null values from sessionStorage
         const instructorProfileRaw = sessionStorage.getItem('instructorProfile');
         if (instructorProfileRaw) {
             const instructorProfile = JSON.parse(instructorProfileRaw);
             if (instructorProfile && instructorProfile.role === 'FORMATEUR') {
                 this.instructorId = instructorProfile.id;
+                this.loadDivingLogs();
             } else {
-                console.error('No instructor profile found or the user is not an instructor.');
+                // Redirection ou autre logique si l'utilisateur n'est pas un formateur
+                this.$router.push('/unauthorized'); // Redirige vers une page 'Non autorisé' par exemple
             }
+        } else {
+            // Si aucun profil n'est trouvé, redirigez ou gérez comme nécessaire
+            this.$router.push('/login'); // Redirige vers la page de connexion par exemple
         }
     }
-});
+
+}
+);
 </script>
 

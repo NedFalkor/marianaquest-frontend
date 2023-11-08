@@ -1,8 +1,8 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
-import DiveLog from '@/views/DiveLog.vue';
-import UserIdentity from '@/views/UserIdentity.vue';
+import DiveLog from '@/views/forms/DiveLog.vue';
+import UserIdentity from '@/views/forms/UserIdentity.vue';
 import NemoCounter from '@/views/NemoCounter.vue';
-import UserRegister from '@/views/UserRegister.vue';
+import UserRegister from '@/views/gatekeepers/UserRegister.vue';
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -29,7 +29,13 @@ const routes: Array<RouteRecordRaw> = [
     path: '/userregister',
     name: 'UserRegister',
     component: UserRegister
-  }
+  },
+  {
+    path: '/instructordashboard',
+    name: 'InstructorDashboard',
+    component: () => import('@/views/dashboards/InstructorDashboard.vue'),
+    meta: { requiresRole: ['FORMATEUR'] }
+  },
 ]
 
 const router = createRouter({
