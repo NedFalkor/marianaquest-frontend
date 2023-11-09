@@ -6,92 +6,36 @@
       <div class="bg-indigo-600 w-full py-5 px-6 text-3xl text-white font-thin text-center">
         Inscription
       </div>
-      <div class="container bg-white p-6 rounded-xl">
-        <form @submit.prevent="registerUser">
-          <div class="mb-4">
-            <label for="username" class="block text-sm font-medium mb-2">Nom d'utilisateur</label>
-            <input class="input w-full p-2 border rounded-md" type="text" id="username" v-model="user.username"
-              required />
-          </div>
-          <div class="mb-4">
-            <label for="email" class="block text-sm font-medium mb-2">Adresse e-mail</label>
-            <input class="input w-full p-2 border rounded-md" type="email" id="email" v-model="user.email" required />
-          </div>
-          <div class="mb-4">
-            <label for="password" class="block text-sm font-medium mb-2">Mot de passe</label>
-            <input class="input w-full p-2 border rounded-md" type="password" id="password" v-model="user.password"
-              required />
-          </div>
-          <div class="mb-4">
-            <label for="role" class="block text-sm font-medium mb-2">Rôle</label>
-            <select id="role" v-model="user.role" class="input w-full p-2 border rounded-md" required>
-              <option value="">Sélectionnez un rôle</option>
-              <option value="PLONGEUR">Plongeur</option>
-              <option value="FORMATEUR">Formateur</option>
-            </select>
-          </div>
-          <button type="submit"
-            class="w-full h-16 text-xl font-light bg-indigo-500 hover:bg-indigo-700 text-white rounded-md">
-            Accepter
-          </button>
-        </form>
-        <div class="mt-4 text-center">
-          <a href="/user-auth" class="text-indigo-600 hover:underline">Vous possédez déjà un compte ?</a>
-        </div>
+      <user-register-form-component @registration-successful="handleRegistrationSuccess"></user-register-form-component>
+      <button type="submit"
+        class="w-full h-16 text-xl font-light bg-indigo-500 hover:bg-indigo-700 text-white rounded-md">
+        Créer un compte
+      </button>
+      <div class="mt-4 text-center">
+        <a href="/user-auth" class="text-indigo-600 hover:underline">Vous possédez déjà un compte ?</a>
       </div>
-    </div>
-    <div v-if="successMessage" class="mt-4 text-center text-green-500">
-      {{ successMessage }}
-    </div>
-    <div v-if="errorMessage" class="mt-4 text-center text-red-500">
-      {{ errorMessage }}
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { ErrorResponse } from '@/interfaces/ErrorResponse';
-import CustomUserService from '@/services/CustomUserService';
 import { defineComponent } from 'vue';
 import { AxiosError } from 'axios';
-import { ICustomUser } from '@/interfaces/CustomUser';
+import { ErrorResponse } from '@/interfaces/ErrorResponse';
+import UserRegisterFormComponentVue from '@/components/forms/gatekeepers/UserRegisterFormComponent.vue';
 
 export default defineComponent({
-  data() {
-    return {
-      user: {
-        username: "",
-        email: "",
-        password: "",
-        role: "",
-      },
-      errorMessage: "",
-      successMessage: ""
-    };
+  components: {
+    "user-register-form-component": UserRegisterFormComponentVue
   },
   methods: {
-    async registerUser() {
-      try {
-        const userData: ICustomUser = {
-          email: this.user.email,
-          username: this.user.username,
-          password: this.user.password,
-          role: this.user.role,
-        };
-        await CustomUserService.createUser(userData);
-        this.successMessage = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
-        this.errorMessage = ""; // Clear any previous error message
-      } catch (error) {
-        this.handleRegistrationError(error);
-      }
+    handleRegistrationSuccess(message: string) {
+      this.successMessage = message;
+      this.errorMessage = "";
     },
-
-
     handleRegistrationError(error: unknown) {
-      if (this.isAxiosError(error)) {
+      if (error && this.isAxiosError(error)) {
         const { data } = error.response || {};
-
-        // Assert the type of `data` to `ErrorResponse`
         if (data && typeof data === 'object') {
           const errorData = data as ErrorResponse;
           this.errorMessage = errorData.error || errorData.message || "Une erreur s'est produite lors de l'inscription.";
@@ -105,10 +49,15 @@ export default defineComponent({
       }
       this.successMessage = "";
     },
-
     isAxiosError(error: unknown): error is AxiosError {
       return (error as AxiosError).isAxiosError === true;
     }
-  }
+  },
+  data() {
+    return {
+      errorMessage: "",
+      successMessage: ""
+    };
+  },
 });
 </script>

@@ -42,7 +42,6 @@
 import { Options, Vue } from "vue-class-component";
 import DiveSettingsComponentVue from "@/components/forms/divelog/DiveSettingsComponent.vue";
 import DiveEquipmentComponentVue from "@/components/forms/divelog/DiveEquipmentComponent.vue";
-import DiveConditionsComponent from "@/components/forms/divelog/DiveConditionsComponent.vue";
 import TitleComponent from "@/components/header/TitleComponent.vue";
 import HeaderComponent from "@/components/header/HeaderComponent.vue";
 import DiveLogService from "@/services/DiveLogService";
@@ -54,12 +53,13 @@ import {
   IDivingLog,
   ISignatureData,
 } from "@/interfaces/DivingLog";
+import DiveConditionsComponentVue from "@/components/forms/divelog/DiveConditionsComponent.vue";
 
 @Options({
   components: {
     "dive-settings-component": DiveSettingsComponentVue,
     "dive-equipment-component": DiveEquipmentComponentVue,
-    "dive-conditions-component": DiveConditionsComponent,
+    "dive-conditions-component": DiveConditionsComponentVue,
     TitleComponent,
     HeaderComponent,
   },

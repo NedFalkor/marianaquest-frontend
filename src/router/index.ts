@@ -3,6 +3,7 @@ import DiveLog from '@/views/forms/DiveLog.vue';
 import UserIdentity from '@/views/forms/UserIdentity.vue';
 import NemoCounter from '@/views/NemoCounter.vue';
 import UserRegister from '@/views/gatekeepers/UserRegister.vue';
+import UserAuthVue from '@/views/gatekeepers/UserAuth.vue';
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -29,6 +30,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/userregister',
     name: 'UserRegister',
     component: UserRegister
+  },
+  {
+    path: '/userauth',
+    name: '/UserAuth',
+    component: UserAuthVue
   },
   {
     path: '/instructordashboard',
