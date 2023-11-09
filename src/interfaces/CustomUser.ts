@@ -1,14 +1,12 @@
 export interface ICustomUser {
     id?: number;
-    username: string;
     email: string;
+    username: string;
     password?: string;
-    firstName?: string;
-    lastName?: string;
-    role: string,
+    role: string;
     dateJoined?: Date;
     lastLogin?: Date;
     isActive?: boolean;
     isStaff?: boolean;
     isSuperuser?: boolean;
-}
+  }  

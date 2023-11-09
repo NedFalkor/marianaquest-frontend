@@ -26,7 +26,7 @@ export default {
     },
 
     // Authentifier un utilisateur
-    loginUser(data: { emailOrUsername: string, password: string }) {
+    loginUser(data: { email: string, username: string, password: string }) {
         return axios.post(`${backendUrl}/api/login/`, data);
     }
 };
