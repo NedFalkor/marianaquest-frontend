@@ -28,4 +28,8 @@ export default {
     deleteDiveLog(id: number) {
         return axios.delete(`${backendUrl}/api/diving-logs/${id}/`);
     },
+
+    getDiveLogsByDiver(diverId: number) {
+        return axios.get(`${backendUrl}/api/diving-logs/diver/${diverId}/`);
+    },
 };

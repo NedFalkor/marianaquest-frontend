@@ -20,7 +20,7 @@ import { IComment } from '@/interfaces/InstructorComment';
 import InstructorCommentService from '@/services/InstructorCommentService';
 
 export default defineComponent({
-    name: 'CommentComponent',
+    name: 'InstructorCommentComponent',
     props: {
         divingLogId: {
             type: Number,
@@ -39,47 +39,43 @@ export default defineComponent({
         };
     },
     methods: {
-        saveComment() {
-            if (this.editContent) {
+        async saveComment() {
+            if (!this.editContent.trim()) {
+                console.error('Comment content cannot be empty');
+                return;
+            }
+
+            try {
+                let response;
                 if (this.comment && this.comment.id) {
-                    InstructorCommentService.updateComment(this.comment.id, this.instructorId, this.editContent)
-                        .then(response => {
-                            this.comment = response.data;
-                            this.editMode = false;
-                            this.editContent = '';
-                            this.$emit('comment-updated', this.comment);
-                        })
-                        .catch(error => {
-                            console.error('Failed to update comment:', error);
-                        });
+                    response = await InstructorCommentService.updateComment(this.comment.id, this.instructorId, this.editContent);
                 } else {
-                    InstructorCommentService.postComment(this.divingLogId, this.instructorId, this.editContent)
-                        .then(response => {
-                            this.comment = response.data;
-                            this.editContent = '';
-                            this.$emit('comment-posted', this.comment);
-                        })
-                        .catch(error => {
-                            console.error('Failed to post new comment:', error);
-                        });
+                    response = await InstructorCommentService.postComment(this.divingLogId, this.instructorId, this.editContent);
                 }
+
+                this.comment = response.data;
+                this.editMode = false;
+                this.editContent = '';
+                this.$emit(this.comment && this.comment.id ? 'comment-updated' : 'comment-posted', this.comment);
+            } catch (error) {
+                console.error('Failed to save comment:', error);
             }
         },
-        deleteComment() {
+        async deleteComment() {
             if (this.comment && this.comment.id) {
-                InstructorCommentService.deleteComment(this.comment.id)
-                    .then(() => {
-                        this.comment = null;
-                        this.editMode = false;
-                        this.editContent = '';
-                        this.$emit('comment-deleted');
-                    })
-                    .catch(error => {
-                        console.error('Failed to delete comment:', error);
-                    });
+                try {
+                    await InstructorCommentService.deleteComment(this.comment.id);
+                    this.comment = null;
+                    this.editMode = false;
+                    this.editContent = '';
+                    this.$emit('comment-deleted');
+                } catch (error) {
+                    console.error('Failed to delete comment:', error);
+                }
             }
         }
     },
 });
 </script>
+
   

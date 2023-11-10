@@ -1,27 +1,27 @@
 <template>
-    <div class="instructor-dashboard">
-        <h1>Dashboard Instructeur</h1>
-
-        <div v-for="log in divingLogs" :key="log.id" class="diving-log-entry">
-            <div>{{ log.settings.dive_site }} - {{ log.settings.dive_date }}</div>
-            <button @click="selectLog(log)">Ajouter Commentaire</button>
-        </div>
-
-        <instructor-comment-component v-if="selectedLog && instructorId" :diving-log-id="selectedLog.id"
-            :instructor-id="instructorId" @comment-posted="loadDivingLogs" />
+    <div>
+        <DiveLogList :diveLogs="divingLogs">
+            <template #default="{ log }">
+                <!-- Ensure that the instructorId passed down is not null -->
+                <InstructorCommentComponent v-if="instructorId !== null" :divingLogId="log.id" :instructorId="instructorId"
+                    @comment-posted="handleCommentPosted" @comment-updated="handleCommentUpdated"
+                    @comment-deleted="handleCommentDeleted" />
+            </template>
+        </DiveLogList>
     </div>
 </template>
-
-
+  
 <script lang="ts">
 import InstructorCommentComponent from '@/components/forms/divelog/InstructorCommentComponent.vue';
 import DiveLogService from '@/services/DiveLogService';
 import { IDivingLog } from '@/interfaces/DivingLog';
 import { defineComponent } from 'vue';
+import InstructorCommentService from '@/services/InstructorCommentService';
+import { IComment } from '@/interfaces/InstructorComment';
 
 export default defineComponent({
     components: {
-        InstructorCommentComponent
+        InstructorCommentComponent,
     },
     data() {
         return {
@@ -33,10 +33,10 @@ export default defineComponent({
     methods: {
         loadDivingLogs(): void {
             DiveLogService.getAllDiveLogs()
-                .then(response => {
+                .then((response) => {
                     this.divingLogs = response.data;
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error('Failed to load diving logs:', error);
                 });
         },
@@ -45,7 +45,82 @@ export default defineComponent({
         },
         getCurrentUserId(): string | null {
             return sessionStorage.getItem('userId');
-        }
+        },
+        handleCommentPosted(diveLogId: number, commentText: string): void {
+            if (this.instructorId) {
+                InstructorCommentService.postComment(diveLogId, this.instructorId, commentText)
+                    .then((response) => {
+                        this.updateDiveLogComments(diveLogId, response.data);
+                        this.notifyUser('Comment posted successfully.');
+                    })
+                    .catch((error) => {
+                        this.notifyUser('Error posting comment.');
+                        console.error('Error posting comment:', error);
+                    });
+            }
+        },
+
+        handleCommentUpdated(commentId: number, updatedCommentText: string): void {
+            if (this.instructorId) {
+                InstructorCommentService.updateComment(commentId, this.instructorId, updatedCommentText)
+                    .then((response) => {
+                        this.updateCommentInDiveLog(commentId, response.data);
+                        this.notifyUser('Comment updated successfully.');
+                    })
+                    .catch((error) => {
+                        this.notifyUser('Error updating comment.');
+                        console.error('Error updating comment:', error);
+                    });
+            }
+        },
+
+        handleCommentDeleted(commentId: number): void {
+            InstructorCommentService.deleteComment(commentId)
+                .then(() => {
+                    this.removeCommentFromDiveLog(commentId);
+                    this.notifyUser('Comment deleted successfully.');
+                })
+                .catch((error) => {
+                    this.notifyUser('Error deleting comment.');
+                    console.error('Error deleting comment:', error);
+                });
+        },
+
+        updateDiveLogComments(diveLogId: number, newComment: IComment): void {
+            const diveLog = this.divingLogs.find((log) => log.id === diveLogId);
+            if (diveLog) {
+                if (!diveLog.comments) {
+                    diveLog.comments = []; // Initialize the comments array if it does not exist
+                }
+                diveLog.comments.push(newComment);
+            }
+        },
+
+        updateCommentInDiveLog(commentId: number, updatedComment: IComment): void {
+            this.divingLogs.forEach((log) => {
+                if (log.comments) {
+                    const commentIndex = log.comments.findIndex((c) => c.id === commentId);
+                    if (commentIndex !== -1) {
+                        log.comments[commentIndex] = updatedComment;
+                    }
+                }
+            });
+        },
+
+        removeCommentFromDiveLog(commentId: number): void {
+            this.divingLogs.forEach((log) => {
+                if (log.comments) {
+                    const commentIndex = log.comments.findIndex((c) => c.id === commentId);
+                    if (commentIndex !== -1) {
+                        log.comments.splice(commentIndex, 1);
+                    }
+                }
+            });
+        },
+
+        notifyUser(message: string): void {
+            // Logic to notify user, can be a toast message, modal, etc.
+        },
     },
     mounted(): void {
         const instructorProfileRaw = sessionStorage.getItem('instructorProfile');
@@ -55,16 +130,14 @@ export default defineComponent({
                 this.instructorId = instructorProfile.id;
                 this.loadDivingLogs();
             } else {
-                // Redirection ou autre logique si l'utilisateur n'est pas un formateur
-                this.$router.push('/unauthorized'); // Redirige vers une page 'Non autorisé' par exemple
+                // Redirection or other logic if the user is not an instructor
+                this.$router.push('/unauthorized'); // Redirect to an 'Unauthorized' page, for example
             }
         } else {
-            // Si aucun profil n'est trouvé, redirigez ou gérez comme nécessaire
-            this.$router.push('/login'); // Redirige vers la page de connexion par exemple
+            // If no profile is found, redirect or handle as necessary
+            this.$router.push('/login'); // Redirect to the login page, for example
         }
-    }
-
-}
-);
+    },
+});
 </script>
-
+  
