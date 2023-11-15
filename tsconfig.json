@@ -13,6 +13,7 @@
     "useDefineForClassFields": true,
     "sourceMap": true,
     "baseUrl": ".",
+    "typeRoots": ["./node_modules/@types", "./path_to_your_custom_types_folder"],
     "types": [
       "webpack-env"
     ],

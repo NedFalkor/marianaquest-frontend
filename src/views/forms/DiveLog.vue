@@ -37,7 +37,6 @@
   </div>
 </template>
 
-
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import DiveSettingsComponentVue from "@/components/forms/divelog/DiveSettingsComponent.vue";
@@ -101,7 +100,7 @@ export default class DiveLog extends Vue {
       };
       reader.readAsDataURL(file);
     } else {
-      this.stampPreview = "";
+      this.stampPreview = null;
     }
   }
 
@@ -113,28 +112,19 @@ export default class DiveLog extends Vue {
       yPosition += 10;
     };
 
-    displayData("ID", this.diveData.id);
-    displayData("Utilisateur", this.diveData.user);
+    const displaySectionData = (sectionData: Record<string, any>, sectionName: string) => {
+      doc.text(sectionName, 10, yPosition);
+      yPosition += 10;
+      for (const key in sectionData) {
+        const value = sectionData[key];
+        displayData(key, value);
+      }
+    };
 
-    for (const key in this.diveData.settings) {
-      const value = this.diveData.settings[key as keyof IDiveSettings];
-      displayData(key, value);
-    }
-
-    for (const key in this.diveData.equipment) {
-      const value = this.diveData.equipment[key as keyof IDiveEquipment];
-      displayData(key, value);
-    }
-
-    for (const key in this.diveData.conditions) {
-      const value = this.diveData.conditions[key as keyof IDiveConditions];
-      displayData(key, value);
-    }
-
-    for (const key in this.diveData.signatureData) {
-      const value = this.diveData.signatureData[key as keyof ISignatureData];
-      displayData(key, value);
-    }
+    displaySectionData(this.diveData.settings, "Paramètres de Plongée");
+    displaySectionData(this.diveData.equipment, "Équipement de Plongée");
+    displaySectionData(this.diveData.conditions, "Conditions de Plongée");
+    displaySectionData(this.diveData.signatureData, "Données de Signature");
   }
 
   generatePDFPreview() {

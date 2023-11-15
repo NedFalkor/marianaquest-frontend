@@ -20,19 +20,19 @@
     <div class="mb-4">
       <span class="block text-gray-700 text-sm font-bold mb-2">Météo :</span>
       <div class="flex items-center mb-2">
-        <input type="radio" id="sunnyWeather" v-model="sunnyWeather" class="mr-2">
+        <input type="radio" id="sunnyWeather" value="soleil" v-model="weather" class="mr-2">
         <label for="sunnyWeather" class="flex items-center"><i class="fas fa-sun mr-1"></i>Soleil</label>
       </div>
       <div class="flex items-center mb-2">
-        <input type="radio" id="cloudyWeather" v-model="cloudyWeather" class="mr-2">
+        <input type="radio" id="cloudyWeather" value="nuage" v-model="weather" class="mr-2">
         <label for="cloudyWeather" class="flex items-center"><i class="fas fa-cloud mr-1"></i>Nuage</label>
       </div>
       <div class="flex items-center mb-2">
-        <input type="radio" id="rainyWeather" v-model="rainyWeather" class="mr-2">
+        <input type="radio" id="rainyWeather" value="pluie" v-model="weather" class="mr-2">
         <label for="rainyWeather" class="flex items-center"><i class="fas fa-cloud-showers-heavy mr-1"></i>Pluie</label>
       </div>
       <div class="flex items-center mb-2">
-        <input type="radio" id="showerWeather" v-model="showerWeather" class="mr-2">
+        <input type="radio" id="showerWeather" value="averse" v-model="weather" class="mr-2">
         <label for="showerWeather" class="flex items-center"><i class="fas fa-cloud-rain mr-1"></i>Averse</label>
       </div>
     </div>
@@ -71,6 +71,14 @@
       </div>
     </div>
 
+    <!-- Wind -->
+    <div class="mb-4">
+      <span class="block text-gray-700 text-sm font-bold mb-2">Vent :</span>
+      <div class="flex items-center mb-2">
+        <input type="radio" id="weakWind" value="faible" v-model="wind" class="mr-2">
+        <label for="weakWind">Faible</label>
+      </div>
+    </div>
 
     <!-- Observations -->
     <div class="mb-4">
@@ -82,7 +90,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'ConditionsComponent',
@@ -90,28 +98,17 @@ export default defineComponent({
     return {
       airTemperature: null as number | null,
       waterTemperature: null as number | null,
-      sunnyWeather: false,
-      cloudyWeather: false,
-      rainyWeather: false,
-      showerWeather: false,
-      visibility: null as 'good' | 'average' | 'poor' | null,
-      current: null as 'none' | 'medium' | 'strong' | null,
+      weather: '',
+      visibility: '',
+      current: '',
+      wind: '',
       observations: '',
     };
-  },
-  computed: {
-    weather(): string {
-      if (this.sunnyWeather) return 'soleil';
-      if (this.cloudyWeather) return 'nuage';
-      if (this.rainyWeather) return 'pluie';
-      if (this.showerWeather) return 'averse';
-      return '';
-    }
   },
   watch: {
     airTemperature: 'emitData',
     waterTemperature: 'emitData',
-    weather: 'emitData',
+    weather: 'emitData', // Modifié
     visibility: 'emitData',
     current: 'emitData',
     observations: 'emitData'
@@ -121,14 +118,16 @@ export default defineComponent({
       this.$emit('update:conditions', {
         air_temperature: this.airTemperature,
         water_temperature: this.waterTemperature,
-        weather: this.weather,
+        weather: this.weather, // Modifié
         visibility: this.visibility,
         current: this.current,
+        wind: this.wind,
         observations: this.observations
       });
     }
   }
 });
 </script>
+
 
 <style></style>

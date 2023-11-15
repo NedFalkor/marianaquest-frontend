@@ -118,7 +118,7 @@ export default defineComponent({
             });
         },
 
-        notifyUser(message: string): void {
+        notifyUser(_message: string): void {
             // Logic to notify user, can be a toast message, modal, etc.
         },
     },
@@ -140,4 +140,3 @@ export default defineComponent({
     },
 });
 </script>
-  

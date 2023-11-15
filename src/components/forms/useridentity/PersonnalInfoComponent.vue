@@ -20,8 +20,8 @@
         class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
 
       <h3 class="text-xl mb-4 text-center">Adresse</h3>
-      <input v-model="address" type="text" id="address"
-        class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+      <input v-model="address"
+        class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
 
       <h3 class="text-xl mb-4 text-center">Code Postal</h3>
       <input v-model="postalCode" type="text" id="postalCode"
@@ -54,12 +54,13 @@
 
 
 <script lang="ts">
-import { IPersonalInfo } from '@/interfaces/DiverProfile';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'PersonalInfo',
-  data(): Partial<IPersonalInfo> {
+  props: {
+  },
+  data() {
     return {
       lastName: '',
       firstName: '',
@@ -67,11 +68,11 @@ export default defineComponent({
       postalCode: '',
       city: '',
       country: '',
-      landline: null,
-      mobile: null,
+      landline: '',
+      mobile: '',
       email: '',
-      imageURL: null,
-      selectedImage: null
+      imageURL: '',
+      selectedImage: null as File | null
     };
   },
   methods: {
@@ -82,9 +83,17 @@ export default defineComponent({
         this.imageURL = URL.createObjectURL(this.selectedImage);
       }
     },
-    emitData() {
-      this.$emit('update:personalInfo', {
-        ...this.$data
+    submitData() {
+      this.$emit('updatePersonalInfo', {
+        lastName: this.lastName,
+        firstName: this.firstName,
+        address: this.address,
+        postalCode: this.postalCode,
+        city: this.city,
+        country: this.country,
+        landline: this.landline,
+        mobile: this.mobile,
+        email: this.email
       });
     }
   }
