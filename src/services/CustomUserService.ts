@@ -25,9 +25,18 @@ export default {
         return axios.delete(`${backendUrl}/api/users/${id}/`);
     },
 
+    deleteAccount() {
+        return axios.delete(`${backendUrl}/api/auth/delete_account/`);
+    },
+
     // Authentifier un utilisateur
     loginUser(data: { email: string, username: string, password: string }) {
         return axios.post(`${backendUrl}/api/login/`, data);
-    }
+    },
+
+    logoutUser() {
+        return axios.post(`${backendUrl}/api/auth/logout/`);
+    },
+    
 };
 
