@@ -42,6 +42,10 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/dashboards/InstructorDashboard.vue'),
     meta: { requiresRole: ['FORMATEUR'] }
   },
+  { path: '/diverdashboard',
+    name: 'DiveDashboard',
+    component: () => import('@/views/dashboards/DiveDashboard.vue'),
+    meta: { requiresRole: ['PLONGEUR'] }}
 ]
 
 const router = createRouter({

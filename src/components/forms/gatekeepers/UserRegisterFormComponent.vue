@@ -76,17 +76,14 @@ export default defineComponent({
         });
         const data = await response.json();
         if (response.ok) {
-          successMessage.value = "Inscription réussie !";
-          errorMessage.value = "";
-          instance?.emit('registration-successful', data.message);
+          // Modifier pour envoyer les données de l'utilisateur
+          instance?.emit('registration-successful', data.user);
         } else {
-          errorMessage.value = data.error;
-          successMessage.value = "";
+          errorMessage.value = data.error || "Erreur lors de l'inscription.";
         }
       } catch (error) {
         console.error("Erreur lors de la connexion de l'utilisateur:", error);
         errorMessage.value = "Une erreur s'est produite lors de la connexion.";
-        successMessage.value = "";
       }
     };
 

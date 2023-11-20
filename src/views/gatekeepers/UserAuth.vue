@@ -23,14 +23,17 @@ import { defineComponent } from 'vue';
 import CustomUserService from '@/services/CustomUserService';
 import { AxiosError } from 'axios';
 import UserSubscriptionFormComponent from '@/components/forms/gatekeepers/UserSubscriptionFormComponent.vue';
+import router from '@/router';
 
 export default defineComponent({
   components: { UserSubscriptionFormComponent },
   data() {
     return {
-      email: "",
-      username: "",
-      password: "",
+      loginData: {
+        email: '',
+        username: '',
+        password: ''
+      },
       errorMessage: "",
       successMessage: ""
     };
@@ -38,15 +41,14 @@ export default defineComponent({
   methods: {
     async loginUser() {
       try {
-        const loginData = {
-          email: this.email,
-          username: this.username,
-          password: this.password
-        };
-
-        await CustomUserService.loginUser(loginData);
+        const response = await CustomUserService.loginUser(this.loginData);
         this.successMessage = "Connexion réussie ! Vous êtes maintenant connecté. ;)";
         this.errorMessage = "";
+
+        const userData = response.data;
+        const dashboardRoute = userData.role === 'FORMATEUR' ? '/instructordashboard' : '/diverdashboard';
+        router.push(dashboardRoute);
+
       } catch (error) {
         this.handleLoginError(error);
       }

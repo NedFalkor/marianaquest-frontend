@@ -23,17 +23,24 @@ import { defineComponent } from 'vue';
 import { AxiosError } from 'axios';
 import { ErrorResponse } from '@/interfaces/ErrorResponse';
 import UserRegisterFormComponentVue from '@/components/forms/gatekeepers/UserRegisterFormComponent.vue';
+import router from '@/router';
 
 export default defineComponent({
   components: {
     "user-register-form-component": UserRegisterFormComponentVue
   },
   methods: {
-    handleRegistrationSuccess(message: string) {
-      this.successMessage = message;
-      this.errorMessage = "";
+    handleRegistrationSuccess(userData: any) {
+      // Réinitialiser les messages
+      this.errorMessage = "Inscription échouée :( !";
+      this.successMessage = "Inscription réussie :) !";
+
+      // Rediriger vers le tableau de bord approprié en fonction du rôle de l'utilisateur
+      const dashboardRoute = userData.role === 'FORMATEUR' ? '/instructordashboard' : '/diverdashboard';
+      router.push(dashboardRoute);
     },
     handleRegistrationError(error: unknown) {
+      // Gestion des erreurs
       if (error && this.isAxiosError(error)) {
         const { data } = error.response || {};
         if (data && typeof data === 'object') {
