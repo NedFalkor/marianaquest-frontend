@@ -3,14 +3,11 @@
   <div class="min-w-screen min-h-screen bg-gray-100 flex items-center justify-center px-5 py-5">
     <div class="w-full mx-auto rounded-xl bg-gray-100 shadow-xl text-gray-800 relative overflow-hidden"
       style="max-width: 500px">
-      <div class="bg-indigo-600 w-full py-5 px-6 text-3xl text-white font-thin text-center">
-        Authentification
-      </div>
-      <user-subscription-form-component></user-subscription-form-component>
-      <button type="submit"
-        class="w-full h-16 text-xl font-light bg-indigo-500 hover:bg-indigo-700 text-white rounded-md">
-        Se connecter
-      </button>
+      <div class="bg-indigo-600 w-full py-5 px-6 text-3xl text-white font-thin text-center">Authentification</div>
+      <user-subscription-form-component @update:loginData="updateLoginData"></user-subscription-form-component>
+      <button @click="loginUser"
+        class="w-full h-16 text-xl font-light bg-indigo-500 hover:bg-indigo-700 text-white rounded-md">Se
+        connecter</button>
       <div class="mt-4 text-center">
         <a href="/user-register" class="text-indigo-600 hover:underline">Vous n'avez pas de compte ?</a>
       </div>
@@ -39,21 +36,23 @@ export default defineComponent({
     };
   },
   methods: {
+    updateLoginData(data: any) {
+      this.loginData = data;
+    },
     async loginUser() {
       try {
         const response = await CustomUserService.loginUser(this.loginData);
-        this.successMessage = "Connexion réussie ! Vous êtes maintenant connecté. ;)";
+        this.successMessage = "Connexion réussie ! Vous êtes maintenant connecté.";
         this.errorMessage = "";
 
+        // Rediriger l'utilisateur vers le tableau de bord approprié
         const userData = response.data;
         const dashboardRoute = userData.role === 'FORMATEUR' ? '/instructordashboard' : '/diverdashboard';
         router.push(dashboardRoute);
-
       } catch (error) {
         this.handleLoginError(error);
       }
     },
-
     handleLoginError(error: unknown) {
       if (error instanceof AxiosError) {
         this.errorMessage = error.response?.data.error || error.response?.data.message || "Une erreur s'est produite lors de la connexion.";

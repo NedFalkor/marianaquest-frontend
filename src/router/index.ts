@@ -5,7 +5,6 @@ import NemoCounter from '@/views/NemoCounter.vue';
 import UserRegister from '@/views/gatekeepers/UserRegister.vue';
 import UserAuthVue from '@/views/gatekeepers/UserAuth.vue';
 
-
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -42,15 +41,17 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/dashboards/InstructorDashboard.vue'),
     meta: { requiresRole: ['FORMATEUR'] }
   },
-  { path: '/diverdashboard',
+  {
+    path: '/diverdashboard',
     name: 'DiveDashboard',
-    component: () => import('@/views/dashboards/DiveDashboard.vue'),
-    meta: { requiresRole: ['PLONGEUR'] }}
-]
+    component: () => import('@/views/dashboards/DiverDashboard.vue'),
+    meta: { requiresRole: ['PLONGEUR'] }
+  }
+];
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes
-})
+});
 
 export default router;
