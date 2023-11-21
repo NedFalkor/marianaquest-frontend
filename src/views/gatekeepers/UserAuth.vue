@@ -41,14 +41,11 @@ export default defineComponent({
     },
     async loginUser() {
       try {
-        const response = await CustomUserService.loginUser(this.loginData);
         this.successMessage = "Connexion réussie ! Vous êtes maintenant connecté.";
         this.errorMessage = "";
 
-        // Rediriger l'utilisateur vers le tableau de bord approprié
-        const userData = response.data;
-        const dashboardRoute = userData.role === 'FORMATEUR' ? '/instructordashboard' : '/diverdashboard';
-        router.push(dashboardRoute);
+        // Rediriger l'utilisateur vers le formulaire de création d'un Dive Log
+        router.push('/divelog');
       } catch (error) {
         this.handleLoginError(error);
       }
@@ -66,3 +63,5 @@ export default defineComponent({
   }
 });
 </script>
+
+

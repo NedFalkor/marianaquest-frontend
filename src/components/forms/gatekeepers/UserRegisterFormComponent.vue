@@ -1,6 +1,6 @@
 <template>
   <div class="container bg-white p-6 rounded-xl">
-    <form @submit.prevent="registerUser">
+    <form @submit.prevent="emitRegistrationData">
       <div class="mb-4">
         <label for="username" class="block text-sm font-medium mb-2">Nom d'utilisateur</label>
         <input class="input w-full p-2 border rounded-md" type="text" id="username" v-model="user.username" required />
@@ -28,54 +28,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, getCurrentInstance } from "vue";
+import { defineComponent, reactive } from "vue";
 
 export default defineComponent({
   name: "UserRegisterFormComponent",
-  setup() {
+  setup(props, { emit }) {
     const user = reactive({
       username: "",
       email: "",
       password: "",
       role: ""
     });
-    const successMessage = ref("");
-    const errorMessage = ref("");
 
-    const instance = getCurrentInstance();
-
-    const registerUser = async () => {
-      if (!user.email && !user.username) {
-        errorMessage.value = "Veuillez fournir un e-mail ou un nom d'utilisateur.";
-        return;
-      }
-
-      try {
-        const response = await fetch("/register/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(user),
-        });
-        const data = await response.json();
-        if (response.ok) {
-          instance?.emit('registration-successful', data.user);
-        } else {
-          errorMessage.value = data.error || "Erreur lors de l'inscription.";
-        }
-      } catch (error) {
-        console.error("Erreur lors de la connexion de l'utilisateur:", error);
-        errorMessage.value = "Une erreur s'est produite lors de la connexion.";
-      }
-    };
+    const emitRegistrationData = () => {
+      emit('registration-data', user);
+    }
 
     return {
       user,
-      successMessage,
-      errorMessage,
-      registerUser,
+      emitRegistrationData
     };
-  },
+  }
 });
 </script>
+
