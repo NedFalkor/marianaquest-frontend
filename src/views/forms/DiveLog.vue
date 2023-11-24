@@ -2,8 +2,8 @@
   <div class="min-h-screen bg-blue-50">
     <header-component class="mb-4"></header-component>
     <TitleComponent class="text-center text-blue-900 mb-8" :pageTitle="'Formulaire de plongée'" />
-    <div class="min-w-screen min-h-screen bg-blue-50 flex items-center justify-center px-5 py-5">
-      <div class="w-2/3 mx-auto rounded-xl bg-f5e7bc shadow-xl text-gray-800 relative overflow-hidden p-6">
+    <div class="flex justify-center px-5 py-5">
+      <div class="w-3/4 mx-auto rounded-xl bg-f5e7bc shadow-xl text-gray-800 relative overflow-hidden p-6">
         <dive-settings-component class="marine-style p-4 mt-4 rounded-md shadow-md"
           @update:settings="updateData('settings', $event)" />
         <dive-equipment-component class="marine-style p-4 mt-4 rounded-md shadow-md"
@@ -154,9 +154,8 @@ export default class DiveLog extends Vue {
 
 <style>
 .form-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 75%;
+  margin: 0 auto;
 }
 
 .form-item {

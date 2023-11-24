@@ -1,42 +1,31 @@
 <template>
   <nav class="bg-gray-800">
-    <div class="max-w-7xl mx-auto px-4 py-2">
-      <div class="flex items-center justify-between h-13">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
         <div class="flex items-center">
-          <img class="h-20 w-auto rounded-full" src="@/assets/MQ_Logo.png" alt="Mariana Quest"/>
+          <img class="h-16 w-auto" src="@/assets/MQ_Logo.png" alt="Mariana Quest" />
         </div>
-
         <div class="flex items-center space-x-4">
-          <router-link
-            v-for="item in navigation"
-            :key="item.name"
-            :to="item.href"
-            :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']">
+          <router-link v-for="item in navigation" :key="item.name" :to="item.href"
+            class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
             {{ item.name }}
           </router-link>
-          <div class="mb-3">
-            <div class="relative mb-4 flex w-full flex-wrap items-stretch">
-              <input
-                type="search"
-                class="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
-                placeholder="Search"
-                aria-label="Search"
-                aria-describedby="button-addon3" />
-              <button
-                class="relative z-[2] rounded-r border-2 border-primary px-6 py-2 text-xs font-medium uppercase text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0"
-                type="button"
-                id="button-addon3"
-                data-te-ripple-init>
-                Search
-              </button>
-            </div>
-          </div>
-
           <div class="relative">
-            <button @click="showDropdown = !showDropdown" class="rounded-full bg-gray-800 text-sm focus:outline-none">
+            <input type="search"
+              class="bg-gray-700 text-white rounded-full focus:ring-2 focus:ring-primary focus:border-primary block pl-10 pr-3 py-2 leading-5 w-full"
+              placeholder="Search">
+            <button class="absolute inset-y-0 right-0 flex items-center pr-2" type="button">
+              <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10H16M8 6H16M8 14H16" />
+              </svg>
+            </button>
+          </div>
+          <div class="relative">
+            <button @click="showDropdown = !showDropdown"
+              class="bg-gray-800 text-white rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
               <img class="h-8 w-8 rounded-full" :src="userPhoto" alt="User Photo" />
             </button>
-            <div v-if="showDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg">
+            <div v-if="showDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
               <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Votre profil</a>
               <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Paramètres</a>
               <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Se déconnecter</a>
@@ -48,6 +37,7 @@
   </nav>
 </template>
 
+
 <script lang="ts">
 import { ref, PropType } from 'vue';
 
@@ -55,6 +45,7 @@ export default {
   name: 'HeaderNavbar',
   props: {
     userPhoto: String as PropType<string>,
+    username: String as PropType<string>, // Ajout du nom d'utilisateur
   },
   setup() {
     const navigation = ref([
@@ -67,7 +58,7 @@ export default {
 
     return {
       navigation,
-      showDropdown,
+      showDropdown
     };
   },
 };
