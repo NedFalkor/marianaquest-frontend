@@ -84,7 +84,21 @@ export default defineComponent({
       }
     },
     submitData() {
-      this.$emit('updatePersonalInfo', {
+      const formData = new FormData();
+      if (this.selectedImage) {
+        formData.append('identity_photo', this.selectedImage);
+      }
+      formData.append('lastName', this.lastName);
+      formData.append('firstName', this.firstName);
+      formData.append('address', this.address);
+      formData.append('postalCode', this.postalCode);
+      formData.append('city', this.city);
+      formData.append('country', this.country);
+      formData.append('landline', this.landline);
+      formData.append('mobile', this.mobile);
+      formData.append('email', this.email);
+
+      console.log("PersonalInfo Data:", {
         lastName: this.lastName,
         firstName: this.firstName,
         address: this.address,
@@ -93,8 +107,12 @@ export default defineComponent({
         country: this.country,
         landline: this.landline,
         mobile: this.mobile,
-        email: this.email
+        email: this.email,
+        imageURL: this.imageURL,
+        selectedImage: this.selectedImage
       });
+
+      this.$emit('updatePersonalInfo', formData);
     }
   }
 });

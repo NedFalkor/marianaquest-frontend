@@ -4,8 +4,7 @@ import axios from 'axios';
 export const backendUrl = 'http://127.0.0.1:8000';
 
 export default {
-    // Créer un nouveau profil de plongeur
-    createDiverProfile(data: IDiverProfile) {
+    createDiverProfile(data: any) {
         return axios.post(`${backendUrl}/api/diver-profiles/`, data);
     },
 
@@ -19,8 +18,7 @@ export default {
         return axios.get(`${backendUrl}/api/diver-profiles/${id}/`);
     },
 
-    // Mettre à jour un profil de plongeur spécifique
-    updateDiverProfile(id: number, data: IDiverProfile) {
+    updateDiverProfile(id: number, data: any) {
         return axios.put(`${backendUrl}/api/diver-profiles/${id}/`, data);
     },
 

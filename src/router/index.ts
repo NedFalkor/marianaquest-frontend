@@ -8,7 +8,7 @@ import UserAuthVue from '@/views/gatekeepers/UserAuth.vue';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/useridentity'
+    redirect: '/userregister'
   },
   {
     path: '/divelog',

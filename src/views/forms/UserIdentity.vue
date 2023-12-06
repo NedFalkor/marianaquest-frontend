@@ -3,7 +3,8 @@
     <header-component></header-component>
     <TitleComponent :pageTitle="`Formulaire d'utilisateur`" />
     <div class="form-container">
-      <personnal-info class="form-item" @update:personalInfo="updatePersonalInfo"></personnal-info>
+      <personnal-info class="form-item" :personalInfo="personalInfoData"
+        @update:personalInfo="updatePersonalInfo"></personnal-info>
       <emergency-info class="form-item" @update:emergencyInfo="updateEmergencyInfo"></emergency-info>
       <button @click="accept">Accepter</button>
     </div>
@@ -18,7 +19,7 @@ import EmergencyInfoComponent from '@/components/forms/useridentity/EmergencyInf
 import TitleComponent from '@/components/header/TitleComponent.vue';
 import HeaderComponent from '@/components/header/HeaderComponent.vue';
 import DiverProfileService from '@/services/DiverProfileService';
-import { IPersonalInfo, IEmergencyContact, IDiverProfile } from '@/interfaces/DiverProfile';
+import { IPersonalInfo, IEmergencyContact } from '@/interfaces/DiverProfile';
 
 export default defineComponent({
   components: {
@@ -41,22 +42,18 @@ export default defineComponent({
     };
 
     const accept = async () => {
-      const combinedData: IDiverProfile = {
-        userId: 0,
-        logbookNumber: '',
-        cumulativeDivesInLogbook: 0,
-        totalDives: 0,
+      console.log("Combined Data to be sent:", {
         personalInfo: personalInfoData.value,
-        emergencyContact: emergencyInfoData.value
-      };
-
+        emergencyInfo: emergencyInfoData.value,
+      });
       if (diverProfileId.value) {
-        await DiverProfileService.updateDiverProfile(diverProfileId.value, combinedData);
+        await DiverProfileService.updateDiverProfile(diverProfileId.value, personalInfoData.value);
       } else {
-        const response = await DiverProfileService.createDiverProfile(combinedData);
+        const response = await DiverProfileService.createDiverProfile(personalInfoData.value);
         diverProfileId.value = response.data.id;
       }
     };
+
 
     return {
       personalInfoData,

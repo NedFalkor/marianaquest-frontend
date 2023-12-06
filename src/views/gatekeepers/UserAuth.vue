@@ -17,10 +17,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import CustomUserService from '@/services/CustomUserService';
 import { AxiosError } from 'axios';
 import UserSubscriptionFormComponent from '@/components/forms/gatekeepers/UserSubscriptionFormComponent.vue';
 import router from '@/router';
+import CustomUserService from '@/services/CustomUserService';
 
 export default defineComponent({
   components: { UserSubscriptionFormComponent },
@@ -41,20 +41,21 @@ export default defineComponent({
     },
     async loginUser() {
       try {
-        this.successMessage = "Connexion réussie ! Vous êtes maintenant connecté.";
-        this.errorMessage = "";
+        // Utilisation de CustomUserService pour authentifier un utilisateur
+        const response = await CustomUserService.loginUser(this.loginData);
 
-        // Rediriger l'utilisateur vers le formulaire de création d'un Dive Log
-        router.push('/divelog');
+        if (response.status === 200 || response.status === 201) {
+          this.successMessage = "Connexion réussie ! Vous êtes maintenant connecté.";
+          this.errorMessage = "";
+          router.push('/divelog');  // Rediriger vers la page appropriée après connexion
+        }
       } catch (error) {
         this.handleLoginError(error);
       }
     },
     handleLoginError(error: unknown) {
-      if (error instanceof AxiosError) {
-        this.errorMessage = error.response?.data.error || error.response?.data.message || "Une erreur s'est produite lors de la connexion.";
-      } else if (error instanceof Error) {
-        this.errorMessage = error.message;
+      if (error instanceof AxiosError && error.response) {
+        this.errorMessage = error.response.data.error || error.response.data.message || "Une erreur s'est produite lors de la connexion.";
       } else {
         this.errorMessage = "Une erreur inattendue s'est produite.";
       }
@@ -63,5 +64,6 @@ export default defineComponent({
   }
 });
 </script>
+
 
 

@@ -8,7 +8,7 @@
         class="w-full h-16 text-xl font-light bg-indigo-500 hover:bg-indigo-700 text-white rounded-md">Créer un
         compte</button>
       <div class="mt-4 text-center">
-        <a href="/user-auth" class="text-indigo-600 hover:underline">Vous possédez déjà un compte ?</a>
+        <router-link to="/userauth" class="text-indigo-600 hover:underline">Vous possédez déjà un compte ?</router-link>
       </div>
     </div>
   </div>
@@ -37,7 +37,7 @@ export default defineComponent({
         const response = await CustomUserService.createUser(dataToSend);
         if (response.status === 201) {
           console.log('Inscription réussie, redirection vers la page d\'authentification...');
-          router.push('/userauth'); // Redirection vers la page d'authentification
+          router.push('/userauth');
         }
       } catch (error) {
         if (error instanceof AxiosError) {
