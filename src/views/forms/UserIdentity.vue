@@ -19,7 +19,7 @@ import EmergencyInfoComponent from '@/components/forms/useridentity/EmergencyInf
 import TitleComponent from '@/components/header/TitleComponent.vue';
 import HeaderComponent from '@/components/header/HeaderComponent.vue';
 import DiverProfileService from '@/services/DiverProfileService';
-import { IPersonalInfo, IEmergencyContact } from '@/interfaces/DiverProfile';
+import { IPersonalInfo, IEmergencyContact, IDiverProfile } from '@/interfaces/DiverProfile';
 
 export default defineComponent({
   components: {
@@ -42,17 +42,26 @@ export default defineComponent({
     };
 
     const accept = async () => {
-      console.log("Combined Data to be sent:", {
+      const diverProfileData: IDiverProfile = {
         personalInfo: personalInfoData.value,
-        emergencyInfo: emergencyInfoData.value,
-      });
-      if (diverProfileId.value) {
-        await DiverProfileService.updateDiverProfile(diverProfileId.value, personalInfoData.value);
-      } else {
-        const response = await DiverProfileService.createDiverProfile(personalInfoData.value);
-        diverProfileId.value = response.data.id;
+        emergencyContact: emergencyInfoData.value,
+      };
+
+      console.log("Combined Data to be sent:", diverProfileData);
+
+      try {
+        let response;
+        if (diverProfileId.value) {
+          response = await DiverProfileService.updateDiverProfile(diverProfileId.value, diverProfileData);
+        } else {
+          response = await DiverProfileService.createDiverProfile(diverProfileData);
+          diverProfileId.value = response.data.id;
+        }
+      } catch (error) {
+        console.error("Erreur lors de l'envoi des données:", error);
       }
     };
+
 
     return {
       personalInfoData,

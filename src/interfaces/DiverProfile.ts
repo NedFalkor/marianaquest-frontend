@@ -9,7 +9,7 @@ export interface IPersonalInfo {
     mobile?: string | null;
     email: string;
     imageURL?: string | null;
-    identity_photo?: File | null;
+    identity_photo?: File;
 }
 
 export interface IEmergencyContact {
@@ -23,10 +23,10 @@ export interface IEmergencyContact {
 
 export interface IDiverProfile {
     id?: number;
-    userId: number;
-    logbookNumber: string;
-    cumulativeDivesInLogbook: number;
-    totalDives: number;
+    // userId: number;
+    // logbookNumber: string;
+    // cumulativeDivesInLogbook: number;
+    // totalDives: number;
     identityPhoto?: string | null;
     personalInfo: IPersonalInfo;
     emergencyContact: IEmergencyContact;

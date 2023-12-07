@@ -2,52 +2,104 @@
   <div class="bg-gray-100 w-1/2 p-6">
     <h3 class="text-2xl mb-5 text-center">Identité du plongeur</h3>
 
+    <!-- Champ pour la photo de profil -->
     <div class="mb-4">
-      <input type="file" accept="image/*" @change="onFileSelected"
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mx-auto block" />
-      <div v-if="imageURL" class="image-container mt-4">
-        <img :src="imageURL" alt="Chosen Image" />
+      <h3 class="text-xl mb-2 text-center">Photo de Profil</h3>
+      <div class="relative">
+        <i class="fas fa-image absolute left-2 top-3 text-gray-600 text-lg"></i>
+        <input type="file" accept="image/*" @change="onFileSelected"
+          class="pl-10 p-2 mb-4 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
       </div>
     </div>
 
+    <!-- Champ pour le Nom de Famille -->
     <div class="mb-4">
-      <h3 class="text-xl mb-4 text-center">Nom de Famille</h3>
-      <input v-model="last_name" type="text" id="lastName"
-        class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-
-      <h3 class="text-xl mb-4 text-center">Prénom</h3>
-      <input v-model="first_name" type="text" id="firstName"
-        class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-
-      <h3 class="text-xl mb-4 text-center">Adresse</h3>
-      <input v-model="address"
-        class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-
-      <h3 class="text-xl mb-4 text-center">Code Postal</h3>
-      <input v-model="postal_code" type="text" id="postalCode"
-        class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-
-      <h3 class="text-xl mb-4 text-center">Ville</h3>
-      <input v-model="city" type="text" id="city"
-        class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-
-      <h3 class="text-xl mb-4 text-center">Pays</h3>
-      <input v-model="country" type="text" id="country"
-        class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+      <h3 class="text-xl mb-2 text-center">Nom de Famille</h3>
+      <div class="relative">
+        <i class="fas fa-user absolute left-2 top-3 text-gray-600 text-lg"></i>
+        <input v-model="last_name" type="text" id="lastName"
+          class="pl-10 p-2 mb-4 shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+      </div>
     </div>
 
+    <!-- Champ pour le Prénom -->
     <div class="mb-4">
-      <h3 class="text-xl mb-4 text-center">Téléphone Fixe</h3>
-      <input v-model="landline" type="tel" id="landlinePhone"
-        class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+      <h3 class="text-xl mb-2 text-center">Prénom</h3>
+      <div class="relative">
+        <i class="fas fa-user absolute left-2 top-3 text-gray-600 text-lg"></i>
+        <input v-model="first_name" type="text" id="firstName"
+          class="pl-10 p-2 mb-4 shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+      </div>
+    </div>
 
-      <h3 class="text-xl mb-4 text-center">Téléphone Portable</h3>
-      <input v-model="mobile" type="tel" id="mobilePhone"
-        class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+    <!-- Champ pour l'Adresse -->
+    <div class="mb-4">
+      <h3 class="text-xl mb-2 text-center">Adresse</h3>
+      <div class="relative">
+        <i class="fas fa-map-marker-alt absolute left-2 top-3 text-gray-600 text-lg"></i>
+        <input v-model="address" type="text"
+          class="pl-10 p-2 mb-4 shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+      </div>
+    </div>
 
-      <h3 class="text-xl mb-4 text-center">Adresse Email</h3>
-      <input v-model="email" type="email" id="emailAddress"
-        class="w-full p-2 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+    <!-- Champ pour le Code Postal -->
+    <div class="mb-4">
+      <h3 class="text-xl mb-2 text-center">Code Postal</h3>
+      <div class="relative">
+        <i class="fas fa-mail-bulk absolute left-2 top-3 text-gray-600 text-lg"></i>
+        <input v-model="postal_code" type="text" id="postalCode"
+          class="pl-10 p-2 mb-4 shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+      </div>
+    </div>
+
+    <!-- Champ pour la Ville -->
+    <div class="mb-4">
+      <h3 class="text-xl mb-2 text-center">Ville</h3>
+      <div class="relative">
+        <i class="fas fa-city absolute left-2 top-3 text-gray-600 text-lg"></i>
+        <input v-model="city" type="text" id="city"
+          class="pl-10 p-2 mb-4 shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+      </div>
+    </div>
+
+    <!-- Champ pour le Pays -->
+    <div class="mb-4">
+      <h3 class="text-xl mb-2 text-center">Pays</h3>
+      <div class="relative">
+        <i class="fas fa-flag absolute left-2 top-3 text-gray-600 text-lg"></i>
+        <input v-model="country" type="text" id="country"
+          class="pl-10 p-2 mb-4 shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+      </div>
+    </div>
+
+    <!-- Champ pour le Téléphone Fixe -->
+    <div class="mb-4">
+      <h3 class="text-xl mb-2 text-center">Téléphone Fixe</h3>
+      <div class="relative">
+        <i class="fas fa-phone absolute left-2 top-3 text-gray-600 text-lg"></i>
+        <input v-model="landline" type="tel" id="landlinePhone"
+          class="pl-10 p-2 mb-4 shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+      </div>
+    </div>
+
+    <!-- Champ pour le Téléphone Portable -->
+    <div class="mb-4">
+      <h3 class="text-xl mb-2 text-center">Téléphone Portable</h3>
+      <div class="relative">
+        <i class="fas fa-mobile-alt absolute left-2 top-3 text-gray-600 text-lg"></i>
+        <input v-model="mobile" type="tel" id="mobilePhone"
+          class="pl-10 p-2 mb-4 shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+      </div>
+    </div>
+
+    <!-- Champ pour l'Adresse Email -->
+    <div class="mb-4">
+      <h3 class="text-xl mb-2 text-center">Adresse Email</h3>
+      <div class="relative">
+        <i class="fas fa-envelope absolute left-2 top-3 text-gray-600 text-lg"></i>
+        <input v-model="email" type="email" id="emailAddress"
+          class="pl-10 p-2 shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+      </div>
     </div>
   </div>
 </template>
@@ -59,6 +111,10 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'PersonalInfo',
   props: {
+    personalInfo: {
+      type: Object,
+      required: true
+    }
   },
   data() {
     return {
@@ -97,20 +153,6 @@ export default defineComponent({
       formData.append('landline', this.landline);
       formData.append('mobile', this.mobile);
       formData.append('email', this.email);
-
-      console.log("PersonalInfo Data:", {
-        last_name: this.last_name,
-        first_name: this.first_name,
-        address: this.address,
-        postal_code: this.postal_code,
-        city: this.city,
-        country: this.country,
-        landline: this.landline,
-        mobile: this.mobile,
-        email: this.email,
-        imageURL: this.imageURL,
-        identity_photo: this.identity_photo
-      });
 
       this.$emit('updatePersonalInfo', formData);
     }

@@ -1,29 +1,30 @@
-import { IDiverProfile } from '@/interfaces/DiverProfile';  // Assurez-vous d'avoir une interface appropriée pour DiverProfile
+import { IDiverProfile } from '@/interfaces/DiverProfile';
 import axios from 'axios';
 
 export const backendUrl = 'http://127.0.0.1:8000';
 
 export default {
-    createDiverProfile(data: any) {
-        return axios.post(`${backendUrl}/api/diver-profiles/`, data);
+    createDiverProfile(data: IDiverProfile) {
+        return axios.post(`${backendUrl}/api/diver-profiles/`, data)
+          .catch(error => {
+            console.error('Erreur lors de la création du profil de plongeur:', error.response);
+            throw error;
+          });
     },
 
-    // Récupérer tous les profils de plongeurs
-    getAllDiverProfiles() {
+    getAllDiverProfiles(): Promise<IDiverProfile[]> {
         return axios.get(`${backendUrl}/api/diver-profiles/`);
     },
 
-    // Récupérer un profil de plongeur spécifique par ID
-    getDiverProfileById(id: number) {
+    getDiverProfileById(id: number): Promise<IDiverProfile> {
         return axios.get(`${backendUrl}/api/diver-profiles/${id}/`);
     },
 
-    updateDiverProfile(id: number, data: any) {
+    updateDiverProfile(id: number, data: IDiverProfile) {
         return axios.put(`${backendUrl}/api/diver-profiles/${id}/`, data);
     },
 
-    // Supprimer un profil de plongeur
-    deleteDiverProfile(id: number) {
+    deleteDiverProfile(id: number): Promise<void> {
         return axios.delete(`${backendUrl}/api/diver-profiles/${id}/`);
     }
 };
