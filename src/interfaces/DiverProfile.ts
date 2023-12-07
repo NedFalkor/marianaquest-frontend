@@ -1,24 +1,24 @@
 export interface IPersonalInfo {
-    lastName: string;
-    firstName: string;
+    last_name: string;
+    first_name: string;
     address: string;
-    postalCode: string;
+    postal_code: string;
     city: string;
     country: string;
     landline?: string | null;
     mobile?: string | null;
     email: string;
     imageURL?: string | null;
-    selectedImage?: File | null;
+    identity_photo?: File | null;
 }
 
 export interface IEmergencyContact {
-    emergencyContactLastName: string;
-    emergencyContactFirstName: string;
-    emergencyContactAddress: string;
-    emergencyContactLandline?: string | null;
-    emergencyContactMobile?: string | null;
-    emergencyContactEmail: string;
+    last_name: string;
+    first_name: string;
+    address: string;
+    landline?: string | null;
+    mobile?: string | null;
+    email: string;
 }
 
 export interface IDiverProfile {

@@ -12,11 +12,11 @@
 
     <div class="mb-4">
       <h3 class="text-xl mb-4 text-center">Nom de Famille</h3>
-      <input v-model="lastName" type="text" id="lastName"
+      <input v-model="last_name" type="text" id="lastName"
         class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
 
       <h3 class="text-xl mb-4 text-center">Prénom</h3>
-      <input v-model="firstName" type="text" id="firstName"
+      <input v-model="first_name" type="text" id="firstName"
         class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
 
       <h3 class="text-xl mb-4 text-center">Adresse</h3>
@@ -24,7 +24,7 @@
         class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
 
       <h3 class="text-xl mb-4 text-center">Code Postal</h3>
-      <input v-model="postalCode" type="text" id="postalCode"
+      <input v-model="postal_code" type="text" id="postalCode"
         class="w-full p-2 mb-4 shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
 
       <h3 class="text-xl mb-4 text-center">Ville</h3>
@@ -62,36 +62,36 @@ export default defineComponent({
   },
   data() {
     return {
-      lastName: '',
-      firstName: '',
+      last_name: '',
+      first_name: '',
       address: '',
-      postalCode: '',
+      postal_code: '',
       city: '',
       country: '',
       landline: '',
       mobile: '',
       email: '',
       imageURL: '',
-      selectedImage: null as File | null
+      identity_photo: null as File | null
     };
   },
   methods: {
     onFileSelected(event: Event) {
       const input = event.target as HTMLInputElement;
       if (input.files && input.files.length > 0) {
-        this.selectedImage = input.files[0];
-        this.imageURL = URL.createObjectURL(this.selectedImage);
+        this.identity_photo = input.files[0];
+        this.imageURL = URL.createObjectURL(this.identity_photo);
       }
     },
     submitData() {
       const formData = new FormData();
-      if (this.selectedImage) {
-        formData.append('identity_photo', this.selectedImage);
+      if (this.identity_photo) {
+        formData.append('identity_photo', this.identity_photo);
       }
-      formData.append('lastName', this.lastName);
-      formData.append('firstName', this.firstName);
+      formData.append('last_name', this.last_name);
+      formData.append('first_name', this.first_name);
       formData.append('address', this.address);
-      formData.append('postalCode', this.postalCode);
+      formData.append('postal_code', this.postal_code);
       formData.append('city', this.city);
       formData.append('country', this.country);
       formData.append('landline', this.landline);
@@ -99,17 +99,17 @@ export default defineComponent({
       formData.append('email', this.email);
 
       console.log("PersonalInfo Data:", {
-        lastName: this.lastName,
-        firstName: this.firstName,
+        last_name: this.last_name,
+        first_name: this.first_name,
         address: this.address,
-        postalCode: this.postalCode,
+        postal_code: this.postal_code,
         city: this.city,
         country: this.country,
         landline: this.landline,
         mobile: this.mobile,
         email: this.email,
         imageURL: this.imageURL,
-        selectedImage: this.selectedImage
+        identity_photo: this.identity_photo
       });
 
       this.$emit('updatePersonalInfo', formData);

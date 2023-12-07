@@ -31,7 +31,7 @@ export default {
 
     // Authentifier un utilisateur
     loginUser(data: { email: string, username: string, password: string }) {
-        return axios.post(`${backendUrl}/api/login/`, data);
+        return axios.post(`${backendUrl}/api/auth/login/`, data);
     },
 
     logoutUser() {
@@ -39,4 +39,3 @@ export default {
     },
     
 };
-
