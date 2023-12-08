@@ -19,7 +19,7 @@ import EmergencyInfoComponent from '@/components/forms/useridentity/EmergencyInf
 import TitleComponent from '@/components/header/TitleComponent.vue';
 import HeaderComponent from '@/components/header/HeaderComponent.vue';
 import DiverProfileService from '@/services/DiverProfileService';
-import { IPersonalInfo, IEmergencyContact, IDiverProfile } from '@/interfaces/DiverProfile';
+import { IPersonalInfo, IEmergencyContact } from '@/interfaces/DiverProfile';
 
 export default defineComponent({
   components: {
@@ -42,19 +42,25 @@ export default defineComponent({
     };
 
     const accept = async () => {
-      const diverProfileData: IDiverProfile = {
-        personalInfo: personalInfoData.value,
-        emergencyContact: emergencyInfoData.value,
+      const formData = new FormData();
+      if (personalInfoData.value.identity_photo) {
+        formData.append('identity_photo', personalInfoData.value.identity_photo);
+      }
+
+      const combinedData = {
+        ...personalInfoData.value,
+        emergency_contact: emergencyInfoData.value
       };
+      delete combinedData.identity_photo;
+      formData.append('diverProfile', JSON.stringify(combinedData));
 
-      console.log("Combined Data to be sent:", diverProfileData);
-
+      console.log("Données combinées à envoyer:", combinedData);
       try {
         let response;
         if (diverProfileId.value) {
-          response = await DiverProfileService.updateDiverProfile(diverProfileId.value, diverProfileData);
+          response = await DiverProfileService.updateDiverProfile(diverProfileId.value, formData);
         } else {
-          response = await DiverProfileService.createDiverProfile(diverProfileData);
+          response = await DiverProfileService.createDiverProfile(formData);
           diverProfileId.value = response.data.id;
         }
       } catch (error) {

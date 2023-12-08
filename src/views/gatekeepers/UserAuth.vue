@@ -47,7 +47,7 @@ export default defineComponent({
         if (response.status === 200 || response.status === 201) {
           this.successMessage = "Connexion réussie ! Vous êtes maintenant connecté.";
           this.errorMessage = "";
-          router.push('/divelog');  // Rediriger vers la page appropriée après connexion
+          router.push('/useridentity');  // Rediriger vers la page appropriée après connexion
         }
       } catch (error) {
         this.handleLoginError(error);

@@ -137,6 +137,7 @@ export default defineComponent({
       if (input.files && input.files.length > 0) {
         this.identity_photo = input.files[0];
         this.imageURL = URL.createObjectURL(this.identity_photo);
+        console.log("Image sélectionnée:", this.identity_photo);
       }
     },
     submitData() {
@@ -154,6 +155,7 @@ export default defineComponent({
       formData.append('mobile', this.mobile);
       formData.append('email', this.email);
 
+      console.log("Données de PersonalInfo soumises:", formData);
       this.$emit('updatePersonalInfo', formData);
     }
   }
