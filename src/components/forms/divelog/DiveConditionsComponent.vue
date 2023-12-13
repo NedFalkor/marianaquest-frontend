@@ -54,19 +54,22 @@
       </div>
     </div>
 
-    <!-- Current -->
     <div class="mb-4">
       <span class="block text-gray-700 text-sm font-bold mb-2">Courant :</span>
       <div class="flex items-center mb-2">
-        <input type="radio" id="noCurrent" v-model="current" value="none" class="mr-2">
+        <input type="radio" id="noCurrent" value="none" v-model="current" class="mr-2">
         <label for="noCurrent" class="flex items-center"><i class="fas fa-water mr-1"></i>Nul</label>
       </div>
       <div class="flex items-center mb-2">
-        <input type="radio" id="mediumCurrent" v-model="current" value="medium" class="mr-2">
+        <input type="radio" id="weakCurrent" value="weak" v-model="current" class="mr-2">
+        <label for="weakCurrent" class="flex items-center"><i class="fas fa-tint mr-1"></i>Faible</label>
+      </div>
+      <div class="flex items-center mb-2">
+        <input type="radio" id="mediumCurrent" value="medium" v-model="current" class="mr-2">
         <label for="mediumCurrent" class="flex items-center"><i class="fas fa-tint mr-1"></i>Moyen</label>
       </div>
       <div class="flex items-center mb-2">
-        <input type="radio" id="strongCurrent" v-model="current" value="strong" class="mr-2">
+        <input type="radio" id="strongCurrent" value="strong" v-model="current" class="mr-2">
         <label for="strongCurrent" class="flex items-center"><i class="fas fa-wind mr-1"></i>Fort</label>
       </div>
     </div>
@@ -75,8 +78,20 @@
     <div class="mb-4">
       <span class="block text-gray-700 text-sm font-bold mb-2">Vent :</span>
       <div class="flex items-center mb-2">
-        <input type="radio" id="weakWind" value="faible" v-model="wind" class="mr-2">
-        <label for="weakWind">Faible</label>
+        <input type="radio" id="noCurrent" v-model="current" value="none" class="mr-2">
+        <label for="noCurrent" class="flex items-center"><i class="fas fa-water mr-1"></i>Nul</label>
+      </div>
+      <div class="flex items-center mb-2">
+        <input type="radio" id="mediumCurrent" v-model="current" value="weak" class="mr-2">
+        <label for="mediumCurrent" class="flex items-center"><i class="fas fa-tint mr-1"></i>Faible</label>
+      </div>
+      <div class="flex items-center mb-2">
+        <input type="radio" id="mediumCurrent" v-model="current" value="medium" class="mr-2">
+        <label for="mediumCurrent" class="flex items-center"><i class="fas fa-tint mr-1"></i>Moyen</label>
+      </div>
+      <div class="flex items-center mb-2">
+        <input type="radio" id="strongCurrent" v-model="current" value="strong" class="mr-2">
+        <label for="strongCurrent" class="flex items-center"><i class="fas fa-wind mr-1"></i>Fort</label>
       </div>
     </div>
 

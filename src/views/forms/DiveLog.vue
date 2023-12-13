@@ -75,19 +75,62 @@ export default class DiveLog extends Vue {
 
   stampPreview: string | null = null;
   signatureCanvas!: HTMLCanvasElement;
+  isDrawing = false;
+  lastX = 0;
+  lastY = 0;
+
+  mounted() {
+    this.$nextTick(() => {
+      this.initCanvas();
+    });
+  }
+
+  initCanvas() {
+    const canvasElement = this.$refs.signatureCanvas;
+    if (canvasElement instanceof HTMLCanvasElement) {
+      this.signatureCanvas = canvasElement;
+      this.signatureCanvas.width = this.signatureCanvas.offsetWidth;
+      this.signatureCanvas.height = this.signatureCanvas.offsetHeight;
+      const ctx = this.signatureCanvas.getContext('2d');
+      if (!ctx) return;
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 2;
+      this.signatureCanvas.addEventListener('mousedown', this.startDrawing);
+      this.signatureCanvas.addEventListener('mousemove', this.draw);
+      this.signatureCanvas.addEventListener('mouseup', () => this.isDrawing = false);
+      this.signatureCanvas.addEventListener('mouseout', () => this.isDrawing = false);
+    } else {
+      console.error('Canvas non trouvé ou élément incorrect');
+    }
+  }
+
+
+  startDrawing(e: MouseEvent) {
+    this.isDrawing = true;
+    [this.lastX, this.lastY] = [e.offsetX, e.offsetY];
+  }
+
+  draw(e: MouseEvent) {
+    if (!this.isDrawing) return;
+    const ctx = this.signatureCanvas.getContext('2d');
+    if (!ctx) return;
+    ctx.beginPath();
+    ctx.moveTo(this.lastX, this.lastY);
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+    [this.lastX, this.lastY] = [e.offsetX, e.offsetY];
+  }
+
 
   updateData(section: keyof IDivingLog, updatedData: unknown) {
     this.diveData[section] = updatedData as any;
   }
 
   clearSignature() {
-    const context = this.signatureCanvas.getContext("2d");
-    context?.clearRect(
-      0,
-      0,
-      this.signatureCanvas.width,
-      this.signatureCanvas.height
-    );
+    if (this.signatureCanvas && this.signatureCanvas.getContext) {
+      const context = this.signatureCanvas.getContext('2d');
+      context?.clearRect(0, 0, this.signatureCanvas.width, this.signatureCanvas.height);
+    }
   }
 
   showStampPreview() {
@@ -107,8 +150,8 @@ export default class DiveLog extends Vue {
   generatePDFContent(doc: jsPDF) {
     let yPosition = 10;
 
-    const displayData = (label: string, value: any) => {
-      doc.text(`${label}: ${value || "N/A"}`, 10, yPosition);
+    const displayData = (label: string, value: string | number | null) => {
+      doc.text(`${label}: ${value ?? "N/A"}`, 10, yPosition);
       yPosition += 10;
     };
 

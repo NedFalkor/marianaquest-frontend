@@ -16,7 +16,7 @@
     <div class="mb-4">
       <h3 class="text-xl mb-2 text-center">Nom de Famille</h3>
       <div class="relative">
-        <i class="fas fa-user absolute left-2 top-3 text-gray-600 text-lg"></i>
+        <i class="fas fa-users absolute left-2 top-3 text-gray-600 text-lg"></i>
         <input v-model="last_name" type="text" id="lastName"
           class="pl-10 p-2 mb-4 shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
       </div>
