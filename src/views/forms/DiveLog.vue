@@ -185,6 +185,7 @@ export default class DiveLog extends Vue {
   }
 
   async submitForm() {
+    console.log("Envoi des données au backend:", this.diveData);
     const response = await DiveLogService.createDiveLog(this.diveData);
     if (response && response.data) {
       console.log("Dive log created:", response.data);
