@@ -1,6 +1,7 @@
 // Importez l'instance Axios configurée
-import instance from './axiosConfig';
+import instance from '../axiosConfig';
 import { ICustomUser } from '@/interfaces/CustomUser';
+import Cookies from 'js-cookie';
 
 export default {
     // Créer un nouvel utilisateur
@@ -24,8 +25,25 @@ export default {
     },
 
     // supprimer un compte utilisateur
-    deleteAccount() {
-        return instance.delete('auth/delete_account/');
+    async deleteAccount() {
+        try {
+            const response = await instance.delete('auth/delete_account/');
+            if (response.status === 204) {
+                localStorage.removeItem('jwtToken');
+                this.clearAuthCookies();
+            } else {
+                console.log('Something else happened:', response.status);
+            }
+            return response;
+        } catch (error) {
+            console.error('Error deleting account:', error);
+            throw error;
+        }
+    },
+
+    clearAuthCookies() {
+        // Effacement du cookie en utilisant js-cookie
+        Cookies.remove('jwtToken');
     },
 
     // Authentifier un utilisateur

@@ -88,8 +88,8 @@ export default defineComponent({
       let gases = [];
       if (this.typeNitrox) gases.push('nitrox');
       if (this.typeTrimix) gases.push('trimix');
-      if (this.typeRebreather) gases.push('rebreather');
-      return gases.join(' ');
+      if (this.typeRebreather) gases.push(`rebreather (${this.typeRebreather})`);
+      return gases.join(', ');
     }
   },
   watch: {

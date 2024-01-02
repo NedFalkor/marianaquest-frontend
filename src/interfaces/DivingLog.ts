@@ -27,7 +27,8 @@ export interface IDiveConditions {
     water_temperature: number | null;
     weather: 'sun' | 'cloud' | 'rain' | 'downpour' | '';
     visibility: 'good' | 'average' | 'poor' | '';
-    current: 'none' | 'medium' | 'strong' | '';
+    current: 'none' | 'weak' | 'medium' | 'strong' | '';
+    wind : 'none' | 'weak' | 'medium' | 'strong' | '';
     observations: string;
 }
 

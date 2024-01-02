@@ -20,7 +20,7 @@ import { defineComponent } from 'vue';
 import { AxiosError } from 'axios';
 import UserSubscriptionFormComponent from '@/components/forms/gatekeepers/UserSubscriptionFormComponent.vue';
 import router from '@/router';
-import CustomUserService from '@/services/CustomUserService';
+import CustomUserService from '@/services/gatekeepers/CustomUserService';
 
 export default defineComponent({
   components: { UserSubscriptionFormComponent },
@@ -67,3 +67,4 @@ export default defineComponent({
 
 
 
+@/services/gatekeepers/CustomUserService

@@ -10,7 +10,7 @@
 </template>
   
 <script lang="ts">
-import DiveLogService from '@/services/DiveLogService';
+import DiveLogService from '@/services/forms/DiveLogService';
 import NotificationService from '@/services/NotificationService';
 import { IDivingLog } from '@/interfaces/DivingLog';
 import { defineComponent } from 'vue';

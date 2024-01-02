@@ -141,22 +141,18 @@ export default defineComponent({
       }
     },
     submitData() {
-      const formData = new FormData();
-      if (this.identity_photo) {
-        formData.append('identity_photo', this.identity_photo);
-      }
-      formData.append('last_name', this.last_name);
-      formData.append('first_name', this.first_name);
-      formData.append('address', this.address);
-      formData.append('postal_code', this.postal_code);
-      formData.append('city', this.city);
-      formData.append('country', this.country);
-      formData.append('landline', this.landline);
-      formData.append('mobile', this.mobile);
-      formData.append('email', this.email);
-
-      console.log("Données de PersonalInfo soumises:", formData);
-      this.$emit('updatePersonalInfo', formData);
+      this.$emit('updatePersonalInfo', {
+        last_name: this.last_name,
+        first_name: this.first_name,
+        address: this.address,
+        postal_code: this.postal_code,
+        city: this.city,
+        country: this.country,
+        landline: this.landline,
+        mobile: this.mobile,
+        email: this.email,
+        identity_photo: this.identity_photo // Assurez-vous de gérer l'envoi de fichiers correctement côté serveur.
+      });
     }
   }
 });

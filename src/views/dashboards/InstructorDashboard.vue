@@ -13,7 +13,7 @@
   
 <script lang="ts">
 import InstructorCommentComponent from '@/components/forms/divelog/InstructorCommentComponent.vue';
-import DiveLogService from '@/services/DiveLogService';
+import DiveLogService from '@/services/forms/DiveLogService';
 import { IDivingLog } from '@/interfaces/DivingLog';
 import { defineComponent } from 'vue';
 import InstructorCommentService from '@/services/InstructorCommentService';

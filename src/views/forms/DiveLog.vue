@@ -43,7 +43,7 @@ import DiveSettingsComponentVue from "@/components/forms/divelog/DiveSettingsCom
 import DiveEquipmentComponentVue from "@/components/forms/divelog/DiveEquipmentComponent.vue";
 import TitleComponent from "@/components/header/TitleComponent.vue";
 import HeaderComponent from "@/components/header/HeaderComponent.vue";
-import DiveLogService from "@/services/DiveLogService";
+import DiveLogService from "@/services/forms/DiveLogService";
 import { jsPDF } from "jspdf";
 import {
   IDiveConditions,
@@ -168,6 +168,16 @@ export default class DiveLog extends Vue {
     displaySectionData(this.diveData.equipment, "Équipement de Plongée");
     displaySectionData(this.diveData.conditions, "Conditions de Plongée");
     displaySectionData(this.diveData.signatureData, "Données de Signature");
+
+    if (this.diveData.signatureData.signature) {
+      doc.addImage(this.diveData.signatureData.signature, 'JPEG', 10, yPosition, 50, 30);
+      yPosition += 40;
+    }
+
+    if (this.stampPreview) {
+      doc.addImage(this.stampPreview, 'JPEG', 10, yPosition, 50, 30);
+      yPosition += 40;
+    }
   }
 
   generatePDFPreview() {

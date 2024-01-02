@@ -18,7 +18,7 @@ import PersonnalInfoComponent from '@/components/forms/useridentity/PersonnalInf
 import EmergencyInfoComponent from '@/components/forms/useridentity/EmergencyInfoComponent.vue';
 import TitleComponent from '@/components/header/TitleComponent.vue';
 import HeaderComponent from '@/components/header/HeaderComponent.vue';
-import DiverProfileService from '@/services/DiverProfileService';
+import DiverProfileService from '@/services/forms/DiverProfileService';
 import { IPersonalInfo, IEmergencyContact } from '@/interfaces/DiverProfile';
 import axios from 'axios';
 

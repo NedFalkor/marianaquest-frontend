@@ -70,7 +70,6 @@
 </template>
 
 
-
 <script lang="ts">
 import { defineComponent } from 'vue';
 
@@ -87,8 +86,8 @@ export default defineComponent({
     };
   },
   methods: {
-    emitEmergencyData() {
-      console.log("EmergencyInfo Data:", {
+    submitData() {
+      this.$emit('updateEmergencyInfo', {
         last_name: this.last_name,
         first_name: this.first_name,
         address: this.address,
@@ -96,10 +95,8 @@ export default defineComponent({
         mobile: this.mobile,
         email: this.email
       });
-      this.$emit('update:emergencyInfo', {
-        ...this.$data
-      });
     }
   }
 });
 </script>
+
