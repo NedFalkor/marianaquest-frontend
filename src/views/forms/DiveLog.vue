@@ -39,12 +39,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import DiveSettingsComponentVue from "@/components/forms/divelog/DiveSettingsComponent.vue";
-import DiveEquipmentComponentVue from "@/components/forms/divelog/DiveEquipmentComponent.vue";
-import TitleComponent from "@/components/header/TitleComponent.vue";
-import HeaderComponent from "@/components/header/HeaderComponent.vue";
-import DiveLogService from "@/services/forms/DiveLogService";
-import { jsPDF } from "jspdf";
+
 import {
   IDiveConditions,
   IDiveEquipment,
@@ -53,6 +48,12 @@ import {
   ISignatureData,
 } from "@/interfaces/DivingLog";
 import DiveConditionsComponentVue from "@/components/forms/divelog/DiveConditionsComponent.vue";
+import DiveSettingsComponentVue from "@/components/forms/divelog/DiveSettingsComponent.vue";
+import DiveEquipmentComponentVue from "@/components/forms/divelog/DiveEquipmentComponent.vue";
+import DiveLogService from "@/services/forms/DiveLogService";
+import TitleComponent from "@/components/header/TitleComponent.vue";
+import HeaderComponent from "@/components/header/HeaderComponent.vue";
+import { jsPDF } from "jspdf";
 
 @Options({
   components: {
