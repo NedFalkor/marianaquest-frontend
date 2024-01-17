@@ -9,7 +9,7 @@ export interface IPersonalInfo {
     mobile?: string | null;
     email: string;
     imageURL?: string | null;
-    identity_photo?: File;
+    identity_photo?: File | null;
 }
 
 export interface IEmergencyContact {
