@@ -1,6 +1,6 @@
 <template>
     <div class="bg-gray-100 w-full p-6">
-        <h2 class="font-bold text-xl mb-4">Diver Dashboard</h2>
+        <h2 class="font-bold text-xl mb-4">Diver Dashboard {{ userData.username }}</h2>
 
         <!-- List of Dive Logs -->
         <div v-for="log in divingLogs" :key="log.id" class="mb-4 p-4 bg-white shadow rounded">
@@ -30,6 +30,8 @@ import { defineComponent } from 'vue';
 import DiveLogService from '@/services/forms/DiveLogService';
 import NotificationService from '@/services/NotificationService';
 import { IDivingLog } from '@/interfaces/DivingLog';
+import { ICustomUser } from '@/interfaces/CustomUser';
+import CustomUserService from '@/services/gatekeepers/CustomUserService';
 
 export default defineComponent({
     data() {
@@ -40,9 +42,22 @@ export default defineComponent({
             editedLog: null as IDivingLog | null,
             isEditing: false,
             viewingDetails: false,
+            userData: {} as ICustomUser
         };
     },
     methods: {
+
+        async fetchUserData() {
+            const userId = sessionStorage.getItem('userId');
+            if (userId) {
+                try {
+                    const response = await CustomUserService.getUserById(Number(userId));
+                    this.userData = response.data;
+                } catch (error) {
+                    console.error('Erreur lors de la récupération des détails de l’utilisateur:', error);
+                }
+            }
+        },
         loadDivingLogs() {
             if (this.diverId !== null) {
                 DiveLogService.getDiveLogsByDiver(this.diverId)
@@ -87,6 +102,7 @@ export default defineComponent({
 
     },
     mounted() {
+        this.fetchUserData();
         const diverProfileRaw = sessionStorage.getItem('diverProfile');
         if (diverProfileRaw) {
             const diverProfile = JSON.parse(diverProfileRaw);
