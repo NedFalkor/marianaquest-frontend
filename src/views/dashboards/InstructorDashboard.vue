@@ -1,13 +1,18 @@
 <template>
-    <div>
-        <DiveLogList :diveLogs="divingLogs">
-            <template #default="{ log }">
-                <!-- Ensure that the instructorId passed down is not null -->
-                <InstructorCommentComponent v-if="instructorId !== null" :divingLogId="log.id" :instructorId="instructorId"
-                    @comment-posted="handleCommentPosted" @comment-updated="handleCommentUpdated"
-                    @comment-deleted="handleCommentDeleted" />
-            </template>
-        </DiveLogList>
+    <div class="bg-gray-100 w-full p-6">
+        <h2 class="font-bold text-xl mb-4">Dashboard de {{ userData.username }}</h2>
+
+        <!-- List of Dive Logs -->
+        <div v-for="log in divingLogs" :key="log.id" class="mb-4 p-4 bg-white shadow rounded">
+            <div class="mb-2">
+                <span class="font-semibold">Dive Log ID:</span> {{ log.id }}
+            </div>
+
+            <!-- Instructor Comment Component -->
+            <InstructorCommentComponent v-if="instructorId !== null" :divingLogId="log.id" :instructorId="instructorId"
+                @comment-posted="handleCommentPosted" @comment-updated="handleCommentUpdated"
+                @comment-deleted="handleCommentDeleted" />
+        </div>
     </div>
 </template>
   
@@ -18,6 +23,8 @@ import { IDivingLog } from '@/interfaces/DivingLog';
 import { defineComponent } from 'vue';
 import InstructorCommentService from '@/services/InstructorCommentService';
 import { IComment } from '@/interfaces/InstructorComment';
+import { ICustomUser } from '@/interfaces/CustomUser';
+import CustomUserService from '@/services/gatekeepers/CustomUserService';
 
 export default defineComponent({
     components: {
@@ -28,9 +35,22 @@ export default defineComponent({
             instructorId: null as number | null,
             divingLogs: [] as IDivingLog[],
             selectedLog: null as IDivingLog | null,
+            userData: {} as ICustomUser, // Utilisez userData ici
         };
     },
+
     methods: {
+        async fetchUserData() {
+            const userId = sessionStorage.getItem('userId');
+            if (userId) {
+                try {
+                    const response = await CustomUserService.getUserById(Number(userId));
+                    this.userData = response.data;
+                } catch (error) {
+                    console.error('Erreur lors de la récupération des détails de l’utilisateur:', error);
+                }
+            }
+        },
         loadDivingLogs(): void {
             DiveLogService.getAllDiveLogs()
                 .then((response) => {
@@ -122,7 +142,8 @@ export default defineComponent({
             // Logic to notify user, can be a toast message, modal, etc.
         },
     },
-    mounted(): void {
+    mounted() {
+        this.fetchUserData();
         const instructorProfileRaw = sessionStorage.getItem('instructorProfile');
         if (instructorProfileRaw) {
             const instructorProfile = JSON.parse(instructorProfileRaw);
@@ -130,13 +151,11 @@ export default defineComponent({
                 this.instructorId = instructorProfile.id;
                 this.loadDivingLogs();
             } else {
-                // Redirection or other logic if the user is not an instructor
-                this.$router.push('/unauthorized'); // Redirect to an 'Unauthorized' page, for example
+                this.$router.push('/unauthorized');
             }
         } else {
-            // If no profile is found, redirect or handle as necessary
-            this.$router.push('/login'); // Redirect to the login page, for example
+            this.$router.push('/login');
         }
-    },
+    }
 });
 </script>

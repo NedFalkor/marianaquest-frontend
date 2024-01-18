@@ -1,15 +1,20 @@
 <template>
-    <div>
+    <div class="bg-gray-100 p-6 rounded-lg">
         <!-- Section displaying the comment -->
-        <div v-if="comment">
-            <p>{{ comment.content }}</p>
-            <button @click="editMode = true">Modifier</button>
-            <button @click="deleteComment">Supprimer</button>
+        <div v-if="comment" class="mb-4">
+            <p class="text-gray-700">{{ comment.content }}</p>
+            <button @click="editMode = true"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">Modifier</button>
+            <button @click="deleteComment"
+                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Supprimer</button>
         </div>
+
         <!-- Form for adding or editing a comment -->
         <div v-if="!comment || editMode">
-            <textarea v-model="editContent"></textarea>
-            <button @click="saveComment">Enregistrer</button>
+            <textarea v-model="editContent"
+                class="shadow border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+            <button @click="saveComment"
+                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Enregistrer</button>
         </div>
     </div>
 </template>

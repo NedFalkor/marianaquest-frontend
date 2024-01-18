@@ -34,5 +34,10 @@ export default {
             userId: userId,
             message: message,
         });
+    },
+    notifyUser(message: string) {
+        // Implement your notification logic here
+        // For example, this could be a simple alert, a toast notification, or a modal dialog
+        alert(message);
     }
 };
