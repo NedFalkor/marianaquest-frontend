@@ -139,8 +139,9 @@ export default defineComponent({
         },
 
         notifyUser(_message: string): void {
-            // Logic to notify user, can be a toast message, modal, etc.
+            alert(_message);
         },
+
     },
     mounted() {
         this.fetchUserData();
