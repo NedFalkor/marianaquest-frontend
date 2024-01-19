@@ -1,4 +1,8 @@
 <template>
+    <div class="dashboard-container">
+        <PersonalInfo :personal-information="userData.personalInformation" @update-user-data="updateUserData" />
+        <EmergencyInfo :emergency-info="userData.emergencyContact" @update-emergency-info="updateUserData" />
+    </div>
     <div class="bg-gray-100 w-full p-6">
         <h2 class="font-bold text-xl mb-4">Diver Dashboard {{ userData.username }}</h2>
 
@@ -6,7 +10,6 @@
         <div v-for="log in divingLogs" :key="log.id" class="mb-4 p-4 bg-white shadow rounded">
             <div class="mb-2">
                 <span class="font-semibold">Dive Log ID:</span> {{ log.id }}
-                <span v-if="log.status" class="ml-2">(<span :class="statusClass(log.status)">{{ log.status }}</span>)</span>
             </div>
             <!-- Edit and Delete buttons -->
             <button @click="editLog(log)" class="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -16,7 +19,7 @@
                 class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                 Delete
             </button>
-            <!-- View Details and Comments -->
+            <!-- View Details -->
             <button @click="viewDetails(log)"
                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                 View Details
@@ -24,6 +27,7 @@
         </div>
     </div>
 </template>
+
 
 <script lang="ts">
 import { defineComponent } from 'vue';
@@ -46,7 +50,6 @@ export default defineComponent({
         };
     },
     methods: {
-
         async fetchUserData() {
             const userId = sessionStorage.getItem('userId');
             if (userId) {
@@ -58,6 +61,23 @@ export default defineComponent({
                 }
             }
         },
+
+        async updateUserData(updatedData: ICustomUser) {
+            if (this.userData && this.userData.id !== undefined) {
+                try {
+                    const response = await CustomUserService.updateUser(this.userData.id, updatedData);
+                    this.userData = response.data;
+                    NotificationService.notifyUser('User data updated successfully');
+                } catch (error) {
+                    console.error('Error updating user data:', error);
+                    NotificationService.notifyUser('Error updating user data');
+                }
+            } else {
+                console.error('User ID is undefined');
+                // Gérer le cas où l'ID utilisateur n'est pas défini
+            }
+        },
+
         loadDivingLogs() {
             if (this.diverId !== null) {
                 DiveLogService.getDiveLogsByDiver(this.diverId)
