@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import PersonnalInfoComponent from '@/components/forms/useridentity/PersonnalInfoComponent.vue';
+import PersonnalInfoComponent from '@/components/forms/useridentity/PersonalInfoComponent.vue';
 import EmergencyInfoComponent from '@/components/forms/useridentity/EmergencyInfoComponent.vue';
 import TitleComponent from '@/components/header/TitleComponent.vue';
 import HeaderComponent from '@/components/header/HeaderComponent.vue';

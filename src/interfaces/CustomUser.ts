@@ -1,3 +1,5 @@
+import { IDiverProfile, IEmergencyContact, IPersonalInfo } from "./DiverProfile";
+
 export interface ICustomUser {
     id?: number;
     email: string;
@@ -9,4 +11,7 @@ export interface ICustomUser {
     isActive?: boolean;
     isStaff?: boolean;
     isSuperuser?: boolean;
+    diverProfile?: IDiverProfile;
+    personalInformation?: IPersonalInfo;
+    emergencyContact?: IEmergencyContact
   }  
