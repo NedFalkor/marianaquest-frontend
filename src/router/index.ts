@@ -43,7 +43,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/diverdashboard',
-    name: 'DiveDashboard',
+    name: 'DiverDashboard',
     component: () => import('@/views/dashboards/DiverDashboard.vue'),
     meta: { requiresRole: ['PLONGEUR'] }
   }

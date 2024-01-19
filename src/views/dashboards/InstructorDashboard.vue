@@ -1,10 +1,11 @@
 <template>
+    <header-component class="mb-4"></header-component>
+    <TitleComponent class="text-center text-blue-900 mb-8" :pageTitle="'Dashboard de ' + userData.username" />
     <div class="dashboard-container">
         <PersonalInfo :personal-information="userData.personalInformation" @update-user-data="updateUserData" />
         <EmergencyInfo :emergency-info="userData.emergencyContact" @update-emergency-info="updateUserData" />
     </div>
     <div class="bg-gray-100 w-full p-6">
-        <h2 class="font-bold text-xl mb-4">Dashboard de {{ userData?.username }}</h2>
         <div v-for="log in divingLogs" :key="log.id" class="mb-4 p-4 bg-white shadow rounded">
             <div class="mb-2">
                 <span class="font-semibold">Dive Log ID:</span> {{ log.id }}
