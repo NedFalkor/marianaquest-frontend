@@ -26,9 +26,15 @@
               <img class="h-8 w-8 rounded-full" :src="userPhoto" alt="User Photo" />
             </button>
             <div v-if="showDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Votre profil</a>
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Paramètres</a>
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Se déconnecter</a>
+              <div class="banner">
+                <div class="banner-content">
+                  <h1>Bienvenue {{ username }}</h1>
+                  <!-- Lien vers le dashboard approprié -->
+                  <a :href="dashboardLink" class="dashboard-link">Votre Dashboard</a>
+                  <!-- Bouton de déconnexion -->
+                  <button @click="logout" class="logout-button">Se déconnecter</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -38,16 +44,16 @@
 </template>
 
 
-<script lang="ts">
-import { ref, PropType } from 'vue';
+<script>
+import { defineComponent, ref, computed } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'HeaderNavbar',
   props: {
-    userPhoto: String as PropType<string>,
-    username: String as PropType<string>, // Ajout du nom d'utilisateur
+    userPhoto: String,
+    username: String,
   },
-  setup() {
+  setup(props) {
     const navigation = ref([
       { name: 'Formulaire Utilisateur', href: '/useridentity', current: false },
       { name: 'Formulaire Plongée', href: '/divelog', current: false },
@@ -56,10 +62,56 @@ export default {
 
     const showDropdown = ref(false);
 
+    const dashboardLink = computed(() => {
+      // Remplacez ceci par votre logique pour déterminer le rôle de l'utilisateur
+      const userRole = 'INSTRUCTOR'; // ou 'PLONGEUR'
+      return userRole === 'INSTRUCTOR' ? '/instructordashboard' : '/diverdashboard';
+    });
+
+    const logout = () => {
+      // Implémentez votre logique de déconnexion ici
+    };
+
     return {
       navigation,
-      showDropdown
+      showDropdown,
+      logout,
+      dashboardLink,
     };
   },
-};
+});
 </script>
+
+
+<style scoped>
+.banner {
+  background-color: #f5f5f5;
+  padding: 10px;
+  text-align: center;
+}
+
+.banner-content h1 {
+  margin: 0;
+  padding: 0;
+}
+
+.dashboard-link,
+.logout-button {
+  margin: 5px;
+  padding: 5px 10px;
+  background-color: blue;
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+}
+
+.logout-button {
+  background-color: red;
+}
+
+.dashboard-link:hover,
+.logout-button:hover {
+  opacity: 0.8;
+}
+</style>

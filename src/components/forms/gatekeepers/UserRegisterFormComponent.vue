@@ -18,8 +18,8 @@
         <label for="role" class="block text-sm font-medium mb-2">Rôle</label>
         <select id="role" v-model="user.role" class="input w-full p-2 border rounded-md" required>
           <option value="">Sélectionnez un rôle</option>
-          <option value="PLONGEUR">Plongeur</option>
-          <option value="FORMATEUR">Formateur</option>
+          <option value="DIVER">Plongeur</option>
+          <option value="INSTRUCTOR">Formateur</option>
         </select>
       </div>
       <button type="submit" class="btn-primary">S'inscrire</button>
