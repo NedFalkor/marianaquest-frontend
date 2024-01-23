@@ -3,8 +3,8 @@
     <div class="w-full mx-auto rounded-xl bg-gray-100 shadow-xl text-gray-800 relative overflow-hidden"
       style="max-width: 500px">
       <div class="bg-indigo-600 w-full py-5 px-6 text-3xl text-white font-thin text-center">Inscription</div>
-      <user-register-form-component @registration-data="handleRegistration"></user-register-form-component>
-      <button type="submit"
+      <user-register-form-component ref="userForm" @registration-data="handleRegistration"></user-register-form-component>
+      <button @click="submitForm"
         class="w-full h-16 text-xl font-light bg-indigo-500 hover:bg-indigo-700 text-white rounded-md">Créer un
         compte</button>
       <div class="mt-4 text-center">
@@ -14,13 +14,14 @@
   </div>
 </template>
 
+
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { AxiosError } from 'axios';
-import { ICustomUser } from '@/interfaces/CustomUser';
 import UserRegisterFormComponentVue from '@/components/forms/gatekeepers/UserRegisterFormComponent.vue';
 import router from '@/router';
 import CustomUserService from '@/services/gatekeepers/CustomUserService';
+import { ICustomUser } from '@/interfaces/CustomUser';
 
 export default defineComponent({
   components: {
@@ -47,6 +48,9 @@ export default defineComponent({
         }
       }
     },
+    submitForm() {
+      (this.$refs.userForm as typeof UserRegisterFormComponentVue).emitRegistrationData();
+    }
   },
   data() {
     return {

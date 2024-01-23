@@ -22,10 +22,10 @@
           <option value="INSTRUCTOR">Formateur</option>
         </select>
       </div>
-      <button type="submit" class="btn-primary">S'inscrire</button>
     </form>
   </div>
 </template>
+
 
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
@@ -51,4 +51,5 @@ export default defineComponent({
   }
 });
 </script>
+
 

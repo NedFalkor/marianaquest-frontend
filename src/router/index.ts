@@ -39,13 +39,13 @@ const routes: Array<RouteRecordRaw> = [
     path: '/instructordashboard',
     name: 'InstructorDashboard',
     component: () => import('@/views/dashboards/InstructorDashboard.vue'),
-    meta: { requiresRole: ['FORMATEUR'] }
+    meta: { requiresRole: ['INSTRUCTOR'] }
   },
   {
     path: '/diverdashboard',
     name: 'DiverDashboard',
     component: () => import('@/views/dashboards/DiverDashboard.vue'),
-    meta: { requiresRole: ['PLONGEUR'] }
+    meta: { requiresRole: ['DIVER'] }
   }
 ];
 
@@ -65,7 +65,7 @@ router.beforeEach((to, from, next) => {
   // Supposons que vous ayez une fonction qui obtient le rôle de l'utilisateur
   const userRole = () => {
     // Obtenir le rôle de l'utilisateur à partir du store ou d'une API
-    return 'FORMATEUR'; // ou 'PLONGEUR', selon l'utilisateur
+    return 'INSTRUCTOR'; // ou 'PLONGEUR', selon l'utilisateur
   };
 
   if (to.meta.requiresRole) {

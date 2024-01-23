@@ -44,7 +44,7 @@
 </template>
 
 
-<script>
+<script lang="ts" >
 import { defineComponent, ref, computed } from 'vue';
 
 export default defineComponent({
@@ -53,7 +53,7 @@ export default defineComponent({
     userPhoto: String,
     username: String,
   },
-  setup(props) {
+  setup() {
     const navigation = ref([
       { name: 'Formulaire Utilisateur', href: '/useridentity', current: false },
       { name: 'Formulaire Plongée', href: '/divelog', current: false },
