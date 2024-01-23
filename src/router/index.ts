@@ -4,6 +4,7 @@ import UserIdentity from '@/views/forms/UserIdentity.vue';
 import NemoCounter from '@/views/NemoCounter.vue';
 import UserRegister from '@/views/gatekeepers/UserRegister.vue';
 import UserAuthVue from '@/views/gatekeepers/UserAuth.vue';
+import { jwtDecode } from 'jwt-decode';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -49,36 +50,49 @@ const routes: Array<RouteRecordRaw> = [
   }
 ];
 
+const isAuthenticated = () => {
+  const token = localStorage.getItem('jwtToken');
+  if (!token) return false;
+
+  try {
+    const decodedToken = jwtDecode(token);
+    const currentTime = Date.now() / 1000;
+    return decodedToken.exp || 0 > currentTime;
+  } catch (error) {
+    return false;
+  }
+};
+
+const getUserRole = () => {
+  const token = localStorage.getItem('jwtToken');
+  if (!token) return null;
+
+  try {
+    const decodedToken = jwtDecode(token);
+    if ('role' in decodedToken) {
+      return decodedToken.role;
+    }
+    return null;
+  } catch (error) {
+    return null;
+  }
+};
+
 const router = createRouter({
   history: createWebHashHistory(),
   routes
 });
 
-// Guard global pour vérifier l'authentification et les rôles
 router.beforeEach((to, from, next) => {
-  // Supposons que vous ayez une fonction qui vérifie si l'utilisateur est authentifié
-  const isAuthenticated = () => {
-    // Vérifier si le token JWT est stocké et valide
-    return localStorage.getItem('jwtToken') ? true : false;
-  };
-
-  // Supposons que vous ayez une fonction qui obtient le rôle de l'utilisateur
-  const userRole = () => {
-    // Obtenir le rôle de l'utilisateur à partir du store ou d'une API
-    return 'INSTRUCTOR'; // ou 'PLONGEUR', selon l'utilisateur
-  };
+  const role = getUserRole();
 
   if (to.meta.requiresRole) {
-    const role = userRole();
     if (!isAuthenticated()) {
-      next({ name: 'UserAuth' }); // Assurez-vous que le nom de la route est correct.
+      next({ name: 'UserAuth' });
+    } else if (Array.isArray(to.meta.requiresRole) && to.meta.requiresRole.includes(role)) {
+      next();
     } else {
-      // Assurez-vous que `requiresRole` est un tableau avant d'utiliser `includes`.
-      if (Array.isArray(to.meta.requiresRole) && to.meta.requiresRole.includes(role)) {
-        next();
-      } else {
-        next(false);
-      }
+      next(false);
     }
   } else {
     next();

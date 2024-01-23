@@ -20,6 +20,7 @@
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "jspdf": "^2.5.1",
+    "jwt-decode": "^4.0.0",
     "postcss": "^8.4.31",
     "vue": "^3.2.13",
     "vue-autocomplete": "^0.0.2",
