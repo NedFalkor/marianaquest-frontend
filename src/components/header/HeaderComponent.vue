@@ -30,7 +30,8 @@
                 <div class="banner-content">
                   <h1>Bienvenue {{ username }}</h1>
                   <!-- Lien vers le dashboard approprié -->
-                  <a :href="dashboardLink" class="dashboard-link">Votre Dashboard</a>
+                  <router-link :to="dashboardLink" class="dashboard-link">Votre Dashboard</router-link>
+
                   <!-- Bouton de déconnexion -->
                   <button @click="logout" class="logout-button">Se déconnecter</button>
                 </div>
@@ -45,6 +46,7 @@
 
 
 <script lang="ts" >
+import { getUserRole } from '@/router';
 import { defineComponent, ref, computed } from 'vue';
 
 export default defineComponent({
@@ -63,10 +65,10 @@ export default defineComponent({
     const showDropdown = ref(false);
 
     const dashboardLink = computed(() => {
-      // Remplacez ceci par votre logique pour déterminer le rôle de l'utilisateur
-      const userRole = 'INSTRUCTOR'; // ou 'PLONGEUR'
+      const userRole = getUserRole();
       return userRole === 'INSTRUCTOR' ? '/instructordashboard' : '/diverdashboard';
     });
+
 
     const logout = () => {
       // Implémentez votre logique de déconnexion ici
