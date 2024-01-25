@@ -79,18 +79,18 @@
       <span class="block text-gray-700 text-sm font-bold mb-2">Vent :</span>
       <div class="flex items-center mb-2">
         <input type="radio" id="noWind" v-model="wind" value="none" class="mr-2">
-        <label for="noCurrent" class="flex items-center"><i class="fas fa-water mr-1"></i>Nul</label>
+        <label for="noWind" class="flex items-center"><i class="fas fa-water mr-1"></i>Nul</label>
       </div>
       <div class="flex items-center mb-2">
         <input type="radio" id="weakWind" v-model="wind" value="weak" class="mr-2">
-        <label for="mediumWind" class="flex items-center"><i class="fas fa-tint mr-1"></i>Faible</label>
+        <label for="weakWind" class="flex items-center"><i class="fas fa-tint mr-1"></i>Faible</label>
       </div>
       <div class="flex items-center mb-2">
         <input type="radio" id="mediumWind" v-model="wind" value="medium" class="mr-2">
         <label for="mediumWind" class="flex items-center"><i class="fas fa-tint mr-1"></i>Moyen</label>
       </div>
       <div class="flex items-center mb-2">
-        <input type="radio" id="strongCurrent" v-model="wind" value="strong" class="mr-2">
+        <input type="radio" id="strongWind" v-model="wind" value="strong" class="mr-2">
         <label for="strongWind" class="flex items-center"><i class="fas fa-wind mr-1"></i>Fort</label>
       </div>
     </div>
@@ -123,7 +123,7 @@ export default defineComponent({
   watch: {
     airTemperature: 'emitData',
     waterTemperature: 'emitData',
-    weather: 'emitData', // Modifié
+    weather: 'emitData',
     visibility: 'emitData',
     current: 'emitData',
     wind: 'emitData',

@@ -13,7 +13,7 @@
     "useDefineForClassFields": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "typeRoots": ["./node_modules/@types", "./path_to_your_custom_types_folder"],
+    "typeRoots": ["./node_modules/@types", "./src/types"],
     "types": [
       "webpack-env"
     ],
@@ -34,7 +34,8 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "tests/**/*.tsx",
+    "src/types/**/*.d.ts",
   ],
   "exclude": [
     "node_modules"
