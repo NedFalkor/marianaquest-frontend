@@ -78,20 +78,20 @@
     <div class="mb-4">
       <span class="block text-gray-700 text-sm font-bold mb-2">Vent :</span>
       <div class="flex items-center mb-2">
-        <input type="radio" id="noCurrent" v-model="current" value="none" class="mr-2">
+        <input type="radio" id="noWind" v-model="wind" value="none" class="mr-2">
         <label for="noCurrent" class="flex items-center"><i class="fas fa-water mr-1"></i>Nul</label>
       </div>
       <div class="flex items-center mb-2">
-        <input type="radio" id="mediumCurrent" v-model="current" value="weak" class="mr-2">
-        <label for="mediumCurrent" class="flex items-center"><i class="fas fa-tint mr-1"></i>Faible</label>
+        <input type="radio" id="weakWind" v-model="wind" value="weak" class="mr-2">
+        <label for="mediumWind" class="flex items-center"><i class="fas fa-tint mr-1"></i>Faible</label>
       </div>
       <div class="flex items-center mb-2">
-        <input type="radio" id="mediumCurrent" v-model="current" value="medium" class="mr-2">
-        <label for="mediumCurrent" class="flex items-center"><i class="fas fa-tint mr-1"></i>Moyen</label>
+        <input type="radio" id="mediumWind" v-model="wind" value="medium" class="mr-2">
+        <label for="mediumWind" class="flex items-center"><i class="fas fa-tint mr-1"></i>Moyen</label>
       </div>
       <div class="flex items-center mb-2">
-        <input type="radio" id="strongCurrent" v-model="current" value="strong" class="mr-2">
-        <label for="strongCurrent" class="flex items-center"><i class="fas fa-wind mr-1"></i>Fort</label>
+        <input type="radio" id="strongCurrent" v-model="wind" value="strong" class="mr-2">
+        <label for="strongWind" class="flex items-center"><i class="fas fa-wind mr-1"></i>Fort</label>
       </div>
     </div>
 
@@ -126,6 +126,7 @@ export default defineComponent({
     weather: 'emitData', // Modifié
     visibility: 'emitData',
     current: 'emitData',
+    wind: 'emitData',
     observations: 'emitData'
   },
   methods: {
@@ -133,7 +134,7 @@ export default defineComponent({
       this.$emit('update:conditions', {
         air_temperature: this.airTemperature,
         water_temperature: this.waterTemperature,
-        weather: this.weather, // Modifié
+        weather: this.weather,
         visibility: this.visibility,
         current: this.current,
         wind: this.wind,

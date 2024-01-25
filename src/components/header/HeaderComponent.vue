@@ -46,7 +46,9 @@
 
 
 <script lang="ts" >
-import { getUserRole } from '@/router';
+import router, { getUserRole } from '@/router';
+import instance from '@/services/axiosConfig';
+import Cookies from 'js-cookie';
 import { defineComponent, ref, computed } from 'vue';
 
 export default defineComponent({
@@ -70,9 +72,17 @@ export default defineComponent({
     });
 
 
-    const logout = () => {
-      // Implémentez votre logique de déconnexion ici
+    const logout = async () => {
+      try {
+        await instance.post('auth/logout/');
+        localStorage.removeItem('jwtToken');
+        Cookies.remove('jwtToken'); // If you're using cookies to store the token
+        router.push('/userauth'); // Redirect to the login page after logout
+      } catch (error) {
+        console.error('Error during logout:', error);
+      }
     };
+
 
     return {
       navigation,
