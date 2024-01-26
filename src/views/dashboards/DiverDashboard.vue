@@ -53,9 +53,11 @@ export default defineComponent({
     methods: {
         async fetchUserData() {
             const userId = sessionStorage.getItem('userId');
+            console.log("UserID:", userId); // Log pour vérifier le userID
             if (userId) {
                 try {
                     const response = await CustomUserService.getUserById(Number(userId));
+                    console.log("UserData:", response.data); // Log pour vérifier les données de l'utilisateur
                     this.userData = response.data;
                 } catch (error) {
                     console.error('Erreur lors de la récupération des détails de l’utilisateur:', error);
@@ -83,6 +85,7 @@ export default defineComponent({
             if (this.diverId !== null) {
                 DiveLogService.getDiveLogsByDiver(this.diverId)
                     .then(response => {
+                        console.log("DivingLogs:", response.data); // Log pour vérifier les journaux de plongée
                         this.divingLogs = response.data;
                     })
                     .catch(error => {
@@ -90,12 +93,16 @@ export default defineComponent({
                     });
             }
         },
+
         editLog(log: IDivingLog) {
+            console.log("Editing Log:", log);
             this.editedLog = { ...log };
             this.isEditing = true;
             // Navigate to edit page or open edit modal
         },
+
         deleteLogRequest(log: IDivingLog) {
+            console.log("Deleting Log:", log);
             if (confirm('Are you sure you want to delete this log?')) {
                 DiveLogService.deleteDiveLog(log.id)
                     .then(() => {
@@ -108,10 +115,13 @@ export default defineComponent({
                     });
             }
         },
+
         viewDetails(log: IDivingLog) {
+            console.log("Viewing Details for Log:", log);
             this.selectedLog = log;
             this.viewingDetails = true;
         },
+
         statusClass(status: string) {
             switch (status) {
                 case 'AWAITING': return 'text-orange-500';

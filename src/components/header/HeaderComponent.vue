@@ -14,11 +14,6 @@
             <input type="search"
               class="bg-gray-700 text-white rounded-full focus:ring-2 focus:ring-primary focus:border-primary block pl-10 pr-3 py-2 leading-5 w-full"
               placeholder="Search">
-            <button class="absolute inset-y-0 right-0 flex items-center pr-2" type="button">
-              <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10H16M8 6H16M8 14H16" />
-              </svg>
-            </button>
           </div>
           <div class="relative">
             <button @click="showDropdown = !showDropdown"
@@ -42,10 +37,11 @@
       </div>
     </div>
   </nav>
+  <user-list></user-list>
 </template>
 
 
-<script lang="ts" >
+<script lang="ts">
 import router, { getUserRole } from '@/router';
 import instance from '@/services/axiosConfig';
 import Cookies from 'js-cookie';
@@ -71,7 +67,6 @@ export default defineComponent({
       return userRole === 'INSTRUCTOR' ? '/instructordashboard' : '/diverdashboard';
     });
 
-
     const logout = async () => {
       try {
         await instance.post('auth/logout/');
@@ -83,7 +78,6 @@ export default defineComponent({
       }
     };
 
-
     return {
       navigation,
       showDropdown,
@@ -93,6 +87,7 @@ export default defineComponent({
   },
 });
 </script>
+
 
 
 <style scoped>

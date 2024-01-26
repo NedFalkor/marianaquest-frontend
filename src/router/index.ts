@@ -83,7 +83,7 @@ const router = createRouter({
   routes
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const role = getUserRole();
 
   if (to.meta.requiresRole) {
@@ -97,6 +97,7 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
+  console.log("Navigating to:", to.name, "UserRole:", role);
 });
 
 export default router;

@@ -14,6 +14,11 @@ export default {
         return instance.get(`users/${id}/`);
     },
 
+      // Récupérer tous les utilisateurs
+    getAllUsers() {
+        return instance.get('users/');
+    },
+
     // Mettre à jour un utilisateur spécifique
     updateUser(id: number, data: ICustomUser) {
         return instance.put(`users/${id}/`, data);
