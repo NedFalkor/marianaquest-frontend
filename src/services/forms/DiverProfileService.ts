@@ -2,22 +2,22 @@ import instance from '../axiosConfig';
 
 export default {
     createDiverProfile(data: any) {
-        return instance.post('api/diver-profiles/', data);
+        return instance.post('diver-profiles/', data);
     },
 
     getAllDiverProfiles() {
-        return instance.get('api/diver-profiles/');
+        return instance.get('diver-profiles/');
     },
 
     getDiverProfileById(id: number) {
-        return instance.get(`api/diver-profiles/${id}/`);
+        return instance.get(`diver-profiles/${id}/`);
     },
 
     updateDiverProfile(id: number, data: any) {
-        return instance.put(`api/diver-profiles/${id}/`, data);
+        return instance.put(`diver-profiles/${id}/`, data);
     },
 
     deleteDiverProfile(id: number) {
-        return instance.delete(`api/diver-profiles/${id}/`);
+        return instance.delete(`diver-profiles/${id}/`);
     }
 };

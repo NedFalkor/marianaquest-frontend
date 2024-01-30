@@ -33,7 +33,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/userauth',
-    name: '/UserAuth',
+    name: 'UserAuth',
     component: UserAuthVue
   },
   {
@@ -52,28 +52,32 @@ const routes: Array<RouteRecordRaw> = [
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('jwtToken');
-  if (!token) return false;
-
+  if (!token) {
+    return false;
+  }
   try {
-    const decodedToken = jwtDecode(token);
-    const currentTime = Date.now() / 1000;
-    return (decodedToken.exp ?? 0) > currentTime;
+    const decodedToken: { exp?: number } = jwtDecode(token); // Add an explicit type for decodedToken
+    const currentTime = new Date().getTime() / 1000;
+    // Check if exp is defined and compare
+    if (decodedToken.exp !== undefined && decodedToken.exp > currentTime) {
+      return true;
+    }
+    return false;
   } catch (error) {
+    console.error("Error decoding token:", error);
     return false;
   }
 };
 
-export const getUserRole = () => {
+export const getUserRole = (): string | null => {
   const token = localStorage.getItem('jwtToken');
   if (!token) return null;
 
   try {
-    const decodedToken = jwtDecode(token);
-    if ('role' in decodedToken) {
-      return decodedToken.role;
-    }
-    return null;
+    const decodedToken: { role?: string } = jwtDecode(token); // Specify the expected properties and types within the decoded token
+    return decodedToken.role ?? null; // Use the nullish coalescing operator to return null if role is undefined
   } catch (error) {
+    console.error("Error decoding token:", error);
     return null;
   }
 };
@@ -83,21 +87,21 @@ const router = createRouter({
   routes
 });
 
-router.beforeEach((to, _from, next) => {
+router.beforeEach((to, from, next) => {
   const role = getUserRole();
 
-  if (to.meta.requiresRole) {
-    if (!isAuthenticated()) {
-      next({ name: 'UserAuth' });
-    } else if (Array.isArray(to.meta.requiresRole) && to.meta.requiresRole.includes(role)) {
-      next();
-    } else {
-      next(false);
-    }
-  } else {
-    next();
+  const requiresRole = to.meta.requiresRole as string[] | undefined;
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+
+  if (requiresAuth && !isAuthenticated()) {
+    return next({ name: 'UserAuth' });
   }
-  console.log("Navigating to:", to.name, "UserRole:", role);
+
+  if (requiresRole && role && !requiresRole.includes(role)) { // Make sure role is not null before calling includes
+    return next({ name: 'UserAuth' });
+  }
+
+  next();
 });
 
 export default router;

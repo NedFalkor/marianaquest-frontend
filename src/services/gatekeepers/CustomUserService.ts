@@ -46,19 +46,33 @@ export default {
         }
     },
 
-    clearAuthCookies() {
-        // Effacement du cookie en utilisant js-cookie
-        Cookies.remove('jwtToken');
-    },
-
     // Authentifier un utilisateur
     loginUser(data: { email: string, username: string, password: string }) {
         return instance.post('auth/login/', data);
     },
 
     // Déconnecter un utilisateur
-    logoutUser() {
-        return instance.post('auth/logout/');
+    async logoutUser() {
+        try {
+          const response = await instance.post('auth/logout/');
+          if (response.status === 200) {
+            // Assuming the logout was successful, clear the local storage and cookies
+            localStorage.removeItem('jwtToken');
+            Cookies.remove('jwtToken'); // Use the correct cookie name if different
+            // You can also redirect the user to the login page or perform other cleanup actions here
+          } else {
+            console.log('Logout failed with status:', response.status);
+          }
+          return response;
+        } catch (error) {
+          console.error('Error during logout:', error);
+          throw error;
+        }
+      },
+
+      clearAuthCookies() {
+        // Effacement du cookie en utilisant js-cookie
+        Cookies.remove('jwtToken');
     },
     
 };
