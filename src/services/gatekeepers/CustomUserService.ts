@@ -46,10 +46,20 @@ export default {
         }
     },
 
-    // Authentifier un utilisateur
-    loginUser(data: { email: string, username: string, password: string }) {
-        return instance.post('auth/login/', data);
-    },
+// Authentifier un utilisateur
+loginUser(data: { email: string, username: string, password: string }) {
+    return instance.post('auth/login/', data)
+        .then(response => {
+            // Here we assume the token is in response.data.access (adjust according to your backend response)
+            localStorage.setItem('jwtToken', response.data.access);
+            return response;
+        })
+        .catch(error => {
+            console.error('Login error:', error);
+            throw error;
+        });
+},
+
 
     // Déconnecter un utilisateur
     async logoutUser() {

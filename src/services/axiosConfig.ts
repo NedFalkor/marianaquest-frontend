@@ -7,16 +7,19 @@ const instance = axios.create({
   baseURL: apiBaseUrl,
 });
 
-// Ajoutez un intercepteur de requête pour ajouter le jeton d'authentification à chaque requête sortante.
+// Add an interceptor to add the authentication token to each outgoing request.
 instance.interceptors.request.use(
   config => {
     const token = localStorage.getItem('jwtToken');
+    console.log('Retrieving token from local storage:', token); // Logging the token
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
+      console.log('Authorization header set:', config.headers['Authorization']); // Logging the header
     }
     return config;
   },
   error => {
+    console.error('Error in request interceptor:', error); // Logging request error
     return Promise.reject(error);
   }
 );
