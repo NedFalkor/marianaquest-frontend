@@ -23,7 +23,7 @@ export interface IEmergencyContact {
 
 export interface IDiverProfile {
     id?: number;
-    // userId: number;
+    userId: number;
     // logbookNumber: string;
     // cumulativeDivesInLogbook: number;
     // totalDives: number;

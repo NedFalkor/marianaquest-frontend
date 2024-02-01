@@ -4,6 +4,8 @@ import UserIdentity from '@/views/forms/UserIdentity.vue';
 import NemoCounter from '@/views/NemoCounter.vue';
 import UserRegister from '@/views/gatekeepers/UserRegister.vue';
 import UserAuthVue from '@/views/gatekeepers/UserAuth.vue';
+import { jwtDecode  } from "jwt-decode";
+import { ICustomJwtPayload } from '@/interfaces/CustomJWTPayload';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -39,13 +41,13 @@ const routes: Array<RouteRecordRaw> = [
     path: '/instructordashboard',
     name: 'InstructorDashboard',
     component: () => import('@/views/dashboards/InstructorDashboard.vue'),
-    meta: { requiresRole: ['FORMATEUR'] }
+    meta: { requiresRole: ['INSTRUCTOR'] }
   },
   {
     path: '/diverdashboard',
     name: 'DiveDashboard',
     component: () => import('@/views/dashboards/DiverDashboard.vue'),
-    meta: { requiresRole: ['PLONGEUR'] }
+    meta: { requiresRole: ['DIVER'] }
   }
 ];
 
@@ -56,25 +58,40 @@ const router = createRouter({
 
 // Guard global pour vérifier l'authentification et les rôles
 router.beforeEach((to, from, next) => {
-  // Supposons que vous ayez une fonction qui vérifie si l'utilisateur est authentifié
-  const isAuthenticated = () => {
-    // Vérifier si le token JWT est stocké et valide
-    return localStorage.getItem('jwtToken') ? true : false;
+  const isAuthenticated = (): boolean => {
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+      return false;
+    }
+    try {
+      const decodedToken = jwtDecode<ICustomJwtPayload>(token);
+      const currentTime = Date.now() / 1000;
+      return !!decodedToken.exp && decodedToken.exp > currentTime;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return false;
+    }
   };
 
-  // Supposons que vous ayez une fonction qui obtient le rôle de l'utilisateur
-  const userRole = () => {
-    // Obtenir le rôle de l'utilisateur à partir du store ou d'une API
-    return 'FORMATEUR'; // ou 'PLONGEUR', selon l'utilisateur
+  const getUserRole = (): string | null => {
+    const token = localStorage.getItem('jwtToken');
+    if (!token) return null;
+
+    try {
+      const decodedToken = jwtDecode<ICustomJwtPayload>(token);
+      return decodedToken.role ?? null;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return null;
+    }
   };
 
   if (to.meta.requiresRole) {
-    const role = userRole();
     if (!isAuthenticated()) {
-      next({ name: 'UserAuth' }); // Assurez-vous que le nom de la route est correct.
+      next({ name: 'UserAuth' });
     } else {
-      // Assurez-vous que `requiresRole` est un tableau avant d'utiliser `includes`.
-      if (Array.isArray(to.meta.requiresRole) && to.meta.requiresRole.includes(role)) {
+      const role = getUserRole();  // Now using the getUserRole function
+      if (role && Array.isArray(to.meta.requiresRole) && to.meta.requiresRole.includes(role)) {
         next();
       } else {
         next(false);
@@ -86,3 +103,4 @@ router.beforeEach((to, from, next) => {
 });
 
 export default router;
+
