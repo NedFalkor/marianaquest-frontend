@@ -4,8 +4,6 @@ import UserIdentity from '@/views/forms/UserIdentity.vue';
 import NemoCounter from '@/views/NemoCounter.vue';
 import UserRegister from '@/views/gatekeepers/UserRegister.vue';
 import UserAuthVue from '@/views/gatekeepers/UserAuth.vue';
-import { jwtDecode  } from "jwt-decode";
-import { ICustomJwtPayload } from '@/interfaces/CustomJWTPayload';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -34,7 +32,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/userauth',
-    name: '/UserAuth',
+    name: 'UserAuth',
     component: UserAuthVue
   },
   {
@@ -45,53 +43,69 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/diverdashboard',
-    name: 'DiveDashboard',
+    name: 'DiverDashboard',
     component: () => import('@/views/dashboards/DiverDashboard.vue'),
     meta: { requiresRole: ['DIVER'] }
   }
 ];
+
+const isAuthenticated = () => {
+  const token = localStorage.getItem('jwtToken');
+  if (!token) {
+    return false;
+  }
+  try {
+    const decodedToken: { exp?: number } = jwtDecode(token); // Add an explicit type for decodedToken
+    const currentTime = new Date().getTime() / 1000;
+    // Check if exp is defined and compare
+    if (decodedToken.exp !== undefined && decodedToken.exp > currentTime) {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return false;
+  }
+};
+
+export const getUserRole = (): string | null => {
+  const token = localStorage.getItem('jwtToken');
+  if (!token) return null;
+
+  try {
+    const decodedToken: { role?: string } = jwtDecode(token); // Specify the expected properties and types within the decoded token
+    return decodedToken.role ?? null; // Use the nullish coalescing operator to return null if role is undefined
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
+  }
+};
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes
 });
 
-// Guard global pour vérifier l'authentification et les rôles
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = (): boolean => {
-    const token = localStorage.getItem('jwtToken');
-    if (!token) {
-      return false;
-    }
-    try {
-      const decodedToken = jwtDecode<ICustomJwtPayload>(token);
-      const currentTime = Date.now() / 1000;
-      return !!decodedToken.exp && decodedToken.exp > currentTime;
-    } catch (error) {
-      console.error("Error decoding token:", error);
-      return false;
-    }
+  // Supposons que vous ayez une fonction qui vérifie si l'utilisateur est authentifié
+  const isAuthenticated = () => {
+    // Vérifier si le token JWT est stocké et valide
+    return localStorage.getItem('jwtToken') ? true : false;
   };
 
-  const getUserRole = (): string | null => {
-    const token = localStorage.getItem('jwtToken');
-    if (!token) return null;
-
-    try {
-      const decodedToken = jwtDecode<ICustomJwtPayload>(token);
-      return decodedToken.role ?? null;
-    } catch (error) {
-      console.error("Error decoding token:", error);
-      return null;
-    }
+  // Supposons que vous ayez une fonction qui obtient le rôle de l'utilisateur
+  const userRole = () => {
+    // Obtenir le rôle de l'utilisateur à partir du store ou d'une API
+    return 'FORMATEUR'; // ou 'PLONGEUR', selon l'utilisateur
   };
 
   if (to.meta.requiresRole) {
+    const role = userRole();
     if (!isAuthenticated()) {
-      next({ name: 'UserAuth' });
+      next({ name: 'UserAuth' }); // Assurez-vous que le nom de la route est correct.
     } else {
-      const role = getUserRole();  // Now using the getUserRole function
-      if (role && Array.isArray(to.meta.requiresRole) && to.meta.requiresRole.includes(role)) {
+      // Assurez-vous que `requiresRole` est un tableau avant d'utiliser `includes`.
+      if (Array.isArray(to.meta.requiresRole) && to.meta.requiresRole.includes(role)) {
         next();
       } else {
         next(false);
@@ -103,4 +117,3 @@ router.beforeEach((to, from, next) => {
 });
 
 export default router;
-

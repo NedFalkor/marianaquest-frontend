@@ -14,11 +14,6 @@
             <input type="search"
               class="bg-gray-700 text-white rounded-full focus:ring-2 focus:ring-primary focus:border-primary block pl-10 pr-3 py-2 leading-5 w-full"
               placeholder="Search">
-            <button class="absolute inset-y-0 right-0 flex items-center pr-2" type="button">
-              <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10H16M8 6H16M8 14H16" />
-              </svg>
-            </button>
           </div>
           <div class="relative">
             <button @click="showDropdown = !showDropdown"
@@ -26,26 +21,37 @@
               <img class="h-8 w-8 rounded-full" :src="userPhoto" alt="User Photo" />
             </button>
             <div v-if="showDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Votre profil</a>
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Paramètres</a>
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Se déconnecter</a>
+              <div class="banner">
+                <div class="banner-content">
+                  <h1>Bienvenue {{ username }}</h1>
+                  <!-- Lien vers le dashboard approprié -->
+                  <router-link :to="dashboardLink" class="dashboard-link">Votre Dashboard</router-link>
+
+                  <!-- Bouton de déconnexion -->
+                  <button @click="logout" class="logout-button">Se déconnecter</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </nav>
+  <user-list></user-list>
 </template>
 
 
 <script lang="ts">
-import { ref, PropType } from 'vue';
+import router, { getUserRole } from '@/router';
+import instance from '@/services/axiosConfig';
+import Cookies from 'js-cookie';
+import { defineComponent, ref, computed } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'HeaderNavbar',
   props: {
-    userPhoto: String as PropType<string>,
-    username: String as PropType<string>, // Ajout du nom d'utilisateur
+    userPhoto: String,
+    username: String,
   },
   setup() {
     const navigation = ref([
@@ -56,10 +62,63 @@ export default {
 
     const showDropdown = ref(false);
 
+    const dashboardLink = computed(() => {
+      const userRole = getUserRole();
+      return userRole === 'INSTRUCTOR' ? '/instructordashboard' : '/diverdashboard';
+    });
+
+    const logout = async () => {
+      try {
+        await instance.post('auth/logout/');
+        localStorage.removeItem('jwtToken');
+        Cookies.remove('jwtToken'); // If you're using cookies to store the token
+        router.push('/userauth'); // Redirect to the login page after logout
+      } catch (error) {
+        console.error('Error during logout:', error);
+      }
+    };
+
     return {
       navigation,
-      showDropdown
+      showDropdown,
+      logout,
+      dashboardLink,
     };
   },
-};
+});
 </script>
+
+
+
+<style scoped>
+.banner {
+  background-color: #f5f5f5;
+  padding: 10px;
+  text-align: center;
+}
+
+.banner-content h1 {
+  margin: 0;
+  padding: 0;
+}
+
+.dashboard-link,
+.logout-button {
+  margin: 5px;
+  padding: 5px 10px;
+  background-color: blue;
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+}
+
+.logout-button {
+  background-color: red;
+}
+
+.dashboard-link:hover,
+.logout-button:hover {
+  opacity: 0.8;
+}
+</style>

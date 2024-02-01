@@ -65,6 +65,11 @@
 import { defineComponent } from 'vue';
 import { IDiveGroup } from '@/interfaces/DiveGroup';
 import { ICustomUser } from '@/interfaces/CustomUser';
+<<<<<<< HEAD
+=======
+import DiveGroupService from '@/services/forms/DiveGroupService';
+import { AxiosError } from 'axios';
+>>>>>>> 1dace89dadf7b599b7019b630de2a19a76353744
 
 export default defineComponent({
     name: 'DiveGroupForm',
@@ -83,6 +88,7 @@ export default defineComponent({
         };
     },
     mounted() {
+<<<<<<< HEAD
         // Chargez les données ici (boatDrivers, trainers, allDivers)
     },
     methods: {
@@ -92,3 +98,40 @@ export default defineComponent({
     },
 });
 </script>
+=======
+        this.loadInitialData();
+    },
+    methods: {
+        loadInitialData() {
+            DiveGroupService.getAllInstructors()
+                .then((response: any) => { // Typage de la réponse
+                    this.trainers = response.data;
+                    this.boatDrivers = response.data;
+                })
+                .catch((error: AxiosError) => { // Typage de l'erreur
+                    console.error('Erreur lors du chargement des instructeurs', error.message);
+                });
+
+            DiveGroupService.getAllDivers()
+                .then((response: any) => { // Typage de la réponse
+                    this.allDivers = response.data;
+                })
+                .catch((error: AxiosError) => { // Typage de l'erreur
+                    console.error('Erreur lors du chargement des plongeurs', error.message);
+                });
+        },
+        submitForm() {
+            DiveGroupService.createDiveGroup(this.diveGroup)
+                .then((response: any) => {
+                    console.log('Groupe de plongée créé avec succès', response.data);
+                    // Gérer la soumission réussie ici (par exemple, redirection ou message de succès)
+                })
+                .catch((error: any) => {
+                    console.error('Erreur lors de la création du groupe de plongée', error);
+                    // Gérer l'erreur ici (par exemple, afficher un message d'erreur)
+                });
+        }
+    }
+});
+</script>
+>>>>>>> 1dace89dadf7b599b7019b630de2a19a76353744

@@ -14,6 +14,11 @@ export default {
         return instance.get(`users/${id}/`);
     },
 
+      // Récupérer tous les utilisateurs
+    getAllUsers() {
+        return instance.get('users/');
+    },
+
     // Mettre à jour un utilisateur spécifique
     updateUser(id: number, data: ICustomUser) {
         return instance.put(`users/${id}/`, data);
@@ -41,19 +46,43 @@ export default {
         }
     },
 
-    clearAuthCookies() {
-        // Effacement du cookie en utilisant js-cookie
-        Cookies.remove('jwtToken');
-    },
+// Authentifier un utilisateur
+loginUser(data: { email: string, username: string, password: string }) {
+    return instance.post('auth/login/', data)
+        .then(response => {
+            // Here we assume the token is in response.data.access (adjust according to your backend response)
+            localStorage.setItem('jwtToken', response.data.access);
+            return response;
+        })
+        .catch(error => {
+            console.error('Login error:', error);
+            throw error;
+        });
+},
 
-    // Authentifier un utilisateur
-    loginUser(data: { email: string, username: string, password: string }) {
-        return instance.post('auth/login/', data);
-    },
 
     // Déconnecter un utilisateur
-    logoutUser() {
-        return instance.post('auth/logout/');
+    async logoutUser() {
+        try {
+          const response = await instance.post('auth/logout/');
+          if (response.status === 200) {
+            // Assuming the logout was successful, clear the local storage and cookies
+            localStorage.removeItem('jwtToken');
+            Cookies.remove('jwtToken'); // Use the correct cookie name if different
+            // You can also redirect the user to the login page or perform other cleanup actions here
+          } else {
+            console.log('Logout failed with status:', response.status);
+          }
+          return response;
+        } catch (error) {
+          console.error('Error during logout:', error);
+          throw error;
+        }
+      },
+
+      clearAuthCookies() {
+        // Effacement du cookie en utilisant js-cookie
+        Cookies.remove('jwtToken');
     },
     
 };

@@ -66,9 +66,13 @@
     <div class="mb-4">
       <h3 class="text-xl mb-2 text-center">Pays</h3>
       <div class="relative">
-        <i class="fas fa-flag absolute left-2 top-3 text-gray-600 text-lg"></i>
-        <input v-model="country" type="text" id="country"
-          class="pl-10 p-2 mb-4 shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+        <i class="fa-solid fa-globe absolute left-2 top-3 text-gray-600 text-lg"></i>
+        <select v-model="selectedCountry"
+          class="pl-10 p-2 mb-4 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+          <option v-for="country in countries" :key="country" :value="country">
+            {{ country }}
+          </option>
+        </select>
       </div>
     </div>
 
@@ -107,6 +111,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { getNames } from 'country-list';
+
 
 export default defineComponent({
   name: 'PersonalInfo',
@@ -123,7 +129,8 @@ export default defineComponent({
       address: '',
       postal_code: '',
       city: '',
-      country: '',
+      countries: getNames(),
+      selectedCountry: null,
       landline: '',
       mobile: '',
       email: '',
@@ -147,11 +154,11 @@ export default defineComponent({
         address: this.address,
         postal_code: this.postal_code,
         city: this.city,
-        country: this.country,
+        country: this.selectedCountry,
         landline: this.landline,
         mobile: this.mobile,
         email: this.email,
-        identity_photo: this.identity_photo // Assurez-vous de gérer l'envoi de fichiers correctement côté serveur.
+        identity_photo: this.identity_photo
       });
     }
   }

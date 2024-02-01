@@ -69,6 +69,7 @@ export default class DiveLog extends Vue {
     id: 0,
     user: 0,
     settings: {} as IDiveSettings,
+    status: '',
     equipment: {} as IDiveEquipment,
     conditions: {} as IDiveConditions,
     signatureData: {} as ISignatureData
@@ -105,7 +106,6 @@ export default class DiveLog extends Vue {
     }
   }
 
-
   startDrawing(e: MouseEvent) {
     this.isDrawing = true;
     [this.lastX, this.lastY] = [e.offsetX, e.offsetY];
@@ -122,9 +122,8 @@ export default class DiveLog extends Vue {
     [this.lastX, this.lastY] = [e.offsetX, e.offsetY];
   }
 
-
-  updateData(section: keyof IDivingLog, updatedData: unknown) {
-    this.diveData[section] = updatedData as any;
+  updateData<K extends keyof IDivingLog>(section: K, updatedData: IDivingLog[K]) {
+    this.diveData[section] = updatedData;
   }
 
   clearSignature() {

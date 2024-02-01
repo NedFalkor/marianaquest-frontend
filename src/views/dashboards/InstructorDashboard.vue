@@ -1,13 +1,18 @@
 <template>
-    <div>
-        <DiveLogList :diveLogs="divingLogs">
-            <template #default="{ log }">
-                <!-- Ensure that the instructorId passed down is not null -->
-                <InstructorCommentComponent v-if="instructorId !== null" :divingLogId="log.id" :instructorId="instructorId"
-                    @comment-posted="handleCommentPosted" @comment-updated="handleCommentUpdated"
-                    @comment-deleted="handleCommentDeleted" />
-            </template>
-        </DiveLogList>
+    <header-component class="mb-4"></header-component>
+    <TitleComponent class="text-center text-blue-900 mb-8" :pageTitle="'Dashboard de ' + userData.username" />
+    <div class="dashboard-container">
+        <PersonalInfo :personal-information="userData.personalInformation" @update-user-data="updateUserData" />
+        <EmergencyInfo :emergency-info="userData.emergencyContact" @update-emergency-info="updateUserData" />
+    </div>
+    <div class="bg-gray-100 w-full p-6">
+        <div v-for="log in divingLogs" :key="log.id" class="mb-4 p-4 bg-white shadow rounded">
+            <div class="mb-2">
+                <span class="font-semibold">Dive Log ID:</span> {{ log.id }}
+            </div>
+            <InstructorCommentComponent v-if="instructorId !== null" :diving-log-id="log.id" :instructor-id="instructorId"
+                @comment-posted="handleCommentPost($event)" />
+        </div>
     </div>
 </template>
   
@@ -16,7 +21,8 @@ import InstructorCommentComponent from '@/components/forms/divelog/InstructorCom
 import DiveLogService from '@/services/forms/DiveLogService';
 import { IDivingLog } from '@/interfaces/DivingLog';
 import { defineComponent } from 'vue';
-import InstructorCommentService from '@/services/InstructorCommentService';
+import CustomUserService from '@/services/gatekeepers/CustomUserService';
+import { ICustomUser } from '@/interfaces/CustomUser';
 import { IComment } from '@/interfaces/InstructorComment';
 
 export default defineComponent({
@@ -27,116 +33,43 @@ export default defineComponent({
         return {
             instructorId: null as number | null,
             divingLogs: [] as IDivingLog[],
-            selectedLog: null as IDivingLog | null,
+            userData: {} as ICustomUser,
         };
     },
-    methods: {
-        loadDivingLogs(): void {
-            DiveLogService.getAllDiveLogs()
-                .then((response) => {
-                    this.divingLogs = response.data;
-                })
-                .catch((error) => {
-                    console.error('Failed to load diving logs:', error);
-                });
-        },
-        selectLog(log: IDivingLog): void {
-            this.selectedLog = log;
-        },
-        getCurrentUserId(): string | null {
-            return sessionStorage.getItem('userId');
-        },
-        handleCommentPosted(diveLogId: number, commentText: string): void {
-            if (this.instructorId) {
-                InstructorCommentService.postComment(diveLogId, this.instructorId, commentText)
-                    .then((response) => {
-                        this.updateDiveLogComments(diveLogId, response.data);
-                        this.notifyUser('Comment posted successfully.');
-                    })
-                    .catch((error) => {
-                        this.notifyUser('Error posting comment.');
-                        console.error('Error posting comment:', error);
-                    });
-            }
-        },
-
-        handleCommentUpdated(commentId: number, updatedCommentText: string): void {
-            if (this.instructorId) {
-                InstructorCommentService.updateComment(commentId, this.instructorId, updatedCommentText)
-                    .then((response) => {
-                        this.updateCommentInDiveLog(commentId, response.data);
-                        this.notifyUser('Comment updated successfully.');
-                    })
-                    .catch((error) => {
-                        this.notifyUser('Error updating comment.');
-                        console.error('Error updating comment:', error);
-                    });
-            }
-        },
-
-        handleCommentDeleted(commentId: number): void {
-            InstructorCommentService.deleteComment(commentId)
-                .then(() => {
-                    this.removeCommentFromDiveLog(commentId);
-                    this.notifyUser('Comment deleted successfully.');
-                })
-                .catch((error) => {
-                    this.notifyUser('Error deleting comment.');
-                    console.error('Error deleting comment:', error);
-                });
-        },
-
-        updateDiveLogComments(diveLogId: number, newComment: IComment): void {
-            const diveLog = this.divingLogs.find((log) => log.id === diveLogId);
-            if (diveLog) {
-                if (!diveLog.comments) {
-                    diveLog.comments = []; // Initialize the comments array if it does not exist
-                }
-                diveLog.comments.push(newComment);
-            }
-        },
-
-        updateCommentInDiveLog(commentId: number, updatedComment: IComment): void {
-            this.divingLogs.forEach((log) => {
-                if (log.comments) {
-                    const commentIndex = log.comments.findIndex((c) => c.id === commentId);
-                    if (commentIndex !== -1) {
-                        log.comments[commentIndex] = updatedComment;
-                    }
-                }
-            });
-        },
-
-        removeCommentFromDiveLog(commentId: number): void {
-            this.divingLogs.forEach((log) => {
-                if (log.comments) {
-                    const commentIndex = log.comments.findIndex((c) => c.id === commentId);
-                    if (commentIndex !== -1) {
-                        log.comments.splice(commentIndex, 1);
-                    }
-                }
-            });
-        },
-
-        notifyUser(_message: string): void {
-            // Logic to notify user, can be a toast message, modal, etc.
-        },
+    async mounted() {
+        await this.fetchUserData();
+        this.loadDivingLogs();
     },
-    mounted(): void {
-        const instructorProfileRaw = sessionStorage.getItem('instructorProfile');
-        if (instructorProfileRaw) {
-            const instructorProfile = JSON.parse(instructorProfileRaw);
-            if (instructorProfile && instructorProfile.role === 'FORMATEUR') {
-                this.instructorId = instructorProfile.id;
-                this.loadDivingLogs();
-            } else {
-                // Redirection or other logic if the user is not an instructor
-                this.$router.push('/unauthorized'); // Redirect to an 'Unauthorized' page, for example
+    methods: {
+        async fetchUserData() {
+            const userId = sessionStorage.getItem('userId');
+            if (userId) {
+                try {
+                    const response = await CustomUserService.getUserById(Number(userId));
+                    this.userData = response.data;
+                    if (this.userData?.role === 'FORMATEUR') {
+                        this.instructorId = this.userData.id as number | null;
+                    }
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                }
             }
-        } else {
-            // If no profile is found, redirect or handle as necessary
-            this.$router.push('/login'); // Redirect to the login page, for example
-        }
+        },
+        loadDivingLogs() {
+            DiveLogService.getAllDiveLogs()
+                .then(response => { this.divingLogs = response.data; })
+                .catch(error => { console.error('Failed to load diving logs:', error); });
+        },
+        handleCommentPost(comment: IComment) {
+            const log = this.divingLogs.find(l => l.id === comment.diving_log);
+            if (log) {
+                log.comments = log.comments || [];
+                log.comments.push(comment);
+            }
+        },
+        updateUserData(updatedUserData: ICustomUser) {
+            this.userData = updatedUserData;
+        },
     },
 });
 </script>
