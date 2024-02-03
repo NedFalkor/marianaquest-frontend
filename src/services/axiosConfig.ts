@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const apiBaseUrl: string = process.env.VUE_APP_API_BASE_URL as string;
 console.log('API Base URL:', apiBaseUrl);
@@ -6,6 +7,14 @@ console.log('API Base URL:', apiBaseUrl);
 const instance = axios.create({
   baseURL: apiBaseUrl,
 });
+
+// Fonction pour effacer le cookie en utilisant js-cookie
+const clearAuthCookies = () => {
+  // Effacement du cookie en utilisant js-cookie
+  Cookies.remove('jwtToken');
+  // Effacement du token du local storage
+  localStorage.removeItem('jwtToken');
+};
 
 // Add an interceptor to add the authentication token to each outgoing request.
 instance.interceptors.request.use(
@@ -25,3 +34,5 @@ instance.interceptors.request.use(
 );
 
 export default instance;
+
+export { clearAuthCookies }; // Exportez la fonction clearAuthCookies pour pouvoir l'utiliser ailleurs dans votre code

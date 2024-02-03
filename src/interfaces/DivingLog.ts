@@ -44,6 +44,6 @@ export interface IDivingLog {
     equipment: IDiveEquipment;
     conditions: IDiveConditions;
     comments?: IComment[];
-    signatureData: ISignatureData;
+    signatureData?: ISignatureData;
     status: string;
 }
