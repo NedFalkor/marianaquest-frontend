@@ -1,45 +1,35 @@
 import instance from '../axiosConfig';
+import { IDiverProfile } from '@/interfaces/DiverProfile';
+import Cookies from 'js-cookie';
 
 export default {
-    createDiverProfile(data: any) {
-<<<<<<< HEAD
-        return instance.post(`${backendUrl}diver-profiles/`, data);
-=======
-        console.log('Creating diver profile with data:', data);
-        return instance.post('diver-profiles/', data);
->>>>>>> 1dace89dadf7b599b7019b630de2a19a76353744
-    },
+  // Créer un profil de plongeur
+  createDiverProfile(data: IDiverProfile) {
+    return instance.post('diver-profiles/', data);
+  },
 
-    getAllDiverProfiles() {
-<<<<<<< HEAD
-        return instance.get(`${backendUrl}diver-profiles/`);
-=======
-        return instance.get('diver-profiles/');
->>>>>>> 1dace89dadf7b599b7019b630de2a19a76353744
-    },
+  // Récupérer un profil de plongeur spécifique par ID
+  getDiverProfileById(id: number) {
+    return instance.get(`diver-profiles/${id}/`);
+  },
 
-    getDiverProfileById(id: number) {
-<<<<<<< HEAD
-        return instance.get(`${backendUrl}diver-profiles/${id}/`);
-    },
+  // Récupérer tous les profils de plongeurs
+  getAllDiverProfiles() {
+    return instance.get('diver-profiles/');
+  },
 
-    updateDiverProfile(id: number, data: any) {
-        return instance.put(`${backendUrl}diver-profiles/${id}/`, data);
-=======
-        return instance.get(`diver-profiles/${id}/`);
-    },
+  // Mettre à jour un profil de plongeur spécifique
+  updateDiverProfile(id: number, data: IDiverProfile) {
+    return instance.put(`diver-profiles/${id}/`, data);
+  },
 
-    updateDiverProfile(id: number, data: any) {
-        console.log('Updating diver profile for ID:', id, 'with data:', data);
-        return instance.put(`diver-profiles/${id}/`, data);
->>>>>>> 1dace89dadf7b599b7019b630de2a19a76353744
-    },
+  // Supprimer un profil de plongeur
+  deleteDiverProfile(id: number) {
+    return instance.delete(`diver-profiles/${id}/`);
+  },
 
-    deleteDiverProfile(id: number) {
-<<<<<<< HEAD
-        return instance.delete(`${backendUrl}diver-profiles/${id}/`);
-=======
-        return instance.delete(`diver-profiles/${id}/`);
->>>>>>> 1dace89dadf7b599b7019b630de2a19a76353744
-    }
-};
+  // effacer les cookies d'authentification
+  clearAuthCookies() {
+    Cookies.remove('jwtToken');
+  },
+}

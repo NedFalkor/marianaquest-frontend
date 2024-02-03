@@ -4,6 +4,9 @@ import UserIdentity from '@/views/forms/UserIdentity.vue';
 import NemoCounter from '@/views/NemoCounter.vue';
 import UserRegister from '@/views/gatekeepers/UserRegister.vue';
 import UserAuthVue from '@/views/gatekeepers/UserAuth.vue';
+import {jwtDecode } from 'jwt-decode';
+import axios from 'axios';
+
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -45,28 +48,44 @@ const routes: Array<RouteRecordRaw> = [
     path: '/diverdashboard',
     name: 'DiverDashboard',
     component: () => import('@/views/dashboards/DiverDashboard.vue'),
-    meta: { requiresRole: ['DIVER'] }
+   meta: { requiresRole: ['DIVER'] }
   }
 ];
 
-const isAuthenticated = () => {
-  const token = localStorage.getItem('jwtToken');
-  if (!token) {
+const isAuthenticated = async () => {
+  const accessToken = localStorage.getItem('jwtToken');
+  const refreshToken = localStorage.getItem('refreshToken'); // Assuming you also store the refresh token
+
+  if (!accessToken || !refreshToken) {
     return false;
   }
+
   try {
-    const decodedToken: { exp?: number } = jwtDecode(token); // Add an explicit type for decodedToken
-    const currentTime = new Date().getTime() / 1000;
-    // Check if exp is defined and compare
+    const decodedToken = jwtDecode(accessToken);
+    const currentTime = Date.now() / 1000;
+
     if (decodedToken.exp !== undefined && decodedToken.exp > currentTime) {
       return true;
+    } else {
+      // Access token has expired, try to refresh it
+      const response = await axios.post('/api/auth/token/refresh/', { refresh: refreshToken });
+
+      if (response.data.access) {
+        // If the refresh was successful, update the tokens in local storage
+        localStorage.setItem('jwtToken', response.data.access);
+        // Optional: Update the refresh token if a new one is returned
+        if (response.data.refresh) {
+          localStorage.setItem('refreshToken', response.data.refresh);
+        }
+        return true;
+      }
     }
-    return false;
   } catch (error) {
-    console.error("Error decoding token:", error);
-    return false;
+    console.error("Error with token authentication:", error);
   }
+  return false;
 };
+
 
 export const getUserRole = (): string | null => {
   const token = localStorage.getItem('jwtToken');
@@ -87,28 +106,15 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  // Supposons que vous ayez une fonction qui vérifie si l'utilisateur est authentifié
-  const isAuthenticated = () => {
-    // Vérifier si le token JWT est stocké et valide
-    return localStorage.getItem('jwtToken') ? true : false;
-  };
-
-  // Supposons que vous ayez une fonction qui obtient le rôle de l'utilisateur
-  const userRole = () => {
-    // Obtenir le rôle de l'utilisateur à partir du store ou d'une API
-    return 'FORMATEUR'; // ou 'PLONGEUR', selon l'utilisateur
-  };
-
   if (to.meta.requiresRole) {
-    const role = userRole();
+    const role = getUserRole(); // Assurez-vous que cette fonction renvoie le rôle correctement
     if (!isAuthenticated()) {
-      next({ name: 'UserAuth' }); // Assurez-vous que le nom de la route est correct.
+      next({ name: 'UserAuth' });
     } else {
-      // Assurez-vous que `requiresRole` est un tableau avant d'utiliser `includes`.
       if (Array.isArray(to.meta.requiresRole) && to.meta.requiresRole.includes(role)) {
         next();
       } else {
-        next(false);
+        next(false); // ou rediriger vers une page d'erreur ou d'accueil
       }
     }
   } else {

@@ -1,7 +1,7 @@
-// axiosConfig.ts
 import axios from 'axios';
 
 const apiBaseUrl: string = process.env.VUE_APP_API_BASE_URL as string;
+console.log('API Base URL:', apiBaseUrl);
 
 const instance = axios.create({
   baseURL: apiBaseUrl,

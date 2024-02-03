@@ -18,8 +18,7 @@ import PersonnalInfoComponent from '@/components/forms/useridentity/PersonalInfo
 import EmergencyInfoComponent from '@/components/forms/useridentity/EmergencyInfoComponent.vue';
 import TitleComponent from '@/components/header/TitleComponent.vue';
 import HeaderComponent from '@/components/header/HeaderComponent.vue';
-import DiverProfileService from '@/services/forms/DiverProfileService';
-import { IPersonalInfo, IEmergencyContact } from '@/interfaces/DiverProfile';
+import { IPersonalInfo, IEmergencyContact, IDiverProfile } from '@/interfaces/DiverProfile';
 import axios from 'axios';
 
 export default defineComponent({
@@ -30,8 +29,24 @@ export default defineComponent({
     HeaderComponent
   },
   setup() {
-    const personalInfoData = ref<IPersonalInfo>({} as IPersonalInfo);
-    const emergencyInfoData = ref<IEmergencyContact>({} as IEmergencyContact);
+    const personalInfoData = ref<IPersonalInfo>({
+      last_name: '',
+      first_name: '',
+      address: '',
+      postal_code: '',
+      city: '',
+      country: '',
+      email: '',
+    });
+    const emergencyInfoData = ref<IEmergencyContact>({
+      last_name: '',
+      first_name: '',
+      address: '',
+      landline: null,
+      mobile: null,
+      email: '',
+    });
+
     const diverProfileId = ref<number | null>(null);
 
     const updatePersonalInfo = (data: IPersonalInfo) => {
@@ -43,11 +58,14 @@ export default defineComponent({
     };
 
     const accept = async () => {
+      // Assuming `userId` is available from your application's state or a similar source
+      const currentUserId = 1; // Placeholder value, replace with actual logic to obtain userId
+
       const formData = new FormData();
       // Append personal info data except for the 'identity_photo'
       for (const [key, value] of Object.entries(personalInfoData.value)) {
         if (key !== 'identity_photo') {
-          formData.append(key, value as string);
+          formData.append('identity_photo', personalInfoData.value.identity_photo!);// Ensure all values are converted to string
         }
       }
 
@@ -56,28 +74,52 @@ export default defineComponent({
         formData.append('identity_photo', personalInfoData.value.identity_photo);
       }
 
-      // Serialize emergency contact data as a JSON string
-      formData.append('emergency_contact', JSON.stringify(emergencyInfoData.value));
+      // Serialize emergency contact data as a JSON string and append
+      const emergencyContactJSON = JSON.stringify(emergencyInfoData.value);
+      formData.append('emergency_contact', emergencyContactJSON);
+
+      // Prepare the diverProfile object for JSON-based APIs
+      // Note: This step might be unnecessary if you're solely using FormData for your request.
+      // Adjust according to your backend API requirements.
+      const diverProfile: IDiverProfile = {
+        userId: currentUserId, // Correctly set the userId
+        personalInfo: personalInfoData.value,
+        emergencyContact: emergencyInfoData.value,
+      };
 
       try {
         let response;
+        // Determine if you are creating a new profile or updating an existing one
         if (diverProfileId.value) {
-          response = await DiverProfileService.updateDiverProfile(diverProfileId.value, formData);
+          // For APIs expecting JSON payload:
+          // response = await DiverProfileService.updateDiverProfile(diverProfileId.value, diverProfile);
+
+          // For APIs expecting FormData (e.g., for file uploads):
+          formData.append('diverProfile', JSON.stringify({ userId: currentUserId, ...diverProfile }));
+          response = await axios.put(`/api/diver-profile/${diverProfileId.value}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          });
         } else {
-          response = await DiverProfileService.createDiverProfile(formData);
-          diverProfileId.value = response.data.id;
+          // For APIs expecting JSON payload:
+          // response = await DiverProfileService.createDiverProfile(diverProfile);
+
+          // For APIs expecting FormData:
+          formData.append('diverProfile', JSON.stringify({ userId: currentUserId, ...diverProfile }));
+          response = await axios.post('/api/diver-profile', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          });
+          diverProfileId.value = response.data.id; // Assuming the API returns the id of the created profile
         }
         console.log("Server response:", response.data);
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          // Handle Axios error here
           console.error("Axios error:", error.message);
         } else {
-          // Handle generic errors here
           console.error("Error submitting data:", error);
         }
       }
     };
+
 
     return {
       personalInfoData,
@@ -90,5 +132,3 @@ export default defineComponent({
   }
 });
 </script>
-
-

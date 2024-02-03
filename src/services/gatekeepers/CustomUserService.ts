@@ -47,19 +47,44 @@ export default {
     },
 
 // Authentifier un utilisateur
-loginUser(data: { email: string, username: string, password: string }) {
+async loginUser(data: { email: string, username: string, password: string }) {
+    console.log('Attempting to log in with:', data);
+  
     return instance.post('auth/login/', data)
-        .then(response => {
-            // Here we assume the token is in response.data.access (adjust according to your backend response)
-            localStorage.setItem('jwtToken', response.data.access);
-            return response;
-        })
-        .catch(error => {
-            console.error('Login error:', error);
-            throw error;
-        });
-},
-
+      .then(response => {
+        console.log('Login response:', response);
+  
+        // Ensure that the response contains the access token
+        if (response.data && response.data.access) {
+          localStorage.setItem('jwtToken', response.data.access);
+          console.log('Access token saved to localStorage');
+        } else {
+          // If the expected token is not in the response, log an error
+          console.error('Access token not found in response data:', response.data);
+        }
+  
+        return response;
+      })
+      .catch(error => {
+        // Log detailed error information
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.error('Login error response:', error.response);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.error('Login error request:', error.request);
+        } else {
+          // Something happened in setting up the request that triggered an error
+          console.error('Login error message:', error.message);
+        }
+  
+        // Log the error config if any
+        console.error('Login error config:', error.config);
+        throw error;
+      });
+  },
+  
 
     // Déconnecter un utilisateur
     async logoutUser() {
