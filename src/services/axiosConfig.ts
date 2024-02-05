@@ -9,7 +9,7 @@ const instance = axios.create({
 });
 
 // Fonction pour effacer le cookie en utilisant js-cookie
-const clearAuthCookies = () => {
+export const clearAuthCookies = () => {
   // Effacement du cookie en utilisant js-cookie
   Cookies.remove('jwtToken');
   // Effacement du token du local storage
@@ -34,5 +34,3 @@ instance.interceptors.request.use(
 );
 
 export default instance;
-
-export { clearAuthCookies }; // Exportez la fonction clearAuthCookies pour pouvoir l'utiliser ailleurs dans votre code

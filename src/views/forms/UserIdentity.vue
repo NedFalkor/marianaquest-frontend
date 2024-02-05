@@ -18,8 +18,8 @@ import PersonnalInfoComponent from '@/components/forms/useridentity/PersonalInfo
 import EmergencyInfoComponent from '@/components/forms/useridentity/EmergencyInfoComponent.vue';
 import TitleComponent from '@/components/header/TitleComponent.vue';
 import HeaderComponent from '@/components/header/HeaderComponent.vue';
-import { IPersonalInfo, IEmergencyContact, IDiverProfile } from '@/interfaces/DiverProfile';
 import axios from 'axios';
+import { IDiverProfile, IEmergencyContact, IPersonalInfo } from '@/interfaces/Users/DiverProfile';
 
 export default defineComponent({
   components: {
@@ -63,9 +63,12 @@ export default defineComponent({
 
       const formData = new FormData();
       // Append personal info data except for the 'identity_photo'
-      for (const [key, value] of Object.entries(personalInfoData.value)) {
+      for (const [key] of Object.entries(personalInfoData.value)) {
         if (key !== 'identity_photo') {
-          formData.append('identity_photo', personalInfoData.value.identity_photo!);// Ensure all values are converted to string
+          if (personalInfoData.value.identity_photo) {
+            formData.append('identity_photo', personalInfoData.value.identity_photo);
+          }
+
         }
       }
 

@@ -6,6 +6,9 @@ import UserRegister from '@/views/gatekeepers/UserRegister.vue';
 import UserAuthVue from '@/views/gatekeepers/UserAuth.vue';
 import {jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import { clearAuthCookies } from '@/services/axiosConfig';
+import { RouteMeta } from '@/interfaces/JWT Tokens/RouteMeta';
+import { ICustomJwtPayload } from '@/interfaces/JWT Tokens/CustomJWTPayload';
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -16,17 +19,20 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/divelog',
     name: 'DiveLog',
-    component: DiveLog
+    component: DiveLog,
+    meta: { requiresAuth: true }
   },
   {
     path: '/useridentity',
     name: 'UserIdentity',
-    component: UserIdentity
+    component: UserIdentity,
+    meta: { requiresAuth: true }
   },
   {
     path: '/nemocounter',
     name: 'NemoCounter',
-    component: NemoCounter
+    component: NemoCounter,
+    meta: { requiresAuth: true }
   },
   {
     path: '/userregister',
@@ -42,84 +48,100 @@ const routes: Array<RouteRecordRaw> = [
     path: '/instructordashboard',
     name: 'InstructorDashboard',
     component: () => import('@/views/dashboards/InstructorDashboard.vue'),
-    meta: { requiresRole: ['INSTRUCTOR'] }
+    meta: { requiresAuth: true, requiresRole: ['INSTRUCTOR'] } as Record<string, any>
   },
   {
     path: '/diverdashboard',
     name: 'DiverDashboard',
     component: () => import('@/views/dashboards/DiverDashboard.vue'),
-   meta: { requiresRole: ['DIVER'] }
+   meta: { requiresAuth: true, requiresRole: ['DIVER'] } as Record<string, any> 
   }
 ];
 
+
 const isAuthenticated = async () => {
   const accessToken = localStorage.getItem('jwtToken');
-  const refreshToken = localStorage.getItem('refreshToken'); // Assuming you also store the refresh token
+  const refreshToken = localStorage.getItem('refreshToken');
 
   if (!accessToken || !refreshToken) {
     return false;
   }
 
   try {
-    const decodedToken = jwtDecode(accessToken);
+    const decodedToken = jwtDecode<ICustomJwtPayload>(accessToken);
     const currentTime = Date.now() / 1000;
 
     if (decodedToken.exp !== undefined && decodedToken.exp > currentTime) {
       return true;
-    } else {
-      // Access token has expired, try to refresh it
-      const response = await axios.post('/api/auth/token/refresh/', { refresh: refreshToken });
-
-      if (response.data.access) {
-        // If the refresh was successful, update the tokens in local storage
-        localStorage.setItem('jwtToken', response.data.access);
-        // Optional: Update the refresh token if a new one is returned
-        if (response.data.refresh) {
-          localStorage.setItem('refreshToken', response.data.refresh);
-        }
-        return true;
-      }
     }
-  } catch (error) {
-    console.error("Error with token authentication:", error);
+
+    // Access token has expired, try to refresh it
+    const response = await axios.post('/api/auth/token/refresh/', { refresh: refreshToken });
+
+    if (response.data.access) {
+      console.log('Old access token before refresh:', localStorage.getItem('jwtToken')); // Ajout pour diagnostic
+      localStorage.setItem('jwtToken', response.data.access);
+      console.log('New access token after refresh:', response.data.access); // Ajout pour diagnostic
+      if (response.data.refresh) {
+        console.log('Old refresh token before refresh:', localStorage.getItem('refreshToken')); // Ajout pour diagnostic
+        localStorage.setItem('refreshToken', response.data.refresh);
+        console.log('New refresh token after refresh:', response.data.refresh); // Ajout pour diagnostic
+      }
+      return true;
+    }
+  } 
+  catch (error) {
+    // Handle the case where refreshing the token fails
+    console.error("Error refreshing token:", error);
+    clearAuthCookies(); // Clear tokens as the refresh has failed
+    return false;
   }
   return false;
 };
-
 
 export const getUserRole = (): string | null => {
   const token = localStorage.getItem('jwtToken');
   if (!token) return null;
 
   try {
-    const decodedToken: { role?: string } = jwtDecode(token); // Specify the expected properties and types within the decoded token
-    return decodedToken.role ?? null; // Use the nullish coalescing operator to return null if role is undefined
+    // Use the jwt-decode library to decode the token and specify the expected payload type
+    const decodedToken = jwtDecode<ICustomJwtPayload>(token);
+
+    // Now you can access the custom claims directly with type safety
+    return decodedToken.role ?? null;
   } catch (error) {
     console.error("Error decoding token:", error);
     return null;
   }
 };
 
+
 const router = createRouter({
   history: createWebHashHistory(),
   routes
 });
 
-router.beforeEach((to, from, next) => {
-  if (to.meta.requiresRole) {
-    const role = getUserRole(); // Assurez-vous que cette fonction renvoie le rôle correctement
-    if (!isAuthenticated()) {
-      next({ name: 'UserAuth' });
-    } else {
-      if (Array.isArray(to.meta.requiresRole) && to.meta.requiresRole.includes(role)) {
-        next();
-      } else {
-        next(false); // ou rediriger vers une page d'erreur ou d'accueil
-      }
-    }
-  } else {
-    next();
+
+router.beforeEach(async (to, from, next) => {
+  const meta = to.meta as RouteMeta;
+  const isAuthenticatedResult = await isAuthenticated();
+
+  if (meta.requiresAuth && !isAuthenticatedResult) {
+    return next({ name: 'UserAuth' });
   }
+
+  // Define userRole here, after isAuthenticatedResult to ensure it's in scope
+  const userRole = getUserRole();
+
+  if (meta.requiresRole) {
+    // Ensure userRole is defined before using it
+    if (!userRole || !meta.requiresRole.includes(userRole)) {
+      return next({ name: 'ErrorPage' });
+    }
+  }
+
+  next();
 });
+
 
 export default router;

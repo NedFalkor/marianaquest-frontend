@@ -1,5 +1,5 @@
 import instance from '../axiosConfig';
-import { IDiverProfile } from '@/interfaces/DiverProfile';
+import { IDiverProfile } from '@/interfaces/Users/DiverProfile';
 import Cookies from 'js-cookie';
 
 export default {

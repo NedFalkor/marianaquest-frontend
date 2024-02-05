@@ -63,13 +63,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { IDiveGroup } from '@/interfaces/DiveGroup';
-import { ICustomUser } from '@/interfaces/CustomUser';
-<<<<<<< HEAD
-=======
 import DiveGroupService from '@/services/forms/DiveGroupService';
 import { AxiosError } from 'axios';
->>>>>>> 1dace89dadf7b599b7019b630de2a19a76353744
+import { ICustomUser } from '@/interfaces/Users/CustomUser';
+import { IDiveGroup } from '@/interfaces/Users/DiveGroup';
 
 export default defineComponent({
     name: 'DiveGroupForm',
@@ -88,17 +85,6 @@ export default defineComponent({
         };
     },
     mounted() {
-<<<<<<< HEAD
-        // Chargez les données ici (boatDrivers, trainers, allDivers)
-    },
-    methods: {
-        submitForm() {
-            // Logique de soumission du formulaire
-        },
-    },
-});
-</script>
-=======
         this.loadInitialData();
     },
     methods: {
@@ -134,4 +120,3 @@ export default defineComponent({
     }
 });
 </script>
->>>>>>> 1dace89dadf7b599b7019b630de2a19a76353744

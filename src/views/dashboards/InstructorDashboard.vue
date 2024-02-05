@@ -22,8 +22,8 @@ import DiveLogService from '@/services/forms/DiveLogService';
 import { IDivingLog } from '@/interfaces/DivingLog';
 import { defineComponent } from 'vue';
 import CustomUserService from '@/services/gatekeepers/CustomUserService';
-import { ICustomUser } from '@/interfaces/CustomUser';
 import { IComment } from '@/interfaces/InstructorComment';
+import { ICustomUser } from '@/interfaces/Users/CustomUser';
 
 export default defineComponent({
     components: {
@@ -72,4 +72,4 @@ export default defineComponent({
         },
     },
 });
-</script>
+</script>@/interfaces/Users/CustomUser

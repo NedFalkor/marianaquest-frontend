@@ -10,9 +10,9 @@
 </template>
   
 <script lang="ts">
+import { ICustomUser } from '@/interfaces/Users/CustomUser';
 import CustomUserService from '@/services/gatekeepers/CustomUserService';
 import { defineComponent, onMounted, ref } from 'vue';
-import { ICustomUser } from '@/interfaces/CustomUser';
 
 export default defineComponent({
     name: 'UserList',
@@ -34,4 +34,4 @@ export default defineComponent({
         };
     }
 });
-</script>
+</script>@/interfaces/Users/CustomUser

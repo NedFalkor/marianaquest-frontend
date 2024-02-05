@@ -21,7 +21,7 @@ import { AxiosError } from 'axios';
 import UserRegisterFormComponentVue from '@/components/forms/gatekeepers/UserRegisterFormComponent.vue';
 import router from '@/router';
 import CustomUserService from '@/services/gatekeepers/CustomUserService';
-import { ICustomUser } from '@/interfaces/CustomUser';
+import { ICustomUser } from '@/interfaces/Users/CustomUser';
 
 export default defineComponent({
   components: {
@@ -59,4 +59,4 @@ export default defineComponent({
     };
   },
 });
-</script>
+</script>@/interfaces/Users/CustomUser

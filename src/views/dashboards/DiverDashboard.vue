@@ -35,8 +35,8 @@ import { defineComponent } from 'vue';
 import DiveLogService from '@/services/forms/DiveLogService';
 import NotificationService from '@/services/NotificationService';
 import { IDivingLog } from '@/interfaces/DivingLog';
-import { ICustomUser } from '@/interfaces/CustomUser';
 import CustomUserService from '@/services/gatekeepers/CustomUserService';
+import { ICustomUser } from '@/interfaces/Users/CustomUser';
 
 export default defineComponent({
     data() {
@@ -149,3 +149,4 @@ export default defineComponent({
     }
 });
 </script>
+@/interfaces/Users/CustomUser

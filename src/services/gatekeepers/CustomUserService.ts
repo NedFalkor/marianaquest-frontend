@@ -1,7 +1,6 @@
 // Importez l'instance Axios configurée
 import instance, { clearAuthCookies } from '../axiosConfig';
-import { ICustomUser } from '@/interfaces/CustomUser';
-import Cookies from 'js-cookie';
+import { ICustomUser } from '@/interfaces/Users/CustomUser';
 
 // Écouteur d'événement beforeunload pour effacer les cookies lors de la fermeture de l'onglet ou de la navigation
 window.addEventListener('beforeunload', () => {
@@ -60,8 +59,13 @@ export default {
     
             // Ensure that the response contains the access token
             if (response.data && response.data.access) {
+              console.log('Old token:', localStorage.getItem('jwtToken'));
               localStorage.setItem('jwtToken', response.data.access);
-              console.log('Access token saved to localStorage');
+              console.log('New access token saved to localStorage:', response.data.access);
+              if (response.data.refresh) {
+                localStorage.setItem('refreshToken', response.data.refresh);
+                console.log('New refresh token saved to localStorage:', response.data.refresh); // Ajout pour diagnostic
+              }
             } else {
               // If the expected token is not in the response, log an error
               console.error('Access token not found in response data:', response.data);

@@ -1,6 +1,6 @@
-import { ICustomUser } from '@/interfaces/CustomUser';
+import { ICustomUser } from '@/interfaces/Users/CustomUser';
 import instance from '../axiosConfig';
-import { IDiveGroup } from '@/interfaces/DiveGroup';
+import { IDiveGroup } from '@/interfaces/Users/DiveGroup';
 
 export default {
     // Créer un nouveau groupe de plongée
