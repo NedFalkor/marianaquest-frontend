@@ -45,7 +45,7 @@ const routes: Array<RouteRecordRaw> = [
     component: UserAuthVue
   },
   {
-    path: '/instructordashboard',
+    path: '/instructordashboard/:instructorId',
     name: 'InstructorDashboard',
     component: () => import('@/views/dashboards/InstructorDashboard.vue'),
     meta: { requiresAuth: true, requiresRole: ['INSTRUCTOR'] } as Record<string, any>

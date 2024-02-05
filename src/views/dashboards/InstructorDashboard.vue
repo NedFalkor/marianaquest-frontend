@@ -8,10 +8,12 @@
     <div class="bg-gray-100 w-full p-6">
         <div v-for="log in divingLogs" :key="log.id" class="mb-4 p-4 bg-white shadow rounded">
             <div class="mb-2">
-                <span class="font-semibold">Dive Log ID:</span> {{ log.id }}
+                <span class="font-semibold">Dive Log ID:</span>
+                <span>{{ log.id.toString() }}</span>
             </div>
-            <InstructorCommentComponent v-if="instructorId !== null" :diving-log-id="log.id" :instructor-id="instructorId"
-                @comment-posted="handleCommentPost($event)" />
+            <InstructorCommentComponent v-if="instructorId !== null" :diving-log-id="log.id.toString()"
+                :instructor-id="instructorId" @comment-posted="handleCommentPost($event)" />
+
         </div>
     </div>
 </template>
@@ -24,14 +26,21 @@ import { defineComponent } from 'vue';
 import CustomUserService from '@/services/gatekeepers/CustomUserService';
 import { IComment } from '@/interfaces/InstructorComment';
 import { ICustomUser } from '@/interfaces/Users/CustomUser';
+import { RouteLocationNormalizedLoaded } from 'vue-router';
 
 export default defineComponent({
     components: {
         InstructorCommentComponent,
     },
+    props: {
+        divingLogId: {
+            type: String,
+            required: true,
+        },
+    },
     data() {
         return {
-            instructorId: null as number | null,
+            instructorId: (null as number | null),
             divingLogs: [] as IDivingLog[],
             userData: {} as ICustomUser,
         };
@@ -39,6 +48,13 @@ export default defineComponent({
     async mounted() {
         await this.fetchUserData();
         this.loadDivingLogs();
+    },
+    computed: {
+        // Use a computed property to get the instructorId from the route
+        instructorIdFromRoute(): number | null {
+            const route = this.$route as RouteLocationNormalizedLoaded;
+            return route.params.instructorId ? parseInt(route.params.instructorId as string, 10) : null;
+        },
     },
     methods: {
         async fetchUserData() {
@@ -72,4 +88,4 @@ export default defineComponent({
         },
     },
 });
-</script>@/interfaces/Users/CustomUser
+</script>
