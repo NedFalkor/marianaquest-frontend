@@ -68,8 +68,10 @@ export default defineComponent({
     });
 
     const logout = async () => {
+      console.log("Logging out user...");
       try {
-        await instance.post('auth/logout/');
+        const response = await instance.post('auth/logout/');
+        console.log("Logout response:", response);
         localStorage.removeItem('jwtToken');
         Cookies.remove('jwtToken'); // If you're using cookies to store the token
         router.push('/userauth'); // Redirect to the login page after logout
@@ -77,6 +79,7 @@ export default defineComponent({
         console.error('Error during logout:', error);
       }
     };
+
 
     return {
       navigation,

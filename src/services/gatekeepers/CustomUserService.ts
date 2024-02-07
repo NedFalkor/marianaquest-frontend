@@ -1,4 +1,5 @@
 // Importez l'instance Axios configurée
+import axios, { AxiosError } from 'axios';
 import instance, { clearAuthCookies } from '../axiosConfig';
 import { ICustomUser } from '@/interfaces/Users/CustomUser';
 
@@ -51,47 +52,55 @@ export default {
 
     // Authentifier un utilisateur
     async loginUser(data: { email: string, username: string, password: string }) {
-        console.log('Attempting to log in with:', data);
+      // Clear any old tokens before starting a new login process
+      localStorage.removeItem('jwtToken');
+      localStorage.removeItem('refreshToken');
     
-        return instance.post('auth/login/', data)
-          .then(response => {
-            console.log('Login response:', response);
+      console.log('Attempting to log in with:', data);
     
-            // Ensure that the response contains the access token
-            if (response.data && response.data.access) {
-              console.log('Old token:', localStorage.getItem('jwtToken'));
-              localStorage.setItem('jwtToken', response.data.access);
-              console.log('New access token saved to localStorage:', response.data.access);
-              if (response.data.refresh) {
-                localStorage.setItem('refreshToken', response.data.refresh);
-                console.log('New refresh token saved to localStorage:', response.data.refresh); // Ajout pour diagnostic
-              }
-            } else {
-              // If the expected token is not in the response, log an error
-              console.error('Access token not found in response data:', response.data);
-            }
+      try {
+        const response = await instance.post('auth/login/', data);
+        console.log('Login response:', response);
     
-            return response;
-          })
-          .catch(error => {
-            // Log detailed error information
-            if (error.response) {
-              // The request was made and the server responded with a status code
-              // that falls out of the range of 2xx
-              console.error('Login error response:', error.response);
-            } else if (error.request) {
-              // The request was made but no response was received
-              console.error('Login error request:', error.request);
-            } else {
-              // Something happened in setting up the request that triggered an error
-              console.error('Login error message:', error.message);
-            }
+        // Ensure that the response contains the access token
+        if (response.data && response.data.access) {
+          localStorage.setItem('jwtToken', response.data.access);
+          console.log('New access token saved to localStorage:', response.data.access);
     
-            // Log the error config if any
-            console.error('Login error config:', error.config);
-            throw error;
-          });
+          if (response.data.refresh) {
+            localStorage.setItem('refreshToken', response.data.refresh);
+            console.log('New refresh token saved to localStorage:', response.data.refresh);
+          }
+        } else {
+          // If the expected token is not in the response, log an error
+          console.error('Access token not found in response data:', response.data);
+        }
+    
+        return response;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          this.handleLoginError(error);
+        } else {
+          console.error('Unexpected error:', error);
+        }
+        throw error; // Re-throw the error if you need to handle it further up the chain
+      }
     },
+    
+    handleLoginError(error: AxiosError) {
+      // Check if the error is an AxiosError
+      if (error.response) {
+        console.error('Login error response:', error.response);
+      } else if (error.request) {
+        console.error('Login error request:', error.request);
+      } else {
+        // Error message will exist on an instance of an Error
+        console.error('Login error message:', error.message);
+      }
+    
+      console.error('Login error config:', error.config);
+    },
+    
     
     // Déconnecter un utilisateur
     async logoutUser() {
@@ -109,4 +118,5 @@ export default {
         throw error;
       }
     },
+    
 };

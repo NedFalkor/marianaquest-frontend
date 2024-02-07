@@ -6,7 +6,6 @@ import UserRegister from '@/views/gatekeepers/UserRegister.vue';
 import UserAuthVue from '@/views/gatekeepers/UserAuth.vue';
 import {jwtDecode } from 'jwt-decode';
 import axios from 'axios';
-import { clearAuthCookies } from '@/services/axiosConfig';
 import { RouteMeta } from '@/interfaces/JWT Tokens/RouteMeta';
 import { ICustomJwtPayload } from '@/interfaces/JWT Tokens/CustomJWTPayload';
 
@@ -54,16 +53,21 @@ const routes: Array<RouteRecordRaw> = [
     path: '/diverdashboard',
     name: 'DiverDashboard',
     component: () => import('@/views/dashboards/DiverDashboard.vue'),
-   meta: { requiresAuth: true, requiresRole: ['DIVER'] } as Record<string, any> 
+    meta: { requiresAuth: true, requiresRole: ['DIVER'] } as Record<string, any> 
   }
 ];
 
+const clearAuthStorage = () => {
+  localStorage.removeItem('jwtToken');
+  localStorage.removeItem('refreshToken');
+};
 
 const isAuthenticated = async () => {
   const accessToken = localStorage.getItem('jwtToken');
   const refreshToken = localStorage.getItem('refreshToken');
 
   if (!accessToken || !refreshToken) {
+    clearAuthStorage();
     return false;
   }
 
@@ -71,7 +75,7 @@ const isAuthenticated = async () => {
     const decodedToken = jwtDecode<ICustomJwtPayload>(accessToken);
     const currentTime = Date.now() / 1000;
 
-    if (decodedToken.exp !== undefined && decodedToken.exp > currentTime) {
+    if (decodedToken.exp && decodedToken.exp > currentTime) {
       return true;
     }
 
@@ -79,25 +83,22 @@ const isAuthenticated = async () => {
     const response = await axios.post('/api/auth/token/refresh/', { refresh: refreshToken });
 
     if (response.data.access) {
-      console.log('Old access token before refresh:', localStorage.getItem('jwtToken')); // Ajout pour diagnostic
       localStorage.setItem('jwtToken', response.data.access);
-      console.log('New access token after refresh:', response.data.access); // Ajout pour diagnostic
       if (response.data.refresh) {
-        console.log('Old refresh token before refresh:', localStorage.getItem('refreshToken')); // Ajout pour diagnostic
         localStorage.setItem('refreshToken', response.data.refresh);
-        console.log('New refresh token after refresh:', response.data.refresh); // Ajout pour diagnostic
       }
       return true;
     }
-  } 
-  catch (error) {
-    // Handle the case where refreshing the token fails
+  } catch (error) {
     console.error("Error refreshing token:", error);
-    clearAuthCookies(); // Clear tokens as the refresh has failed
+    clearAuthStorage();
     return false;
   }
+
+  clearAuthStorage();
   return false;
 };
+
 
 export const getUserRole = (): string | null => {
   const token = localStorage.getItem('jwtToken');

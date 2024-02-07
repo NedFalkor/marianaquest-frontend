@@ -18,6 +18,7 @@
 </template>
 
 <script lang="ts">
+
 import { Options, Vue } from "vue-class-component";
 import { IDiveConditions, IDiveEquipment, IDiveSettings, IDivingLog } from "@/interfaces/DivingLog";
 import DiveConditionsComponentVue from "@/components/forms/divelog/DiveConditionsComponent.vue";
@@ -26,6 +27,9 @@ import DiveEquipmentComponentVue from "@/components/forms/divelog/DiveEquipmentC
 import DiveLogService from "@/services/forms/DiveLogService";
 import TitleComponent from "@/components/header/TitleComponent.vue";
 import HeaderComponent from "@/components/header/HeaderComponent.vue";
+import { jwtDecode } from "jwt-decode";
+import { ICustomJwtPayload } from "@/interfaces/JWT Tokens/CustomJWTPayload";
+import { ICustomUser } from "@/interfaces/Users/CustomUser";
 
 @Options({
   components: {
@@ -46,19 +50,60 @@ export default class DiveLog extends Vue {
     conditions: {} as IDiveConditions
   };
 
-  updateData<K extends keyof IDivingLog>(section: K, updatedData: IDivingLog[K]) {
+  public updateData<K extends keyof IDivingLog>(section: K, updatedData: IDivingLog[K]) {
     this.diveData[section] = updatedData;
   }
 
+  // This method might be called after you receive the user data from the backend
+  setUserData(userData: ICustomUser) {
+    if (userData.id) {
+      this.diveData.user = userData.id;
+    } else {
+      console.error('User data does not have an ID!');
+    }
+  }
+
+  created() {
+    console.log("Directly assigned User ID:", this.diveData.user);
+  }
+
+
+  decodeTokenAndSetUserId() {
+    // The key here should match the key used when the token is stored.
+    const token = localStorage.getItem('jwtToken');
+    if (token) {
+      try {
+        const decoded = jwtDecode<ICustomJwtPayload>(token);
+        if (decoded.user_id) {
+          this.diveData.user = decoded.user_id;
+          console.log("User ID set from token:", this.diveData.user);
+        } else {
+          console.error('JWT payload does not contain user_id.');
+          // Here you may want to handle what happens if the user_id is not in the token
+        }
+      } catch (error) {
+        console.error('Error decoding JWT token:', error);
+        // Here you may want to handle what happens if the token cannot be decoded
+      }
+    } else {
+      console.error('No jwtToken found in localStorage.');
+      // Here you may want to handle what happens if the token is not found
+    }
+  }
+
+
   async submitForm() {
-    console.log("Envoi des données au backend:", this.diveData);
     try {
+      // Ensure user ID is decoded from the token and set before submission
+      this.decodeTokenAndSetUserId();
+
+      console.log("User ID at form submission:", this.diveData.user);
+      console.log("Envoi des données au backend:", this.diveData);
+
       const response = await DiveLogService.createDiveLog(this.diveData);
       console.log("Dive log created:", response.data);
-      // Handle successful form submission, like redirecting to another page or showing a success message
     } catch (error) {
       console.error("Erreur lors de la création du journal de plongée:", error);
-      // Handle error, like showing an error message to the user
     }
   }
 }
