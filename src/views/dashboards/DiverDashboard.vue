@@ -6,6 +6,11 @@
         <EmergencyInfo :emergency-info="userData.emergencyContact" @update-emergency-info="updateUserData" />
     </div>
     <div class="bg-gray-100 w-full p-6">
+        <dive-log-list-component :diveLogs="divingLogs" @edit-log="handleEditLog"
+            @delete-log="handleDeleteLog"></dive-log-list-component>
+
+    </div>
+    <div class="bg-gray-100 w-full p-6">
 
         <!-- List of Dive Logs -->
         <div v-for="log in divingLogs" :key="log.id" class="mb-4 p-4 bg-white shadow rounded">
@@ -13,10 +18,11 @@
                 <span class="font-semibold">Dive Log ID:</span> {{ log.id }}
             </div>
             <!-- Edit and Delete buttons -->
-            <button @click="editLog(log)" class="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button @click="handleEditLog(log)"
+                class="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Edit
             </button>
-            <button @click="deleteLogRequest(log)"
+            <button @click="handleDeleteLog(log)"
                 class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                 Delete
             </button>
@@ -33,12 +39,16 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import DiveLogService from '@/services/forms/DiveLogService';
+import DiveLogListComponent from '@/components/forms/divelog/DiveLogListComponent.vue';
 import NotificationService from '@/services/NotificationService';
 import { IDivingLog } from '@/interfaces/DivingLog';
 import CustomUserService from '@/services/gatekeepers/CustomUserService';
 import { ICustomUser } from '@/interfaces/Users/CustomUser';
 
 export default defineComponent({
+    components: {
+        DiveLogListComponent,
+    },
     data() {
         return {
             diverId: null as number | null,
@@ -47,7 +57,7 @@ export default defineComponent({
             editedLog: null as IDivingLog | null,
             isEditing: false,
             viewingDetails: false,
-            userData: {} as ICustomUser
+            userData: {} as ICustomUser,
         };
     },
     methods: {
@@ -94,14 +104,14 @@ export default defineComponent({
             }
         },
 
-        editLog(log: IDivingLog) {
+        handleEditLog(log: IDivingLog) {
             console.log("Editing Log:", log);
             this.editedLog = { ...log };
             this.isEditing = true;
             // Navigate to edit page or open edit modal
         },
 
-        deleteLogRequest(log: IDivingLog) {
+        handleDeleteLog(log: IDivingLog) {
             console.log("Deleting Log:", log);
             if (confirm('Are you sure you want to delete this log?')) {
                 DiveLogService.deleteDiveLog(log.id)
@@ -149,4 +159,3 @@ export default defineComponent({
     }
 });
 </script>
-@/interfaces/Users/CustomUser

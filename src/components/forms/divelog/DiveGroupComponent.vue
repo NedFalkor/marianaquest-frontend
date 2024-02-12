@@ -2,6 +2,18 @@
     <div class="bg-gray-100 w-1/2 p-6">
         <h2 class="font-bold text-xl mb-4">Dive Group Form</h2>
 
+        <div class="mb-4">
+            <label for="existingGroups" class="block text-gray-700 text-sm font-bold mb-2">Existing Dive Groups:</label>
+            <select id="existingGroups" v-model="selectedDiveGroup"
+                class="shadow border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline">
+                <option disabled value="">Please select one</option>
+                <option v-for="group in existingDiveGroups" :key="group.id" :value="group.id">
+                    {{ group.groupDescription }}
+                </option>
+            </select>
+        </div>
+
+
         <!-- Group Description -->
         <div class="mb-4">
             <label for="groupDescription" class="block text-gray-700 text-sm font-bold mb-2">Group Description:</label>
@@ -64,7 +76,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import DiveGroupService from '@/services/forms/DiveGroupService';
-import { AxiosError } from 'axios';
 import { ICustomUser } from '@/interfaces/Users/CustomUser';
 import { IDiveGroup } from '@/interfaces/Users/DiveGroup';
 
@@ -72,6 +83,8 @@ export default defineComponent({
     name: 'DiveGroupForm',
     data() {
         return {
+            existingDiveGroups: [] as IDiveGroup[],
+            selectedDiveGroup: null,
             diveGroup: {
                 groupDescription: '',
                 boatDriver: null,
@@ -87,33 +100,41 @@ export default defineComponent({
     mounted() {
         this.loadInitialData();
     },
+    watch: {
+        selectedDiveGroup(newVal) {
+            // Trouvez le groupe sélectionné dans existingDiveGroups et mettez à jour diveGroup avec ses données
+            const selectedGroup = this.existingDiveGroups.find(group => group.id === newVal);
+            if (selectedGroup) {
+                this.diveGroup = { ...selectedGroup };
+                // Vous pouvez également ajuster les champs individuellement
+            }
+        }
+    },
     methods: {
-        loadInitialData() {
-            DiveGroupService.getAllInstructors()
-                .then((response: any) => { // Typage de la réponse
-                    this.trainers = response.data;
-                    this.boatDrivers = response.data;
-                })
-                .catch((error: AxiosError) => { // Typage de l'erreur
-                    console.error('Erreur lors du chargement des instructeurs', error.message);
-                });
+        async loadInitialData() {
+            try {
+                const instructorsResponse = await DiveGroupService.getAllInstructors();
+                this.trainers = instructorsResponse.data;
+                this.boatDrivers = instructorsResponse.data;
 
-            DiveGroupService.getAllDivers()
-                .then((response: any) => { // Typage de la réponse
-                    this.allDivers = response.data;
-                })
-                .catch((error: AxiosError) => { // Typage de l'erreur
-                    console.error('Erreur lors du chargement des plongeurs', error.message);
-                });
+                const diversResponse = await DiveGroupService.getAllDivers();
+                this.allDivers = diversResponse.data;
+
+                const groupsResponse = await DiveGroupService.getAllDiveGroups();
+                this.existingDiveGroups = groupsResponse.data;
+            } catch (error) {
+                console.error('Erreur lors du chargement des données', error);
+            }
         },
+
         submitForm() {
             DiveGroupService.createDiveGroup(this.diveGroup)
-                .then((response: any) => {
+                .then((response) => {
                     console.log('Groupe de plongée créé avec succès', response.data);
                     // Gérer la soumission réussie ici (par exemple, redirection ou message de succès)
                 })
-                .catch((error: any) => {
-                    console.error('Erreur lors de la création du groupe de plongée', error);
+                .catch((error) => {
+                    console.error('Erreur lors de la création du groupe de plongée', error.message);
                     // Gérer l'erreur ici (par exemple, afficher un message d'erreur)
                 });
         }

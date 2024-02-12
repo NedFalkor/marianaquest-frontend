@@ -3,15 +3,17 @@
         <ul>
             <li v-for="log in diveLogs" :key="log.id">
                 {{ log.settings.dive_site }} - {{ log.settings.dive_date }}
-                <slot :log="log"></slot>
+                <!-- Supposez que chaque log a un bouton d'édition et de suppression -->
+                <button @click="emitEditLog(log)">Edit</button>
+                <button @click="emitDeleteLog(log)">Delete</button>
             </li>
         </ul>
     </div>
 </template>
-  
+
 <script lang="ts">
-import { IDivingLog } from '@/interfaces/DivingLog';
 import { defineComponent, PropType } from 'vue';
+import { IDivingLog } from '@/interfaces/DivingLog';
 
 export default defineComponent({
     name: 'DiveLogListComponent',
@@ -19,6 +21,14 @@ export default defineComponent({
         diveLogs: {
             type: Array as PropType<IDivingLog[]>,
             required: true,
+        },
+    },
+    methods: {
+        emitEditLog(log: IDivingLog) {
+            this.$emit('edit-log', log);
+        },
+        emitDeleteLog(log: IDivingLog) {
+            this.$emit('delete-log', log);
         },
     },
 });

@@ -12,6 +12,10 @@ export default {
         return instance.get('diving-logs/');
     },
 
+    getAllAwaitingDiveLogs() {
+        return instance.get('diving-logs/?status=AWAITING');
+    },
+
     // Récupérer un log de plongée spécifique par ID
     getDiveLogById(id: number) {
         return instance.get(`diving-logs/${id}/`);
@@ -30,5 +34,18 @@ export default {
     // Récupérer les logs de plongée de l'utilisateur
     getDiveLogsByDiver(diverId: number) {
         return instance.get(`diving-logs/diver/${diverId}/`);
+    },
+
+    requestLogModification(logId: number, userId: number, modificationDetails: string) {
+        return instance.post(`/api/logs/${logId}/modification-request`, {
+            userId,
+            modificationDetails
+        });
+    },
+
+    confirmLogDeletion(logId: number, userId: number) {
+        return instance.post(`/api/logs/${logId}/confirm-deletion`, {
+            userId
+        });
     },
 };

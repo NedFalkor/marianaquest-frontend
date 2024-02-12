@@ -1,4 +1,5 @@
 import { IComment } from "./InstructorComment";
+import { IDiveGroup } from "./Users/DiveGroup";
 
 export interface IDiveSettings {
     dive_number?: number;
@@ -43,6 +44,7 @@ export interface IDivingLog {
     settings: IDiveSettings;
     equipment: IDiveEquipment;
     conditions: IDiveConditions;
+    diveGroup?: IDiveGroup;
     comments?: IComment[];
     signatureData?: ISignatureData;
     status: string;

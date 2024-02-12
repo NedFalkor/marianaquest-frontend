@@ -126,23 +126,24 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const meta = to.meta as RouteMeta;
   const isAuthenticatedResult = await isAuthenticated();
+  const userRole = getUserRole();
 
   if (meta.requiresAuth && !isAuthenticatedResult) {
     return next({ name: 'UserAuth' });
   }
 
-  // Define userRole here, after isAuthenticatedResult to ensure it's in scope
-  const userRole = getUserRole();
-
   if (meta.requiresRole) {
-    // Ensure userRole is defined before using it
     if (!userRole || !meta.requiresRole.includes(userRole)) {
+      // Redirect to the error page if the user does not have the required role
       return next({ name: 'ErrorPage' });
     }
   }
 
+  // Proceed to the route if the user is authenticated and has the required role (or no specific role is required)
   next();
 });
+
+
 
 
 export default router;

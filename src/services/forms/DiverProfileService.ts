@@ -5,7 +5,11 @@ import Cookies from 'js-cookie';
 export default {
   // Créer un profil de plongeur
   createDiverProfile(data: IDiverProfile) {
-    return instance.post('diver-profiles/', data);
+    return instance.post('diver-profiles/', data, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   },
 
   // Récupérer un profil de plongeur spécifique par ID

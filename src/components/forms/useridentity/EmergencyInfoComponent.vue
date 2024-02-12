@@ -59,7 +59,7 @@
 
     <!-- Champ pour l'Adresse Email -->
     <div class="mb-4">
-      <h3 class="text-xl mb-2 text-center">Adresse Email</h3>
+      <h3 class="text-xl mb-2 text-center">Adresse EMAIL</h3>
       <div class="relative">
         <i class="fas fa-envelope absolute left-2 top-3 text-gray-600 text-lg"></i>
         <input v-model="email" type="email" id="emergencyEmail"
@@ -71,32 +71,63 @@
 
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
+
+interface EmergencyContact {
+  last_name: string;
+  first_name: string;
+  address: string;
+  landline: string | null;
+  mobile: string | null;
+  email: string;
+}
 
 export default defineComponent({
-  name: 'EmergencyInfo',
-  data() {
+  name: 'EmergencyInfoForm',
+  props: {
+    emergencyContact: {
+      type: Object,
+      default: () => ({
+        last_name: '',
+        first_name: '',
+        address: '',
+        landline: null,
+        mobile: null,
+        email: '',
+      }),
+    },
+  },
+  emits: ['updateEmergencyInfo'],
+  setup(props, { emit }) {
+    const last_name = ref(props.emergencyContact.last_name);
+    const first_name = ref(props.emergencyContact.first_name);
+    const address = ref(props.emergencyContact.address);
+    const landline = ref(props.emergencyContact.landline);
+    const mobile = ref(props.emergencyContact.mobile);
+    const email = ref(props.emergencyContact.email);
+
+    // Fonction pour soumettre les données du formulaire
+    function submitData() {
+      const emergencyContact: EmergencyContact = {
+        last_name: last_name.value,
+        first_name: first_name.value,
+        address: address.value,
+        landline: landline.value,
+        mobile: mobile.value,
+        email: email.value,
+      };
+      emit('updateEmergencyInfo', emergencyContact);
+    }
+
     return {
-      last_name: '',
-      first_name: '',
-      address: '',
-      landline: '',
-      mobile: '',
-      email: ''
+      last_name,
+      first_name,
+      address,
+      landline,
+      mobile,
+      email,
+      submitData,
     };
   },
-  methods: {
-    submitData() {
-      this.$emit('updateEmergencyInfo', {
-        last_name: this.last_name,
-        first_name: this.first_name,
-        address: this.address,
-        landline: this.landline,
-        mobile: this.mobile,
-        email: this.email
-      });
-    }
-  }
 });
 </script>
-

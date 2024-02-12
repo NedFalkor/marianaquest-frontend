@@ -10,12 +10,15 @@
           @update:equipment="updateData('equipment', $event)" />
         <dive-conditions-component class="marine-style p-4 mt-4 rounded-md shadow-md"
           @update:conditions="updateData('conditions', $event)" />
+        <!-- Ajouter le composant DiveGroupForm ici -->
+        <dive-group-form @update:diveGroup="updateData('diveGroup', $event)" />
         <button class="mt-4 bg-indigo-500 hover:bg-indigo-700 text-white rounded-md px-4 py-2"
           @click="submitForm">Enregistrer</button>
       </div>
     </div>
   </div>
 </template>
+
 
 <script lang="ts">
 
@@ -30,12 +33,15 @@ import HeaderComponent from "@/components/header/HeaderComponent.vue";
 import { jwtDecode } from "jwt-decode";
 import { ICustomJwtPayload } from "@/interfaces/JWT Tokens/CustomJWTPayload";
 import { ICustomUser } from "@/interfaces/Users/CustomUser";
+import DiveGroupForm from "@/components/forms/DiveGroupForm.vue";
+import { IDiveGroup } from "@/interfaces/Users/DiveGroup";
 
 @Options({
   components: {
     "dive-settings-component": DiveSettingsComponentVue,
     "dive-equipment-component": DiveEquipmentComponentVue,
     "dive-conditions-component": DiveConditionsComponentVue,
+    "dive-group-form": DiveGroupForm,
     TitleComponent,
     HeaderComponent,
   },
@@ -51,8 +57,14 @@ export default class DiveLog extends Vue {
   };
 
   public updateData<K extends keyof IDivingLog>(section: K, updatedData: IDivingLog[K]) {
-    this.diveData[section] = updatedData;
+    if (section === 'diveGroup') {
+      this.diveData.diveGroup = updatedData as IDiveGroup;
+    } else {
+      this.diveData[section] = updatedData;
+    }
   }
+
+
 
   // This method might be called after you receive the user data from the backend
   setUserData(userData: ICustomUser) {
@@ -91,7 +103,6 @@ export default class DiveLog extends Vue {
     }
   }
 
-
   async submitForm() {
     try {
       // Ensure user ID is decoded from the token and set before submission
@@ -100,7 +111,12 @@ export default class DiveLog extends Vue {
       console.log("User ID at form submission:", this.diveData.user);
       console.log("Envoi des données au backend:", this.diveData);
 
-      const response = await DiveLogService.createDiveLog(this.diveData);
+      const completeDiveData = {
+        ...this.diveData,
+        diveGroup: this.diveData.diveGroup
+      };
+
+      const response = await DiveLogService.createDiveLog(completeDiveData);
       console.log("Dive log created:", response.data);
     } catch (error) {
       console.error("Erreur lors de la création du journal de plongée:", error);

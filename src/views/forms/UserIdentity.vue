@@ -18,8 +18,10 @@ import PersonnalInfoComponent from '@/components/forms/useridentity/PersonalInfo
 import EmergencyInfoComponent from '@/components/forms/useridentity/EmergencyInfoComponent.vue';
 import TitleComponent from '@/components/header/TitleComponent.vue';
 import HeaderComponent from '@/components/header/HeaderComponent.vue';
+import { IEmergencyContact, IPersonalInfo, IDiverProfile } from '@/interfaces/Users/DiverProfile';
+import DiverProfileService from '@/services/forms/DiverProfileService';
+import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
-import { IDiverProfile, IEmergencyContact, IPersonalInfo } from '@/interfaces/Users/DiverProfile';
 
 export default defineComponent({
   components: {
@@ -58,67 +60,37 @@ export default defineComponent({
     };
 
     const accept = async () => {
-      // Assuming `userId` is available from your application's state or a similar source
-      const currentUserId = 1; // Placeholder value, replace with actual logic to obtain userId
-
-      const formData = new FormData();
-      // Append personal info data except for the 'identity_photo'
-      for (const [key] of Object.entries(personalInfoData.value)) {
-        if (key !== 'identity_photo') {
-          if (personalInfoData.value.identity_photo) {
-            formData.append('identity_photo', personalInfoData.value.identity_photo);
-          }
-
-        }
-      }
-
-      // Append identity_photo if it exists and is a File object
-      if (personalInfoData.value.identity_photo instanceof File) {
-        formData.append('identity_photo', personalInfoData.value.identity_photo);
-      }
-
-      // Serialize emergency contact data as a JSON string and append
-      const emergencyContactJSON = JSON.stringify(emergencyInfoData.value);
-      formData.append('emergency_contact', emergencyContactJSON);
-
-      // Prepare the diverProfile object for JSON-based APIs
-      // Note: This step might be unnecessary if you're solely using FormData for your request.
-      // Adjust according to your backend API requirements.
-      const diverProfile: IDiverProfile = {
-        userId: currentUserId, // Correctly set the userId
-        personalInfo: personalInfoData.value,
-        emergencyContact: emergencyInfoData.value,
-      };
-
       try {
+        const token = localStorage.getItem('jwtToken');
+        if (!token) {
+          console.error('Token not found');
+          return;
+        }
+        const decodedToken: { user_id: number } = jwtDecode(token);
+        const currentUserId = decodedToken.user_id;
+
+        // Créer un objet de type IDiverProfile à partir des données de formulaire et d'urgence
+        const diverProfileData: IDiverProfile = {
+          personalInfo: personalInfoData.value,
+          emergencyContact: emergencyInfoData.value
+        };
+
+        // Utilisation de DiverProfileService pour envoyer les données
         let response;
-        // Determine if you are creating a new profile or updating an existing one
         if (diverProfileId.value) {
-          // For APIs expecting JSON payload:
-          // response = await DiverProfileService.updateDiverProfile(diverProfileId.value, diverProfile);
-
-          // For APIs expecting FormData (e.g., for file uploads):
-          formData.append('diverProfile', JSON.stringify({ userId: currentUserId, ...diverProfile }));
-          response = await axios.put(`/api/diver-profile/${diverProfileId.value}`, formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-          });
+          response = await DiverProfileService.updateDiverProfile(diverProfileId.value, diverProfileData);
         } else {
-          // For APIs expecting JSON payload:
-          // response = await DiverProfileService.createDiverProfile(diverProfile);
-
-          // For APIs expecting FormData:
-          formData.append('diverProfile', JSON.stringify({ userId: currentUserId, ...diverProfile }));
-          response = await axios.post('/api/diver-profile', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-          });
-          diverProfileId.value = response.data.id; // Assuming the API returns the id of the created profile
+          response = await DiverProfileService.createDiverProfile(diverProfileData);
+          diverProfileId.value = response.data.id;
         }
         console.log("Server response:", response.data);
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          console.error("Axios error:", error.message);
+          console.error("Error submitting data:", error.response?.data || error.message);
+        } else if (error instanceof Error) {
+          console.error("Error submitting data:", error.message);
         } else {
-          console.error("Error submitting data:", error);
+          console.error("An unexpected error occurred", error);
         }
       }
     };

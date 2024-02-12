@@ -110,57 +110,95 @@
 
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { getNames } from 'country-list';
 
+interface PersonalInfo {
+  last_name: string;
+  first_name: string;
+  address: string;
+  postal_code: string;
+  city: string;
+  country: string | null;
+  landline: string;
+  mobile: string;
+  email: string;
+  identity_photo: File | null;
+}
 
 export default defineComponent({
-  name: 'PersonalInfo',
+  name: 'PersonalInfoForm',
   props: {
     personalInfo: {
       type: Object,
-      required: true
-    }
+      default: () => ({
+        last_name: '',
+        first_name: '',
+        address: '',
+        postal_code: '',
+        city: '',
+        country: '',
+        landline: '',
+        mobile: '',
+        email: '',
+        identity_photo: null,
+      }),
+    },
   },
-  data() {
+  setup(props, { emit }) {
+    const last_name = ref(props.personalInfo.last_name);
+    const first_name = ref(props.personalInfo.first_name);
+    const address = ref(props.personalInfo.address);
+    const postal_code = ref(props.personalInfo.postal_code);
+    const city = ref(props.personalInfo.city);
+    const countries = ref(getNames());
+    const selectedCountry = ref(props.personalInfo.country);
+    const landline = ref(props.personalInfo.landline);
+    const mobile = ref(props.personalInfo.mobile);
+    const email = ref(props.personalInfo.email);
+    const identity_photo = ref(props.personalInfo.identity_photo);
+
+    // Fonction pour gérer la sélection d'une photo de profil
+    function onFileSelected(event: Event) {
+      const files = (event.target as HTMLInputElement).files;
+      if (files && files.length > 0) {
+        identity_photo.value = files[0];
+        emit('update:identityPhoto', files[0]);
+      }
+    }
+
+    // Fonction pour soumettre les données du formulaire
+    function submitData() {
+      const personalInfo: PersonalInfo = {
+        last_name: last_name.value,
+        first_name: first_name.value,
+        address: address.value,
+        postal_code: postal_code.value,
+        city: city.value,
+        country: selectedCountry.value,
+        landline: landline.value,
+        mobile: mobile.value,
+        email: email.value,
+        identity_photo: identity_photo.value,
+      };
+      emit('updatePersonalInfo', personalInfo);
+    }
+
     return {
-      last_name: '',
-      first_name: '',
-      address: '',
-      postal_code: '',
-      city: '',
-      countries: getNames(),
-      selectedCountry: null,
-      landline: '',
-      mobile: '',
-      email: '',
-      imageURL: '',
-      identity_photo: null as File | null
+      last_name,
+      first_name,
+      address,
+      postal_code,
+      city,
+      countries,
+      selectedCountry,
+      landline,
+      mobile,
+      email,
+      identity_photo,
+      onFileSelected,
+      submitData,
     };
   },
-  methods: {
-    onFileSelected(event: Event) {
-      const input = event.target as HTMLInputElement;
-      if (input.files && input.files.length > 0) {
-        this.identity_photo = input.files[0];
-        this.imageURL = URL.createObjectURL(this.identity_photo);
-        console.log("Image sélectionnée:", this.identity_photo);
-      }
-    },
-    submitData() {
-      this.$emit('updatePersonalInfo', {
-        last_name: this.last_name,
-        first_name: this.first_name,
-        address: this.address,
-        postal_code: this.postal_code,
-        city: this.city,
-        country: this.selectedCountry,
-        landline: this.landline,
-        mobile: this.mobile,
-        email: this.email,
-        identity_photo: this.identity_photo
-      });
-    }
-  }
 });
 </script>
