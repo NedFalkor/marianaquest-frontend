@@ -39,7 +39,7 @@ export default {
       try {
         const response = await instance.delete('auth/delete_account/');
         if (response.status === 204) {
-          clearAuthCookies(); // Utilisez la fonction clearAuthCookies
+          clearAuthCookies();
         } else {
           console.log('Something else happened:', response.status);
         }
@@ -52,7 +52,6 @@ export default {
 
     // Authentifier un utilisateur
     async loginUser(data: { email: string, username: string, password: string }) {
-      // Clear any old tokens before starting a new login process
       localStorage.removeItem('jwtToken');
       localStorage.removeItem('refreshToken');
     
@@ -62,7 +61,6 @@ export default {
         const response = await instance.post('auth/login/', data);
         console.log('Login response:', response);
     
-        // Ensure that the response contains the access token
         if (response.data && response.data.access) {
           localStorage.setItem('jwtToken', response.data.access);
           console.log('New access token saved to localStorage:', response.data.access);
@@ -72,7 +70,6 @@ export default {
             console.log('New refresh token saved to localStorage:', response.data.refresh);
           }
         } else {
-          // If the expected token is not in the response, log an error
           console.error('Access token not found in response data:', response.data);
         }
     
@@ -83,18 +80,16 @@ export default {
         } else {
           console.error('Unexpected error:', error);
         }
-        throw error; // Re-throw the error if you need to handle it further up the chain
+        throw error;
       }
     },
     
     handleLoginError(error: AxiosError) {
-      // Check if the error is an AxiosError
       if (error.response) {
         console.error('Login error response:', error.response);
       } else if (error.request) {
         console.error('Login error request:', error.request);
       } else {
-        // Error message will exist on an instance of an Error
         console.error('Login error message:', error.message);
       }
     
@@ -107,8 +102,7 @@ export default {
       try {
         const response = await instance.post('auth/logout/');
         if (response.status === 200) {
-          clearAuthCookies(); // Utilisez la fonction clearAuthCookies
-          // Vous pouvez également effectuer d'autres actions de nettoyage ici
+          clearAuthCookies();
         } else {
           console.log('Logout failed with status:', response.status);
         }

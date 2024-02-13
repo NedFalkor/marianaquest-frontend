@@ -24,10 +24,8 @@
               <div class="banner">
                 <div class="banner-content">
                   <h1>Bienvenue {{ username }}</h1>
-                  <!-- Lien vers le dashboard approprié -->
                   <router-link :to="dashboardLink" class="dashboard-link">Votre Dashboard</router-link>
 
-                  <!-- Bouton de déconnexion -->
                   <button @click="logout" class="logout-button">Se déconnecter</button>
                 </div>
               </div>
@@ -73,8 +71,8 @@ export default defineComponent({
         const response = await instance.post('auth/logout/');
         console.log("Logout response:", response);
         localStorage.removeItem('jwtToken');
-        Cookies.remove('jwtToken'); // If you're using cookies to store the token
-        router.push('/userauth'); // Redirect to the login page after logout
+        Cookies.remove('jwtToken');
+        router.push('/userauth');
       } catch (error) {
         console.error('Error during logout:', error);
       }

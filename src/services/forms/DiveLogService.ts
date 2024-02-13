@@ -12,6 +12,7 @@ export default {
         return instance.get('diving-logs/');
     },
 
+    // Récupérer tous les logs AWAITING
     getAllAwaitingDiveLogs() {
         return instance.get('diving-logs/?status=AWAITING');
     },
@@ -36,6 +37,7 @@ export default {
         return instance.get(`diving-logs/diver/${diverId}/`);
     },
 
+    // Demander une modification du log
     requestLogModification(logId: number, userId: number, modificationDetails: string) {
         return instance.post(`/api/logs/${logId}/modification-request`, {
             userId,
@@ -43,6 +45,7 @@ export default {
         });
     },
 
+    // Confirmer une suppression du log
     confirmLogDeletion(logId: number, userId: number) {
         return instance.post(`/api/logs/${logId}/confirm-deletion`, {
             userId

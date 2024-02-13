@@ -3,7 +3,6 @@
         <ul>
             <li v-for="log in diveLogs" :key="log.id">
                 {{ log.settings.dive_site }} - {{ log.settings.dive_date }}
-                <!-- Supposez que chaque log a un bouton d'édition et de suppression -->
                 <button @click="emitEditLog(log)">Edit</button>
                 <button @click="emitDeleteLog(log)">Delete</button>
             </li>

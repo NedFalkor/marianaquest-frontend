@@ -37,26 +37,22 @@
 
         <div v-if="diveTime !== null" class="result mt-6 bg-white p-6 rounded-md shadow-md">
           <div class="flex items-center mb-4" v-if="calculateTotalCapacity() > 0">
-            <!-- Optional: you can add an icon here -->
             <span class="font-semibold text-indigo-600 text-xl mr-4">Capacité totale :</span>
             <span class="text-xl font-bold">{{ calculateTotalCapacity() }} litres</span>
           </div>
 
           <div class="flex items-center mb-4">
-            <!-- Optional: you can add an icon here -->
             <span class="font-semibold text-indigo-600 text-xl mr-4">Temps de plongée à {{ maxDepth }} mètres :</span>
             <span class="text-xl font-bold">{{ diveTime }} minutes</span>
           </div>
 
           <div class="flex items-center mb-4">
-            <!-- Optional: you can add an icon here -->
             <span class="font-semibold text-indigo-600 text-lg mr-4">Temps de montée (à {{ ascentRate }} mètres/minute)
               :</span>
             <span class="text-lg font-bold">{{ maxDepth / ascentRate }} minutes</span>
           </div>
 
           <div class="flex items-center mb-4" v-if="totalDiveTime !== null">
-            <!-- Optional: you can add an icon here -->
             <span class="font-semibold text-indigo-600 text-lg mr-4">Temps total de plongée :</span>
             <span class="text-lg font-bold">{{ totalDiveTime }} minutes</span>
           </div>

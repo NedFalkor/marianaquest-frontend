@@ -59,4 +59,4 @@ export default defineComponent({
     };
   },
 });
-</script>@/interfaces/Users/CustomUser
+</script>

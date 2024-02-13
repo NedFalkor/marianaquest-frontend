@@ -106,7 +106,6 @@ export default defineComponent({
     const mobile = ref(props.emergencyContact.mobile);
     const email = ref(props.emergencyContact.email);
 
-    // Fonction pour soumettre les données du formulaire
     function submitData() {
       const emergencyContact: EmergencyContact = {
         last_name: last_name.value,

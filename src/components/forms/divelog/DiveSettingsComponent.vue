@@ -2,28 +2,28 @@
   <div class="marine-style w-1/4 p-6">
     <h2 class="text-2c5282 font-bold text-xl mb-4">Paramètres de la plongée</h2>
 
-    <!-- Dive Number -->
+    <!-- Numéro de plongée -->
     <div class="mb-4">
       <label for="diveNumber" class="block text-gray-700 text-sm font-bold mb-2">Numéro de plongée :</label>
       <input type="number" id="diveNumber" v-model="diveNumber"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     </div>
 
-    <!-- Dive Date -->
+    <!-- Date de plongée -->
     <div class="mb-4">
       <label for="diveDate" class="block text-gray-700 text-sm font-bold mb-2">Date :</label>
       <input type="date" id="diveDate" v-model="diveDate"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     </div>
 
-    <!-- Dive Location -->
+    <!-- Site de plongée -->
     <div class="mb-4">
       <label for="diveLocation" class="block text-gray-700 text-sm font-bold mb-2">Site de plongée :</label>
       <input type="text" id="diveLocation" v-model="diveSite"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     </div>
 
-    <!-- Environment -->
+    <!-- Environement -->
     <div class="mb-4">
       <span class="block text-gray-700 text-sm font-bold mb-2">Milieu :</span>
       <div class="flex items-center mb-2">
@@ -38,28 +38,28 @@
       </div>
     </div>
 
-    <!-- Depth -->
+    <!-- Profondeur -->
     <div class="mb-4">
       <label for="depth" class="block text-gray-700 text-sm font-bold mb-2">Profondeur (m) :</label>
       <input type="number" id="depth" v-model="depth"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     </div>
 
-    <!-- Dive Duration -->
+    <!-- Durée -->
     <div class="mb-4">
       <label for="diveDuration" class="block text-gray-700 text-sm font-bold mb-2">Durée de plongée (min) :</label>
       <input type="number" id="diveDuration" v-model="durationDive"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     </div>
 
-    <!-- Return Surface Time -->
+    <!-- Retour temps surface -->
     <div class="mb-4">
       <label for="returnSurfaceTime" class="block text-gray-700 text-sm font-bold mb-2">Retour surface (h/min) :</label>
       <input type="text" id="returnSurfaceTime" v-model="surfaceReturn"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     </div>
 
-    <!-- Decompression Stop -->
+    <!-- Palier -->
     <div class="mb-4">
       <label for="decompressionStop" class="block text-gray-700 text-sm font-bold mb-2">Palier :</label>
       <input type="text" id="decompressionStop" v-model="decompressionStop"

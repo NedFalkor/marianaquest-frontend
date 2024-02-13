@@ -69,13 +69,18 @@ export default defineComponent({
         const decodedToken: { user_id: number } = jwtDecode(token);
         const currentUserId = decodedToken.user_id;
 
-        // Créer un objet de type IDiverProfile à partir des données de formulaire et d'urgence
+        // Vérifier si l'id est valide
+        if (!currentUserId) {
+          console.error('User ID is undefined or not valid');
+          return;
+        }
+
         const diverProfileData: IDiverProfile = {
+          userId: currentUserId,
           personalInfo: personalInfoData.value,
           emergencyContact: emergencyInfoData.value
         };
 
-        // Utilisation de DiverProfileService pour envoyer les données
         let response;
         if (diverProfileId.value) {
           response = await DiverProfileService.updateDiverProfile(diverProfileId.value, diverProfileData);

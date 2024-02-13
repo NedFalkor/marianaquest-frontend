@@ -2,7 +2,7 @@
   <div class="bg-gray-100 w-1/2 p-6">
     <h3 class="text-2xl mb-5 text-center">Identité du plongeur</h3>
 
-    <!-- Champ pour la photo de profil -->
+    <!-- photo de profil -->
     <div class="mb-4">
       <h3 class="text-xl mb-2 text-center">Photo de Profil</h3>
       <div class="relative">
@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <!-- Champ pour le Nom de Famille -->
+    <!-- Nom de Famille -->
     <div class="mb-4">
       <h3 class="text-xl mb-2 text-center">Nom de Famille</h3>
       <div class="relative">
@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <!-- Champ pour le Prénom -->
+    <!-- Prénom -->
     <div class="mb-4">
       <h3 class="text-xl mb-2 text-center">Prénom</h3>
       <div class="relative">
@@ -32,7 +32,7 @@
       </div>
     </div>
 
-    <!-- Champ pour l'Adresse -->
+    <!-- Adresse -->
     <div class="mb-4">
       <h3 class="text-xl mb-2 text-center">Adresse</h3>
       <div class="relative">
@@ -42,7 +42,7 @@
       </div>
     </div>
 
-    <!-- Champ pour le Code Postal -->
+    <!-- Code Postal -->
     <div class="mb-4">
       <h3 class="text-xl mb-2 text-center">Code Postal</h3>
       <div class="relative">
@@ -52,7 +52,7 @@
       </div>
     </div>
 
-    <!-- Champ pour la Ville -->
+    <!-- Ville -->
     <div class="mb-4">
       <h3 class="text-xl mb-2 text-center">Ville</h3>
       <div class="relative">
@@ -62,7 +62,7 @@
       </div>
     </div>
 
-    <!-- Champ pour le Pays -->
+    <!-- Pays -->
     <div class="mb-4">
       <h3 class="text-xl mb-2 text-center">Pays</h3>
       <div class="relative">
@@ -76,7 +76,7 @@
       </div>
     </div>
 
-    <!-- Champ pour le Téléphone Fixe -->
+    <!-- Téléphone Fixe -->
     <div class="mb-4">
       <h3 class="text-xl mb-2 text-center">Téléphone Fixe</h3>
       <div class="relative">
@@ -86,7 +86,7 @@
       </div>
     </div>
 
-    <!-- Champ pour le Téléphone Portable -->
+    <!-- Téléphone Portable -->
     <div class="mb-4">
       <h3 class="text-xl mb-2 text-center">Téléphone Portable</h3>
       <div class="relative">
@@ -96,7 +96,7 @@
       </div>
     </div>
 
-    <!-- Champ pour l'Adresse Email -->
+    <!-- Adresse Email -->
     <div class="mb-4">
       <h3 class="text-xl mb-2 text-center">Adresse Email</h3>
       <div class="relative">
@@ -158,7 +158,7 @@ export default defineComponent({
     const email = ref(props.personalInfo.email);
     const identity_photo = ref(props.personalInfo.identity_photo);
 
-    // Fonction pour gérer la sélection d'une photo de profil
+    // sélection d'une photo de profil
     function onFileSelected(event: Event) {
       const files = (event.target as HTMLInputElement).files;
       if (files && files.length > 0) {
@@ -167,7 +167,7 @@ export default defineComponent({
       }
     }
 
-    // Fonction pour soumettre les données du formulaire
+    // soumettre les données du formulaire
     function submitData() {
       const personalInfo: PersonalInfo = {
         last_name: last_name.value,

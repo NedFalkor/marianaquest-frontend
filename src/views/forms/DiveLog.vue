@@ -10,7 +10,6 @@
           @update:equipment="updateData('equipment', $event)" />
         <dive-conditions-component class="marine-style p-4 mt-4 rounded-md shadow-md"
           @update:conditions="updateData('conditions', $event)" />
-        <!-- Ajouter le composant DiveGroupForm ici -->
         <dive-group-form @update:diveGroup="updateData('diveGroup', $event)" />
         <button class="mt-4 bg-indigo-500 hover:bg-indigo-700 text-white rounded-md px-4 py-2"
           @click="submitForm">Enregistrer</button>
@@ -21,7 +20,6 @@
 
 
 <script lang="ts">
-
 import { Options, Vue } from "vue-class-component";
 import { IDiveConditions, IDiveEquipment, IDiveSettings, IDivingLog } from "@/interfaces/DivingLog";
 import DiveConditionsComponentVue from "@/components/forms/divelog/DiveConditionsComponent.vue";
@@ -33,7 +31,6 @@ import HeaderComponent from "@/components/header/HeaderComponent.vue";
 import { jwtDecode } from "jwt-decode";
 import { ICustomJwtPayload } from "@/interfaces/JWT Tokens/CustomJWTPayload";
 import { ICustomUser } from "@/interfaces/Users/CustomUser";
-import DiveGroupForm from "@/components/forms/DiveGroupForm.vue";
 import { IDiveGroup } from "@/interfaces/Users/DiveGroup";
 
 @Options({
@@ -41,7 +38,6 @@ import { IDiveGroup } from "@/interfaces/Users/DiveGroup";
     "dive-settings-component": DiveSettingsComponentVue,
     "dive-equipment-component": DiveEquipmentComponentVue,
     "dive-conditions-component": DiveConditionsComponentVue,
-    "dive-group-form": DiveGroupForm,
     TitleComponent,
     HeaderComponent,
   },
@@ -64,9 +60,6 @@ export default class DiveLog extends Vue {
     }
   }
 
-
-
-  // This method might be called after you receive the user data from the backend
   setUserData(userData: ICustomUser) {
     if (userData.id) {
       this.diveData.user = userData.id;
@@ -81,7 +74,6 @@ export default class DiveLog extends Vue {
 
 
   decodeTokenAndSetUserId() {
-    // The key here should match the key used when the token is stored.
     const token = localStorage.getItem('jwtToken');
     if (token) {
       try {
@@ -91,21 +83,17 @@ export default class DiveLog extends Vue {
           console.log("User ID set from token:", this.diveData.user);
         } else {
           console.error('JWT payload does not contain user_id.');
-          // Here you may want to handle what happens if the user_id is not in the token
         }
       } catch (error) {
         console.error('Error decoding JWT token:', error);
-        // Here you may want to handle what happens if the token cannot be decoded
       }
     } else {
       console.error('No jwtToken found in localStorage.');
-      // Here you may want to handle what happens if the token is not found
     }
   }
 
   async submitForm() {
     try {
-      // Ensure user ID is decoded from the token and set before submission
       this.decodeTokenAndSetUserId();
 
       console.log("User ID at form submission:", this.diveData.user);

@@ -41,13 +41,12 @@ export default defineComponent({
     },
     async loginUser() {
       try {
-        // Utilisation de CustomUserService pour authentifier un utilisateur
         const response = await CustomUserService.loginUser(this.loginData);
 
         if (response.status === 200 || response.status === 201) {
           this.successMessage = "Connexion réussie ! Vous êtes maintenant connecté.";
           this.errorMessage = "";
-          router.push('/useridentity');  // Rediriger vers la page appropriée après connexion
+          router.push('/useridentity');
         }
       } catch (error) {
         this.handleLoginError(error);

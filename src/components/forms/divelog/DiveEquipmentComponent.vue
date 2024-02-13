@@ -10,6 +10,7 @@
         <option value="15l">15L</option>
       </select>
     </div>
+
     <div class="parameter space-y-2">
       <label for="wetSuit" class="block text-gray-700 text-sm font-bold mb-2">Combinaison :</label>
       <select id="wetSuit" v-model="wetSuit"
@@ -20,6 +21,7 @@
         <option value="XL">XL</option>
       </select>
     </div>
+
     <div class="parameter space-y-2">
       <label for="diveType" class="block text-gray-700 text-sm font-bold mb-2">Type de plongée :</label>
       <select id="diveType" v-model="diveType"
@@ -32,6 +34,7 @@
         <option value="other">Autre</option>
       </select>
     </div>
+
     <div class="parameter">
       <input type="checkbox" id="nitroxType" v-model="typeNitrox" class="mr-2">
       <label for="nitroxType">Nitrox</label>

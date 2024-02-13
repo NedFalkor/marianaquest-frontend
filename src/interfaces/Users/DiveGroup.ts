@@ -1,9 +1,9 @@
 export interface IDiveGroup {
     id?: number;
     groupDescription: string;
-    boatDriver: number | null; // Permettre null
-    trainerOne: number | null; // Permettre null
-    trainerTwo: number | null; // Permettre null
+    boatDriver: number | null;
+    trainerOne: number | null;
+    trainerTwo: number | null;
     divers: number[];
     createdOn?: Date;
 }

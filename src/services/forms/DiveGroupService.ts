@@ -28,14 +28,13 @@ export default {
         return instance.delete(`dive-groups/${id}/`);
     },
 
+    // Récuperer tous les instructeurs
     getAllInstructors() {
-        // Remplacez 'instructors' par l'URL appropriée pour récupérer les instructeurs
         return instance.get<ICustomUser[]>('instructors/');
     },
 
     // Méthode pour récupérer tous les plongeurs
     getAllDivers() {
-        // Remplacez 'divers' par l'URL appropriée pour récupérer les plongeurs
         return instance.get<ICustomUser[]>('divers/');
     },
 };

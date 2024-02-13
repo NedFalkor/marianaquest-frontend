@@ -9,14 +9,14 @@
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     </div>
 
-    <!-- Water Temperature -->
+    <!-- Eau Temperature -->
     <div class="mb-4">
       <label for="waterTemperature" class="block text-gray-700 text-sm font-bold mb-2">Température de l'eau (°C) :</label>
       <input type="number" id="waterTemperature" v-model="waterTemperature"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     </div>
 
-    <!-- Weather -->
+    <!-- Meteo -->
     <div class="mb-4">
       <span class="block text-gray-700 text-sm font-bold mb-2">Météo :</span>
       <div class="flex items-center mb-2">
@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    <!-- Visibility -->
+    <!-- Visibilité -->
     <div class="mb-4">
       <span class="block text-gray-700 text-sm font-bold mb-2">Visibilité :</span>
       <div class="flex items-center mb-2">
@@ -74,7 +74,7 @@
       </div>
     </div>
 
-    <!-- Wind -->
+    <!-- Vent -->
     <div class="mb-4">
       <span class="block text-gray-700 text-sm font-bold mb-2">Vent :</span>
       <div class="flex items-center mb-2">

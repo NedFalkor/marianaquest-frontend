@@ -8,28 +8,26 @@
     <div class="bg-gray-100 w-full p-6">
         <dive-log-list-component :diveLogs="divingLogs" @edit-log="handleEditLog"
             @delete-log="handleDeleteLog"></dive-log-list-component>
-
     </div>
     <div class="bg-gray-100 w-full p-6">
 
-        <!-- List of Dive Logs -->
+        <!-- Liste des logs -->
         <div v-for="log in divingLogs" :key="log.id" class="mb-4 p-4 bg-white shadow rounded">
             <div class="mb-2">
-                <span class="font-semibold">Dive Log ID:</span> {{ log.id }}
+                <span class="font-semibold">ID Log de plongée:</span> {{ log.id }}
             </div>
-            <!-- Edit and Delete buttons -->
             <button @click="handleEditLog(log)"
                 class="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Edit
+                Modifier
             </button>
             <button @click="handleDeleteLog(log)"
                 class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                Delete
+                Effacer
             </button>
-            <!-- View Details -->
+            <!-- Détails -->
             <button @click="viewDetails(log)"
                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                View Details
+                Voir les détails
             </button>
         </div>
     </div>
@@ -39,16 +37,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import DiveLogService from '@/services/forms/DiveLogService';
-import DiveLogListComponent from '@/components/forms/divelog/DiveLogListComponent.vue';
 import NotificationService from '@/services/NotificationService';
 import { IDivingLog } from '@/interfaces/DivingLog';
 import CustomUserService from '@/services/gatekeepers/CustomUserService';
 import { ICustomUser } from '@/interfaces/Users/CustomUser';
 
 export default defineComponent({
-    components: {
-        DiveLogListComponent,
-    },
     data() {
         return {
             diverId: null as number | null,
@@ -63,11 +57,11 @@ export default defineComponent({
     methods: {
         async fetchUserData() {
             const userId = sessionStorage.getItem('userId');
-            console.log("UserID:", userId); // Log pour vérifier le userID
+            console.log("UserID:", userId);
             if (userId) {
                 try {
                     const response = await CustomUserService.getUserById(Number(userId));
-                    console.log("UserData:", response.data); // Log pour vérifier les données de l'utilisateur
+                    console.log("UserData:", response.data);
                     this.userData = response.data;
                 } catch (error) {
                     console.error('Erreur lors de la récupération des détails de l’utilisateur:', error);
@@ -86,8 +80,15 @@ export default defineComponent({
                     NotificationService.notifyUser('Error updating user data');
                 }
             } else {
-                console.error('User ID is undefined');
-                // Gérer le cas où l'ID utilisateur n'est pas défini
+                // gérer si id pas défini
+                try {
+                    const response = await CustomUserService.createUser(updatedData);
+                    this.userData = response.data;
+                    NotificationService.notifyUser('New user created successfully');
+                } catch (error) {
+                    console.error('Error creating new user:', error);
+                    NotificationService.notifyUser('Error creating new user');
+                }
             }
         },
 
@@ -95,7 +96,7 @@ export default defineComponent({
             if (this.diverId !== null) {
                 DiveLogService.getDiveLogsByDiver(this.diverId)
                     .then(response => {
-                        console.log("DivingLogs:", response.data); // Log pour vérifier les journaux de plongée
+                        console.log("DivingLogs:", response.data);
                         this.divingLogs = response.data;
                     })
                     .catch(error => {
@@ -108,7 +109,6 @@ export default defineComponent({
             console.log("Editing Log:", log);
             this.editedLog = { ...log };
             this.isEditing = true;
-            // Navigate to edit page or open edit modal
         },
 
         handleDeleteLog(log: IDivingLog) {
