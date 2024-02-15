@@ -8,6 +8,8 @@ import {jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import { RouteMeta } from '@/interfaces/JWT Tokens/RouteMeta';
 import { ICustomJwtPayload } from '@/interfaces/JWT Tokens/CustomJWTPayload';
+import InstructorDashboardVue from '@/views/dashboards/InstructorDashboard.vue';
+import DiverDashboardVue from '@/views/dashboards/DiverDashboard.vue';
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -44,17 +46,17 @@ const routes: Array<RouteRecordRaw> = [
     component: UserAuthVue
   },
   {
-    path: '/instructordashboard/:instructorId',
+    path: '/instructordashboard',
     name: 'InstructorDashboard',
-    component: () => import('@/views/dashboards/InstructorDashboard.vue'),
-    meta: { requiresAuth: true, requiresRole: ['INSTRUCTOR'] } as Record<string, any>
+    component: InstructorDashboardVue,
+    meta: { requiresAuth: true, requiresRole: ['INSTRUCTOR'] }
   },
   {
     path: '/diverdashboard',
     name: 'DiverDashboard',
-    component: () => import('@/views/dashboards/DiverDashboard.vue'),
-    meta: { requiresAuth: true, requiresRole: ['DIVER'] } as Record<string, any> 
-  }
+    component: DiverDashboardVue,
+    meta: { requiresAuth: true, requiresRole: ['DIVER'] }
+  }  
 ];
 
 const clearAuthStorage = () => {
@@ -89,7 +91,7 @@ const isAuthenticated = async () => {
       return true;
     }
   } catch (error) {
-    console.error("Error refreshing token:", error);
+    console.error("Erreur refresh token:", error);
     clearAuthStorage();
     return false;
   }
@@ -108,7 +110,7 @@ export const getUserRole = (): string | null => {
 
     return decodedToken.role ?? null;
   } catch (error) {
-    console.error("Error decoding token:", error);
+    console.error("Erreur decoding token:", error);
     return null;
   }
 };

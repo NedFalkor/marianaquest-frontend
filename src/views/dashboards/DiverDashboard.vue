@@ -2,8 +2,8 @@
     <header-component class="mb-4"></header-component>
     <TitleComponent class="text-center text-blue-900 mb-8" :pageTitle="'Dashboard de ' + userData.username" />
     <div class="dashboard-container">
-        <PersonalInfo :personal-information="userData.personalInformation" @update-user-data="updateUserData" />
-        <EmergencyInfo :emergency-info="userData.emergencyContact" @update-emergency-info="updateUserData" />
+        <personnal-info :personal-information="userData.personalInformation" @update-user-data="updateUserData" />
+        <emergency-info :emergency-info="userData.emergencyContact" @update-emergency-info="updateUserData" />
     </div>
     <div class="bg-gray-100 w-full p-6">
         <dive-log-list-component :diveLogs="divingLogs" @edit-log="handleEditLog"
@@ -41,8 +41,20 @@ import NotificationService from '@/services/NotificationService';
 import { IDivingLog } from '@/interfaces/DivingLog';
 import CustomUserService from '@/services/gatekeepers/CustomUserService';
 import { ICustomUser } from '@/interfaces/Users/CustomUser';
+import HeaderComponent from '@/components/header/HeaderComponent.vue';
+import TitleComponent from '@/components/header/TitleComponent.vue';
+import DiveLogListComponent from '@/components/lists/DiveLogListComponent.vue';
+import PersonnalInfoComponent from '@/components/forms/useridentity/PersonalInfoComponent.vue';
+import EmergencyInfoComponent from '@/components/forms/useridentity/EmergencyInfoComponent.vue';
 
 export default defineComponent({
+    components: {
+        HeaderComponent,
+        TitleComponent,
+        DiveLogListComponent,
+        'personnal-info': PersonnalInfoComponent,
+        'emergency-info': EmergencyInfoComponent,
+    },
     data() {
         return {
             diverId: null as number | null,

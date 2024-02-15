@@ -25,7 +25,6 @@
                 <div class="banner-content">
                   <h1>Bienvenue {{ username }}</h1>
                   <router-link :to="dashboardLink" class="dashboard-link">Votre Dashboard</router-link>
-
                   <button @click="logout" class="logout-button">Se déconnecter</button>
                 </div>
               </div>
@@ -49,7 +48,7 @@ export default defineComponent({
   name: 'HeaderNavbar',
   props: {
     userPhoto: String,
-    username: String,
+    username: String
   },
   setup() {
     const navigation = ref([
@@ -59,6 +58,7 @@ export default defineComponent({
     ]);
 
     const showDropdown = ref(false);
+    const errorMessage = ref('');
 
     const dashboardLink = computed(() => {
       const userRole = getUserRole();
@@ -68,13 +68,22 @@ export default defineComponent({
     const logout = async () => {
       console.log("Logging out user...");
       try {
-        const response = await instance.post('auth/logout/');
-        console.log("Logout response:", response);
+        await instance.post('auth/logout/');
+        console.log("Logout successful");
+
         localStorage.removeItem('jwtToken');
         Cookies.remove('jwtToken');
+
+        localStorage.removeItem('refreshToken');
+
         router.push('/userauth');
       } catch (error) {
         console.error('Error during logout:', error);
+        localStorage.removeItem('jwtToken');
+        Cookies.remove('jwtToken');
+        localStorage.removeItem('refreshToken');
+        router.push('/userauth');
+        errorMessage.value = "Erreur lors de la déconnexion. Veuillez réessayer.";
       }
     };
 
@@ -84,11 +93,11 @@ export default defineComponent({
       showDropdown,
       logout,
       dashboardLink,
+      errorMessage: '',
     };
   },
 });
 </script>
-
 
 
 <style scoped>

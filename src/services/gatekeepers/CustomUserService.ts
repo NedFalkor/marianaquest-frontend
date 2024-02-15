@@ -41,11 +41,11 @@ export default {
         if (response.status === 204) {
           clearAuthCookies();
         } else {
-          console.log('Something else happened:', response.status);
+          console.log('autre chose est arrivée:', response.status);
         }
         return response;
       } catch (error) {
-        console.error('Error deleting account:', error);
+        console.error('erreur effacement compte:', error);
         throw error;
       }
     },
@@ -55,22 +55,22 @@ export default {
       localStorage.removeItem('jwtToken');
       localStorage.removeItem('refreshToken');
     
-      console.log('Attempting to log in with:', data);
+      console.log('essaie de se connecter avec:', data);
     
       try {
         const response = await instance.post('auth/login/', data);
-        console.log('Login response:', response);
+        console.log('réponse login:', response);
     
         if (response.data && response.data.access) {
           localStorage.setItem('jwtToken', response.data.access);
-          console.log('New access token saved to localStorage:', response.data.access);
+          console.log('nouveau access token:', response.data.access);
     
           if (response.data.refresh) {
             localStorage.setItem('refreshToken', response.data.refresh);
-            console.log('New refresh token saved to localStorage:', response.data.refresh);
+            console.log('nouveau refresh token:', response.data.refresh);
           }
         } else {
-          console.error('Access token not found in response data:', response.data);
+          console.error('aucun token trouvé:', response.data);
         }
     
         return response;
@@ -78,7 +78,7 @@ export default {
         if (axios.isAxiosError(error)) {
           this.handleLoginError(error);
         } else {
-          console.error('Unexpected error:', error);
+          console.error('erreur inattendue:', error);
         }
         throw error;
       }
@@ -86,14 +86,14 @@ export default {
     
     handleLoginError(error: AxiosError) {
       if (error.response) {
-        console.error('Login error response:', error.response);
+        console.error('erreur login:', error.response);
       } else if (error.request) {
-        console.error('Login error request:', error.request);
+        console.error('erreur requete login:', error.request);
       } else {
-        console.error('Login error message:', error.message);
+        console.error('erreur message login:', error.message);
       }
     
-      console.error('Login error config:', error.config);
+      console.error('erreur login config:', error.config);
     },
     
     
@@ -104,11 +104,11 @@ export default {
         if (response.status === 200) {
           clearAuthCookies();
         } else {
-          console.log('Logout failed with status:', response.status);
+          console.log('déco avec statut:', response.status);
         }
         return response;
       } catch (error) {
-        console.error('Error during logout:', error);
+        console.error('Erreur déco:', error);
         throw error;
       }
     },
