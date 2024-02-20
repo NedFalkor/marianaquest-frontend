@@ -11,21 +11,21 @@
   </div>
 </template>
 
-
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import PersonnalInfoComponent from '@/components/forms/useridentity/PersonalInfoComponent.vue';
+import PersonalInfoComponent from '@/components/forms/useridentity/PersonalInfoComponent.vue';
 import EmergencyInfoComponent from '@/components/forms/useridentity/EmergencyInfoComponent.vue';
 import TitleComponent from '@/components/header/TitleComponent.vue';
 import HeaderComponent from '@/components/header/HeaderComponent.vue';
-import { IEmergencyContact, IPersonalInfo, IDiverProfile } from '@/interfaces/Users/DiverProfile';
+import { IEmergencyContact, IPersonalInfo } from '@/interfaces/Users/DiverProfile';
 import DiverProfileService from '@/services/forms/DiverProfileService';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import { ICustomJwtPayload } from '@/interfaces/JWT Tokens/CustomJWTPayload';
 
 export default defineComponent({
   components: {
-    'personnal-info': PersonnalInfoComponent,
+    'personnal-info': PersonalInfoComponent,
     'emergency-info': EmergencyInfoComponent,
     TitleComponent,
     HeaderComponent
@@ -39,14 +39,17 @@ export default defineComponent({
       city: '',
       country: '',
       email: '',
+      landline: '',
+      mobile: '',
+      identity_photo: null
     });
     const emergencyInfoData = ref<IEmergencyContact>({
       last_name: '',
       first_name: '',
       address: '',
-      landline: null,
-      mobile: null,
-      email: '',
+      landline: '',
+      mobile: '',
+      email: ''
     });
 
     const diverProfileId = ref<number | null>(null);
@@ -66,26 +69,37 @@ export default defineComponent({
           console.error('Token not found');
           return;
         }
-        const decodedToken: { user_id: number } = jwtDecode(token);
+
+        const decodedToken = jwtDecode<ICustomJwtPayload>(token);
         const currentUserId = decodedToken.user_id;
 
-        // Vérifier si l'id est valide
         if (!currentUserId) {
           console.error('User ID is undefined or not valid');
           return;
         }
 
-        const diverProfileData: IDiverProfile = {
-          userId: currentUserId,
-          personalInfo: personalInfoData.value,
-          emergencyContact: emergencyInfoData.value
+        // Create a single object for both personal and emergency contact data
+        const profileData = {
+          user: currentUserId,
+          ...personalInfoData.value,
+          emergency_contact: emergencyInfoData.value,
         };
+
+        let formData = new FormData();
+
+        // Append identity photo if it exists
+        if (personalInfoData.value.identity_photo instanceof File) {
+          formData.append('identity_photo', personalInfoData.value.identity_photo);
+        }
+
+        // Append the combined profileData as a JSON string
+        formData.append('diverProfileData', JSON.stringify(profileData));
 
         let response;
         if (diverProfileId.value) {
-          response = await DiverProfileService.updateDiverProfile(diverProfileId.value, diverProfileData);
+          response = await DiverProfileService.updateDiverProfile(diverProfileId.value, formData);
         } else {
-          response = await DiverProfileService.createDiverProfile(diverProfileData);
+          response = await DiverProfileService.createDiverProfile(formData);
           diverProfileId.value = response.data.id;
         }
         console.log("Server response:", response.data);
@@ -100,7 +114,6 @@ export default defineComponent({
       }
     };
 
-
     return {
       personalInfoData,
       emergencyInfoData,
@@ -112,3 +125,4 @@ export default defineComponent({
   }
 });
 </script>
+

@@ -3,7 +3,7 @@ import axios, { AxiosError } from 'axios';
 import instance, { clearAuthCookies } from '../axiosConfig';
 import { ICustomUser } from '@/interfaces/Users/CustomUser';
 
-// Écouteur d'événement beforeunload pour effacer les cookies lors de la fermeture de l'onglet ou de la navigation
+
 window.addEventListener('beforeunload', () => {
   clearAuthCookies();
 });
@@ -34,7 +34,7 @@ export default {
         return instance.delete(`users/${id}/`);
     },
 
-    // supprimer un compte utilisateur
+    // Supprimer un compte utilisateur
     async deleteAccount() {
       try {
         const response = await instance.delete('auth/delete_account/');

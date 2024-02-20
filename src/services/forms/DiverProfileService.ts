@@ -1,13 +1,12 @@
 import instance from '../axiosConfig';
-import { IDiverProfile } from '@/interfaces/Users/DiverProfile';
 import Cookies from 'js-cookie';
 
 export default {
   // Créer un profil de plongeur
-  createDiverProfile(data: IDiverProfile) {
+  createDiverProfile(data: FormData) {
     return instance.post('diver-profiles/', data, {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'multipart/form-data'
       }
     });
   },
@@ -23,8 +22,12 @@ export default {
   },
 
   // Mettre à jour un profil de plongeur spécifique
-  updateDiverProfile(id: number, data: IDiverProfile) {
-    return instance.put(`diver-profiles/${id}/`, data);
+  updateDiverProfile(id: number, data: FormData) {
+    return instance.put(`api/diver-profiles/${id}/`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
   },
 
   // Supprimer un profil de plongeur

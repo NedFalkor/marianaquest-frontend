@@ -107,6 +107,7 @@ export default defineComponent({
     const email = ref(props.emergencyContact.email);
 
     function submitData() {
+      console.log('Submitting:', { last_name, first_name, address, landline, mobile, email });
       const emergencyContact: EmergencyContact = {
         last_name: last_name.value,
         first_name: first_name.value,
